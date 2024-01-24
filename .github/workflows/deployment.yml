@@ -1,0 +1,19 @@
+name: Build & Deploy
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Supermind Admin
+        with:
+         host: ${{secrets.SSH_HOST}}
+         key: ${{secrets.SSH_KEY}}
+         usename: ${{secrets.SSH_USERNAME}}
+
+         script: |
+           cd: var/www/test
+           git clone git@github.com:emilesd/supermind-admin.git
+           echo 'clone successful'
