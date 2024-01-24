@@ -1,0 +1,73 @@
+/*! -----------------------------------------------------------------------------------
+    Template Name: Fastkart Admin
+    Template URI: http://admin.pixelstrap.com/Fastkart/theme
+    Description: This is Admin theme
+    Author: Pixelstrap
+    Author URI: https://themeforest.net/user/pixelstrap
+----------------------------------------------------------------------------------- !*/
+/* *** utils *** */
+@import 'utils/variables';
+@import 'utils/breakpoints';
+@import 'utils/mixins';
+
+:root {
+  --theme-color: #0da487;
+}
+
+/* *** Skeleton Loader *** */
+@import 'skeletonLoader';
+
+/* *** base *** */
+@import 'base/reset';
+@import 'base/typography';
+
+/* *** components *** */
+@import 'components/according';
+@import 'components/alert';
+@import 'components/badge';
+@import 'components/breadcrumb';
+@import 'components/buttons';
+@import 'components/card';
+@import 'components/country-flag';
+@import 'components/dropdown';
+@import 'components/error-box';
+@import 'components/forms';
+@import 'components/loader';
+@import 'components/modal';
+@import 'components/pagination';
+@import 'components/radio';
+@import 'components/success-box';
+@import 'components/switch';
+@import 'components/tab';
+@import 'components/table';
+@import 'components/tree';
+@import 'components/typeahead-search';
+
+/* *** layout *** */
+@import 'layout/footer';
+@import 'layout/grid';
+@import 'layout/header';
+@import 'layout/navs';
+@import 'layout/product';
+@import 'layout/rtl';
+@import 'layout/search';
+@import 'layout/select2';
+@import 'layout/sidebar';
+
+/* *** pages *** */
+@import 'pages/checkout';
+@import 'pages/dashboard';
+@import 'pages/errorpage';
+@import 'pages/login';
+@import 'pages/media';
+@import 'pages/order-tracking';
+@import 'pages/pos';
+@import 'pages/shipping';
+@import 'pages/theme-option';
+@import 'pages/wallet';
+
+/* *** themes *** */
+@import 'themes/dark';
+@import 'themes/dark-sidebar';
+@import 'themes/update';
+@import 'themes/responsive';

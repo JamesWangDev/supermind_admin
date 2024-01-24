@@ -1,0 +1,205 @@
+/**=====================
+    Badge CSS start
+==========================**/
+.badge {
+  padding: $badge-padding;
+
+  &+.badge {
+    margin-left: 5px;
+  }
+
+  svg {
+    width: $badge-svg-size;
+    height: $badge-svg-size;
+    padding-top: 3px;
+  }
+}
+
+.status-danger,
+.status-out_of_stock,
+.status-failed {
+  span {
+    background-color: rgba($color: #e22454, $alpha: 0.15);
+    color: #e22454;
+    padding: 5px 10px;
+    text-transform: capitalize;
+    display: inline-block;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 400;
+  }
+}
+
+.status-success,
+.status-in_stock,
+.status-completed,
+.status-delivered {
+  span {
+    background-color: rgba($color: #2f8733, $alpha: 0.15);
+    color: #2f8733;
+    padding: 5px 10px;
+    text-transform: capitalize;
+    display: inline-block;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 400;
+  }
+}
+
+.status-pending {
+  span {
+    background-color: rgba(#e6c007, 0.15);
+    color: #000000a3;
+    padding: 5px 10px;
+    text-transform: capitalize;
+    display: inline-block;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 400;
+  }
+}
+
+.status-processing {
+  span {
+    background-color: rgba(#0077b3, 0.15);
+    color: #0077b3;
+    padding: 5px 10px;
+    text-transform: capitalize;
+    display: inline-block;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 400;
+  }
+}
+
+.status-refund {
+  span {
+    background-color: rgba(#d9534f, 0.15);
+    color: #d9534f;
+    padding: 5px 10px;
+    text-transform: capitalize;
+    display: inline-block;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 400;
+  }
+}
+
+.status-rejected {
+  span {
+    background-color: #d9534f26;
+    color: #d9534f;
+    padding: 5px 10px;
+    text-transform: capitalize;
+    display: inline-block;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 400;
+  }
+}
+
+.status-approved {
+  span {
+    background-color: #2f873326;
+    color: #2f8733;
+    padding: 5px 10px;
+    text-transform: capitalize;
+    display: inline-block;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 400;
+  }
+}
+
+.status-canceled {
+  span {
+    background-color: rgba(#000000, 0.15);
+    color: #000000;
+    padding: 5px 10px;
+    text-transform: capitalize;
+    display: inline-block;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 400;
+  }
+}
+
+.status-awaiting_for_approval {
+  span {
+    background-color: rgba(#7e7e7e, 0.15);
+    color: #7e7e7e;
+    padding: 5px 10px;
+    text-transform: capitalize;
+    display: inline-block;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 400;
+  }
+}
+
+.status-order-status {
+  span {
+    padding: 5px 10px;
+    text-transform: capitalize;
+    display: inline-block;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 400;
+  }
+}
+
+.badge-theme {
+  background-color: var(--theme-color);
+}
+
+/* flat badge loop css */
+@each $pill-badge-name,
+$pill-badge-color in (primary, var(--theme-color)),
+(secondary, $secondary-color),
+(success, $success-color),
+(danger, $danger-color),
+(info, $info-color),
+(light, $light-color),
+(dark, $dark-color),
+(warning, $warning-color) {
+  .pill-badge-#{$pill-badge-name} {
+    background-color: $pill-badge-color;
+    box-shadow: -0.5px 4.33px 16px 0px rgba($pill-badge-color, 0.25);
+    color: $white;
+    border-radius: 0;
+  }
+}
+
+.pill-badge-primary {
+  background-color: var(--theme-color);
+}
+
+.pill-badge-secondary {
+  background-color: var(--theme-secondary);
+}
+
+/* round badge loop css */
+@each $round-badge-name,
+$round-badge-color in (primary, var(--theme-color)),
+(secondary, $secondary-color),
+(success, $success-color),
+(danger, $danger-color),
+(info, $info-color),
+(light, $light-color),
+(dark, $dark-color),
+(warning, $warning-color) {
+  .round-badge-#{$round-badge-name} {
+    border-radius: 6px;
+    background-color: $round-badge-color;
+    box-shadow: -0.5px -6.67px 14px 0px rgba($round-badge-color, 0.18);
+    color: $white !important;
+  }
+}
+
+.round-badge-primary {
+  background-color: var(--theme-color);
+}
+
+.round-badge-secondary {
+  background-color: var(--theme-secondary);
+}

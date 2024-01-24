@@ -1,0 +1,73 @@
+/**=====================
+     Pagination CSS Start
+==========================**/
+.custom-pagination {
+    margin-top: calc(22px + (35 - 22) * ((100vw - 320px) / (1920 - 320)));
+    padding-bottom: 1px;
+
+    .pagination {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: calc(6px + (13 - 6) * ((100vw - 320px) / (1920 - 320)));
+
+        .page-item {
+            border-radius: 5px;
+            overflow: hidden;
+
+            &:not(:first-child) {
+                .page-link {
+                    margin: 0;
+                }
+            }
+
+            &.active {
+                .page-link {
+                    background-color: var(--theme-color);
+                    border-color: var(--theme-color);
+                    color: $white;
+
+                    &:hover {
+                        background-color: var(--theme-color);
+                        border-color: var(--theme-color);
+                        color: $white;
+                    }
+                }
+            }
+
+            &.disabled {
+                .page-link {
+                    background-color: transparent
+                }
+            }
+
+            .page-link {
+                @include flex_common;
+                color: $content-color;
+                border: 1px solid transparent;
+                z-index: unset;
+                border-radius: 5px;
+                width: 40px;
+                height: 40px;
+                padding: 0;
+
+                &:hover {
+                    border: 1px solid var(--theme-color);
+                    background-color: unset;
+                    color: var(--theme-color) !important;
+                }
+
+                &:focus {
+                    color: var(--theme-color);
+                    background-color: $white;
+                    box-shadow: none;
+                }
+
+                svg {
+                    [dir="rtl"] & {
+                        transform: scale(-1);
+                    }
+                }
+            }
+        }
+    }
+}

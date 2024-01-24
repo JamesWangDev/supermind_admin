@@ -1,0 +1,238 @@
+.elevation-0 {
+  z-index: 0;
+  transition: box-shadow 2s;
+}
+
+.elevation--border {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.elevation-24 {
+  box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
+  z-index: 24;
+  transition: box-shadow 2s ease-out;
+}
+
+.elevation-23 {
+  box-shadow: 0px 11px 14px -7px rgba(0, 0, 0, 0.2), 0px 23px 36px 3px rgba(0, 0, 0, 0.14), 0px 9px 44px 8px rgba(0, 0, 0, 0.12);
+  z-index: 23;
+  transition: box-shadow 2s ease-out;
+}
+
+.elevation-22 {
+  box-shadow: 0px 10px 14px -6px rgba(0, 0, 0, 0.2), 0px 22px 35px 3px rgba(0, 0, 0, 0.14), 0px 8px 42px 7px rgba(0, 0, 0, 0.12);
+  z-index: 22;
+  transition: box-shadow 2s ease-out;
+}
+
+.elevation-21 {
+  box-shadow: 0px 10px 13px -6px rgba(0, 0, 0, 0.2), 0px 21px 33px 3px rgba(0, 0, 0, 0.14), 0px 8px 40px 7px rgba(0, 0, 0, 0.12);
+  z-index: 21;
+  transition: box-shadow 2s ease-out;
+}
+
+.elevation-20 {
+  box-shadow: 0px 10px 13px -6px rgba(0, 0, 0, 0.2), 0px 20px 31px 3px rgba(0, 0, 0, 0.14), 0px 8px 38px 7px rgba(0, 0, 0, 0.12);
+  z-index: 20;
+  transition: box-shadow 2s ease-out;
+}
+
+.elevation-19 {
+  box-shadow: 0px 9px 12px -6px rgba(0, 0, 0, 0.2), 0px 19px 29px 2px rgba(0, 0, 0, 0.14), 0px 7px 36px 6px rgba(0, 0, 0, 0.12);
+  z-index: 19;
+  transition: box-shadow 2s ease-out;
+}
+
+.elevation-18 {
+  box-shadow: 0px 9px 11px -5px rgba(0, 0, 0, 0.2), 0px 18px 28px 2px rgba(0, 0, 0, 0.14), 0px 7px 34px 6px rgba(0, 0, 0, 0.12);
+  z-index: 18;
+  transition: box-shadow 2s ease-out;
+}
+
+.elevation-17 {
+  box-shadow: 0px 8px 11px -5px rgba(0, 0, 0, 0.2), 0px 17px 26px 2px rgba(0, 0, 0, 0.14), 0px 6px 32px 5px rgba(0, 0, 0, 0.12);
+  z-index: 17;
+  transition: box-shadow 2s ease-out;
+}
+
+.elevation-16 {
+  box-shadow: 0px 8px 10px -5px rgba(0, 0, 0, 0.2), 0px 16px 24px 2px rgba(0, 0, 0, 0.14), 0px 6px 30px 5px rgba(0, 0, 0, 0.12);
+  z-index: 16;
+  transition: box-shadow 2s ease-out;
+}
+
+.elevation-15 {
+  box-shadow: 0px 8px 9px -5px rgba(0, 0, 0, 0.2), 0px 15px 22px 2px rgba(0, 0, 0, 0.14), 0px 6px 28px 5px rgba(0, 0, 0, 0.12);
+  z-index: 15;
+  transition: box-shadow 2s ease-out;
+}
+
+.elevation-14 {
+  box-shadow: 0px 7px 9px -4px rgba(0, 0, 0, 0.2), 0px 14px 21px 2px rgba(0, 0, 0, 0.14), 0px 5px 26px 4px rgba(0, 0, 0, 0.12);
+  z-index: 14;
+  transition: box-shadow 2s ease-out;
+}
+
+.elevation-13 {
+  box-shadow: 0px 7px 8px -4px rgba(0, 0, 0, 0.2), 0px 13px 19px 2px rgba(0, 0, 0, 0.14), 0px 5px 24px 4px rgba(0, 0, 0, 0.12);
+  z-index: 13;
+  transition: box-shadow 2s ease-out;
+}
+
+.elevation-12 {
+  box-shadow: 0px 7px 8px -4px rgba(0, 0, 0, 0.2), 0px 12px 17px 2px rgba(0, 0, 0, 0.14), 0px 5px 22px 4px rgba(0, 0, 0, 0.12);
+  z-index: 12;
+  transition: box-shadow 2s ease-out;
+}
+
+.elevation-11 {
+  box-shadow: 0px 6px 7px -4px rgba(0, 0, 0, 0.2), 0px 11px 15px 1px rgba(0, 0, 0, 0.14), 0px 4px 20px 3px rgba(0, 0, 0, 0.12);
+  z-index: 11;
+  transition: box-shadow 2s ease-out;
+}
+
+.elevation-10 {
+  box-shadow: 0px 6px 6px -3px rgba(0, 0, 0, 0.2), 0px 10px 14px 1px rgba(0, 0, 0, 0.14), 0px 4px 18px 3px rgba(0, 0, 0, 0.12);
+  z-index: 10;
+  transition: box-shadow 2s ease-out;
+}
+
+.elevation-9 {
+  box-shadow: 0px 5px 6px -3px rgba(0, 0, 0, 0.2), 0px 9px 12px 1px rgba(0, 0, 0, 0.14), 0px 3px 16px 2px rgba(0, 0, 0, 0.12);
+  z-index: 9;
+  transition: box-shadow 2s ease-out;
+}
+
+.elevation-8 {
+  box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+  z-index: 8;
+  transition: box-shadow 2s ease-out;
+}
+
+.elevation-7 {
+  box-shadow: 0px 4px 5px -2px rgba(0, 0, 0, 0.2), 0px 7px 10px 1px rgba(0, 0, 0, 0.14), 0px 2px 16px 1px rgba(0, 0, 0, 0.12);
+  z-index: 7;
+  transition: box-shadow 2s ease-out;
+}
+
+.elevation-6 {
+  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12);
+  z-index: 6;
+  transition: box-shadow 2s ease-out;
+}
+
+.elevation-5 {
+  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 5px 8px 0px rgba(0, 0, 0, 0.14), 0px 1px 14px 0px rgba(0, 0, 0, 0.12);
+  z-index: 5;
+  transition: box-shadow 2s ease-out;
+}
+
+.elevation-4 {
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+  z-index: 4;
+  transition: box-shadow 2s ease-out;
+}
+
+.elevation-3 {
+  box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+  z-index: 3;
+  transition: box-shadow 2s ease-out;
+}
+
+.elevation-2 {
+  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  z-index: 2;
+  transition: box-shadow 2s ease-out;
+}
+
+.elevation-1 {
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  z-index: 1;
+  transition: box-shadow 2s ease-out;
+}
+
+.skeleton-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 250px;
+  padding: calc(8px + (14 - 8) * ((100vw - 320px) / (1920 - 320)));
+  z-index: 1;
+  background-color: #f9f9f6;
+}
+
+.skeleton *:empty {
+  background: #f6f7f8;
+  background-position: -500px 0;
+  animation: skeletonShine 1s linear 0s infinite normal forwards;
+  border-radius: 5px;
+  background-image: linear-gradient(135deg, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+  background-repeat: no-repeat;
+  background-size: 1000px 100%;
+  width: 100%;
+}
+
+.skeleton__section+.skeleton__section {
+  margin-top: 16px;
+}
+
+.skeleton-section {
+  width: 100%;
+}
+
+.skeleton__section--actions {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.skeleton__section--card {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 24px;
+}
+
+.skeleton__header {
+  margin-bottom: 6px;
+  height: 32px;
+  width: 200px;
+  max-width: 35%;
+}
+
+.skeleton__header--long {
+  width: 300px;
+  max-width: 85%;
+}
+
+.skeleton__p {
+  height: 16px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.skeleton__p:last-child {
+  width: 45%;
+}
+
+.skeleton__p--short {
+  max-width: 120px;
+}
+
+.skeleton__img {
+  height: 110px;
+  width: 64px;
+  border-radius: 8px;
+}
+
+.skeleton__tree .skeleton__p {
+  width: 100%;
+  max-width: none;
+}
+
+@keyframes skeletonShine {
+  to {
+    background-position: 500px 0;
+  }
+}
