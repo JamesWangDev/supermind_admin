@@ -6,6 +6,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
     steps:
       - name: Pull Update
         uses: appleboy/ssh-action@v0.1.2
@@ -19,9 +22,12 @@ jobs:
            git pull origin master
            echo 'pull successful'
            
+      - name: Go to Project folder
+        run: cd ../var/www/supermind/supermind-admin
+      - name: Checkout repository
+        uses: actions/checkout@v2
       - name: Install dependencies
         run: npm install
-        
       - name: Build
         run: npm run build
       - name: Restart Nginx
