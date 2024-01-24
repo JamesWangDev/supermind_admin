@@ -7,7 +7,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy Supermind Admin
+      - name: Pull Update
         uses: appleboy/ssh-action@v0.1.2
         with:
          host: ${{secrets.SSH_HOST}}
@@ -15,7 +15,6 @@ jobs:
          username: ${{secrets.SSH_USERNAME}}
 
          script: |
-           mkdir test
-           cd: test
-           git clone git@github.com:emilesd/supermind-admin.git
-           echo 'clone successful'
+           cd ../var/www/supermind/supermind-admin
+           git pull origin master
+           echo 'pull successful'
