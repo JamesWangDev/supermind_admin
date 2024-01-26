@@ -3,6 +3,7 @@ import { descriptionSchema, discountSchema, dropDownScheme, ifTypeSimpleSchema, 
 export const ProductValidationSchema = {
   name: nameSchema,
   short_description: nameSchema,
+  api_url: nameSchema,
   description: descriptionSchema,
   stock_status: nameSchema,
   external_url: externalUrlSchema,
@@ -35,6 +36,7 @@ export function ProductInitValues(oldData, updateId) {
     // General
     name: updateId ? oldData?.name || "" : "",
     short_description: updateId ? oldData?.short_description || "" : "",
+    api_url: updateId ? oldData?.api_url || "" : "",
     description: updateId ? oldData?.description || "" : "",
     store_id: updateId ? Number(oldData?.store_id) || "" : "",
     // Inverntory  =>Type: Simple

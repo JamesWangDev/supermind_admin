@@ -942,5 +942,6 @@
   "TotalOrders":"Total Orders",
   "TotalRevenue":"Total Revenue",
   "Symbolisarequired":"Symbol is required",
-  "QuicLinks":"Quick Links"
+  "QuicLinks":"Quick Links",
+  "EnterApiUrl": "Enter API URL"
 }
