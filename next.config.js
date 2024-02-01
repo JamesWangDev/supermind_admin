@@ -10,6 +10,8 @@ const nextConfig = {
     // API_PROD_URL: "https://laravel.pixelstrap.net/fastkart/api/",
   },
   images: {
+    loader: "custom",
+    loaderFile: "./src/Utils/ImageLoader/imageloader.js",
     remotePatterns: [
       {
         protocol: "http",
