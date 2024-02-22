@@ -15,22 +15,22 @@ const AllProductTabs = ({ values, setFieldValue, errors, updateId, activeTab }) 
                     <GeneralTab values={values} setFieldValue={setFieldValue} />
                 </TabPane>
                 <TabPane tabId="2">
-                    <InventoryTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
+                    <ImagesTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
+                    {/* <InventoryTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} /> */}
                 </TabPane>
                 <TabPane tabId="3">
-                    <SetupTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
+                    {/* <SetupTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} /> */}
                 </TabPane>
                 <TabPane tabId="4">
-                    <ImagesTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
                 </TabPane>
                 <TabPane tabId="5">
-                    <SeoTab values={values} setFieldValue={setFieldValue} updateId={updateId} />
+                    {/* <SeoTab values={values} setFieldValue={setFieldValue} updateId={updateId} /> */}
                 </TabPane>
                 <TabPane tabId="6">
-                    <ShippingTaxTab />
+                    {/* <ShippingTaxTab /> */}
                 </TabPane>
                 <TabPane tabId="7">
-                    <OptionsTab />
+                    {/* <OptionsTab /> */}
                 </TabPane>
             </TabContent>
         </Col>

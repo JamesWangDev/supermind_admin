@@ -26,6 +26,7 @@ const MENUITEMS = [
     type: "sub",
     children: [
       { title: "AddProduct", path: "/product/create", displayTitle: "Add Product", permission: ["product.create"] },
+      { title: "AddSuperpower", path: "/superpower/create", displayTitle: "Add Superpower", permission: ["product.create"] },
       { title: "AllProducts", path: "/product", displayTitle: "All Product", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["product.create"] },
       { title: "Attributes", path: "/attribute", displayTitle: "All Attributes", permission: ["attribute.index", "attribute.create"] },
       { title: "Categories", path: "/category", displayTitle: "Categories", permission: ["category.index"] },

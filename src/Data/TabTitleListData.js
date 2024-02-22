@@ -32,12 +32,32 @@ import themeOption7 from "../../public/assets/images/theme-option/shop/07.jpg"
 export const ProductTabTitleListData = [
   { title: "General", icon: <RiSettingsLine />, inputs: ["name", "description", "short_description", 'description', "store_id"] },
   { title: "Inventory", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
-  { title: "Setup", icon: <RiToolsLine />, inputs: ["tags", "categories", "cross_sell_product_id"] },
-  { title: "Images", icon: <RiImageLine />, inputs: ["product_thumbnail", "product_images"] },
-  { title: "SEO", icon: <RiEarthLine />, inputs: ["meta_title", "meta_description ", "product_meta_image"] },
-  { title: "Shipping&Tax", icon: <RiTruckLine />, inputs: ["is_return", "is_cod", "shipping_days", "tax_id"] },
-  { title: "Status", icon: <RiCheckboxCircleLine />, inputs: ["status", "is_free_shipping", "is_changeable", "is_refundable"] },
+  { title: "Avatar", icon: <RiImageLine />, inputs: ["product_thumbnail", "product_images"] },
+  { title: "Personality & Limits", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
+  { title: "Market Place Listing Info", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
+  { title: "Publish Website", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
+  { title: "Test", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
+  { title: "Payments and Pricing", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
+
+  // { title: "Setup", icon: <RiToolsLine />, inputs: ["tags", "categories", "cross_sell_product_id"] },
+  // { title: "SEO", icon: <RiEarthLine />, inputs: ["meta_title", "meta_description ", "product_meta_image"] },
+  // { title: "Shipping&Tax", icon: <RiTruckLine />, inputs: ["is_return", "is_cod", "shipping_days", "tax_id"] },
+  // { title: "Status", icon: <RiCheckboxCircleLine />, inputs: ["status", "is_free_shipping", "is_changeable", "is_refundable"] },
 ];
+
+export const SuperPowerTabTitleListData = [
+  { title: "General", icon: <RiSettingsLine />, inputs: ["name", "description", "short_description", 'description', "store_id"] },
+  { title: "Inventory", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
+  { title: "Add Actions", icon: <RiImageLine />, inputs: ["product_thumbnail", "product_images"] },
+  { title: "Add Knowledge", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
+  { title: "Task Decomposition Tools & Chains", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
+  { title: "Create chains & workflows", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
+  { title: "Fine Tune Model", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
+  { title: "Market Place Listing Info", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
+  { title: "Test", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
+  { title: "Payments and Pricing", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
+];
+
 export const CouponTabTitleListData = [
   { title: "General", icon: <RiSettingsLine />, inputs: ["code", "type", "amount", "status", "is_expired"] },
   { title: "Restriction", icon: <RiCloseCircleLine />, inputs: ["products", "exclude_products", "min_spend", "max_spend"] },
