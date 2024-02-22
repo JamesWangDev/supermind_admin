@@ -20,8 +20,8 @@ const MENUITEMS = [
     ],
   },
   {
-    title: "Products",
-    displayTitle: "Products",
+    title: "Superminds",
+    displayTitle: "Superminds",
     icon: <RiStore3Line />,
     type: "sub",
     children: [
