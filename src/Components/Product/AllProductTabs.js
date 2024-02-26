@@ -6,19 +6,23 @@ import ImagesTab from './ImagesTab'
 import SeoTab from './SeoTab'
 import ShippingTaxTab from './ShippingTaxTab'
 import OptionsTab from './OptionsTab'
+import LLMTool from './PromptAndModelsTabs'
+import AddSuperpowersTab from './AddSuperpowersTab'
 
 const AllProductTabs = ({ values, setFieldValue, errors, updateId, activeTab }) => {
     return (
-        <Col xl="7" lg="8">
+        <Col xl="9" lg="9">
             <TabContent activeTab={activeTab}>
                 <TabPane tabId="1" className="some">
                     <GeneralTab values={values} setFieldValue={setFieldValue} />
                 </TabPane>
                 <TabPane tabId="2">
-                    <ImagesTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
+                    <LLMTool />
+                    {/* <ImagesTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} /> */}
                     {/* <InventoryTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} /> */}
                 </TabPane>
                 <TabPane tabId="3">
+                    <AddSuperpowersTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
                     {/* <SetupTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} /> */}
                 </TabPane>
                 <TabPane tabId="4">

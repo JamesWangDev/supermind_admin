@@ -30,9 +30,9 @@ import themeOption6 from "../../public/assets/images/theme-option/shop/06.jpg"
 import themeOption7 from "../../public/assets/images/theme-option/shop/07.jpg"
 
 export const ProductTabTitleListData = [
-  { title: "General", icon: <RiSettingsLine />, inputs: ["name", "description", "short_description", 'description', "store_id"] },
-  { title: "Inventory", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
-  { title: "Avatar", icon: <RiImageLine />, inputs: ["product_thumbnail", "product_images"] },
+  { title: "General", icon: <RiSettingsLine />, inputs: ["name", "description", "short_description", 'is_picture', "store_id"] },
+  { title: "Inventory", icon: <RiFileListLine />, inputs: [] },
+  { title: "Add Superpowers", icon: <RiImageLine />, inputs: ["product_thumbnail", "product_images"] },
   { title: "Personality & Limits", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
   { title: "Market Place Listing Info", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
   { title: "Publish Website", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },

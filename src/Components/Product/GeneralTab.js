@@ -4,6 +4,7 @@ import request from "../../Utils/AxiosUtils";
 import { store } from "../../Utils/AxiosUtils/API";
 import SimpleInputField from "../InputFields/SimpleInputField";
 import SearchableSelectInput from "../InputFields/SearchableSelectInput";
+import CheckBoxField from "../InputFields/CheckBoxField";
 import DescriptionInput from "./DescriptionInput";
 import SettingContext from "../../Helper/SettingContext";
 import I18NextContext from "@/Helper/I18NextContext";
@@ -16,8 +17,9 @@ const GeneralTab = ({ values, setFieldValue }) => {
   const { data: StoreData } = useQuery([store], () => request({ url: store, params: { status: 1 } }), { refetchOnWindowFocus: false, select: (data) => data.data.data.map((item) => ({ id: item.id, name: item.store_name })) });
   return (
     <>
-      <SimpleInputField nameList={[{ name: "name", require: "true", placeholder: t("EnterName") }, { name: "short_description", require: "true", title: "ShortDescription", type: "textarea", rows: 3, placeholder: t("EnterShortDescription"), helpertext: "*Maximum length should be 300 characters." }, { name: "api_url", require: "true", placeholder: t("EnterApiUrl") }]} />
+      <SimpleInputField nameList={[{ name: "name", require: "true", placeholder: t("EnterName") }, { name: "short_description", require: "true", title: "ShortDescription", type: "textarea", rows: 3, placeholder: t("EnterShortDescription"), helpertext: "*Maximum length should be 300 characters." }]} />
       <DescriptionInput values={values} setFieldValue={setFieldValue} title={t('Description')} nameKey="description" errorMessage={"Descriptionisrequired"} />
+      <CheckBoxField name="is_picture" title="picture" />
       {state?.isMultiVendor && <SearchableSelectInput
         nameList={[
           {
