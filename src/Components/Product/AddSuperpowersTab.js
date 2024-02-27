@@ -33,11 +33,11 @@ const AddSuperpowersTab = ({ values, setFieldValue, errors, updateId }) => {
   const selectOptions = useMemo(() => (cartProducts.map(item => ({id: item.product.id, name: item.product.name}))), [cartProducts]);
   return (
     <>
-      {/* <div className="inline">
+      <div className="inline">
         <Row>
-            <Col xs={9}> */}
+            <Col xs={9}>
                 {/* <CustomDropDown items={selectOptions} value={selectedSuperpower} handleSelectChange={setSelectedSuperpower} placeholder={"Select Superpower..."} toggleStyle={{height: "30px"}} toggleClassName={"w-100 bg-primary border-none rounded-0"} /> */}
-                {/* <SearchableSelectInput
+                <SearchableSelectInput
                     nameList={[
                     {
                         name: "superpowers",
@@ -51,8 +51,8 @@ const AddSuperpowersTab = ({ values, setFieldValue, errors, updateId }) => {
                         },
                     },
                     ]}
-                /> */}
-            {/* </Col>
+                />
+            </Col>
             <Col xs={3}>
                 <div className="w-100 flex justify-content-center">
                     <Btn 
@@ -63,8 +63,8 @@ const AddSuperpowersTab = ({ values, setFieldValue, errors, updateId }) => {
             </Col>
         </Row>
 
-      </div> */}
-      <MultiSelectField errors={errors} values={values} setFieldValue={setFieldValue} name="Superpowers" require="true" data={selectOptions} />
+      </div>
+      {/* <MultiSelectField errors={errors} values={values} setFieldValue={setFieldValue} name="Superpowers" require="true" data={selectOptions} /> */}
     </>
   );
 };

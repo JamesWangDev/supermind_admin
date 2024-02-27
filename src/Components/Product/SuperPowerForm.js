@@ -12,7 +12,7 @@ import TabTitle from "../Coupon/TabTitle";
 import { ProductInitValues, ProductValidationSchema } from "./ProductObjects";
 import ProductSubmitFunction from "./ProductSubmitFunction";
 import SettingContext from "../../Helper/SettingContext";
-import AllProductTabs from "./AllProductTabs";
+import AllSuperPowerTabs from "./AllSuperPowerTabs";
 import I18NextContext from "@/Helper/I18NextContext";
 import { useTranslation } from "@/app/i18n/client";
 
@@ -57,7 +57,7 @@ const SuperPowerForm = ({ mutate, loading, updateId, title }) => {
                   <Col xl="3" lg="4">
                     <TabTitle activeTab={activeTab} setActiveTab={setActiveTab} titleList={SuperPowerTabTitleListData} errors={errors} touched={touched} />
                   </Col>
-                  <AllProductTabs values={values} activeTab={activeTab} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
+                  <AllSuperPowerTabs values={values} activeTab={activeTab} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
                   <FormBtn loading={loading} />
                 </Row>
               </Card>
