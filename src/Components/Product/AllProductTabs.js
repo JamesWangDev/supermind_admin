@@ -12,7 +12,7 @@ import PersonalityLimitsTab from './PersonalityLimitsTab'
 
 const AllProductTabs = ({ values, setFieldValue, errors, updateId, activeTab }) => {
     return (
-        <Col xl="7" lg="8">
+        <Col xl="9" lg="9">
             <TabContent activeTab={activeTab}>
                 <TabPane tabId="1" className="some">
                     <GeneralTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
