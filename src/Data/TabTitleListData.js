@@ -36,7 +36,7 @@ export const ProductTabTitleListData = [
   { title: "Personality & Limits", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
   { title: "Market Place Listing Info", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
   { title: "Publish Website", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
-  { title: "Test", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
+  { title: "Test Supermind", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
   { title: "Payments and Pricing", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
 
   // { title: "Setup", icon: <RiToolsLine />, inputs: ["tags", "categories", "cross_sell_product_id"] },
