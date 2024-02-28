@@ -33,7 +33,7 @@ const AddSuperpowersTab = ({ values, setFieldValue, errors, updateId }) => {
   const selectOptions = useMemo(() => (cartProducts.map(item => ({id: item.product.id, name: item.product.name}))), [cartProducts]);
   return (
     <>
-      <div className="inline">
+      {/* <div className="inline">
         <Row>
             <Col xs={9}>
                 <SearchableSelectInput
@@ -62,8 +62,8 @@ const AddSuperpowersTab = ({ values, setFieldValue, errors, updateId }) => {
             </Col>
         </Row>
 
-      </div>
-      {/* <MultiSelectField errors={errors} values={values} setFieldValue={setFieldValue} name="Superpowers" require="true" data={selectOptions} /> */}
+      </div> */}
+      <MultiSelectField errors={errors} values={values} setFieldValue={setFieldValue} name="superpowers" require="false" data={selectOptions} />
     </>
   );
 };

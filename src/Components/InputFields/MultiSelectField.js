@@ -21,7 +21,7 @@ const MultiSelectField = ({ setFieldValue, values, name, getValuesKey = "id", da
   useEffect(() => {
     setSelectedItems();
     SelectedItemFunction(data && data);
-  }, [values?.[name]]);
+  }, [values?.[name], data]);
   return (
     <div className="category-select-box" ref={ref}>
       <MultiSelectInput values={values} name={name} data={data} selectedItems={selectedItems} setIsComponentVisible={setIsComponentVisible} setFieldValue={setFieldValue} setSelectedItems={setSelectedItems} errors={errors} getValuesKey={getValuesKey} />
