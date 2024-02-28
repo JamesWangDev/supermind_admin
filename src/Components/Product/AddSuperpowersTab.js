@@ -36,7 +36,6 @@ const AddSuperpowersTab = ({ values, setFieldValue, errors, updateId }) => {
       <div className="inline">
         <Row>
             <Col xs={9}>
-                {/* <CustomDropDown items={selectOptions} value={selectedSuperpower} handleSelectChange={setSelectedSuperpower} placeholder={"Select Superpower..."} toggleStyle={{height: "30px"}} toggleClassName={"w-100 bg-primary border-none rounded-0"} /> */}
                 <SearchableSelectInput
                     nameList={[
                     {
@@ -44,10 +43,10 @@ const AddSuperpowersTab = ({ values, setFieldValue, errors, updateId }) => {
                         title: "Superpowers",
                         require: "true",
                         inputprops: {
-                        name: "superpower_id",
-                        id: "superpower_id",
-                        options: selectOptions || [],
-                        close: true
+                          name: "superpowers",
+                          id: "superpowers",
+                          options: selectOptions || [],
+                          close: true
                         },
                     },
                     ]}

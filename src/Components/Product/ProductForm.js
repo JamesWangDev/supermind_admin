@@ -36,8 +36,8 @@ const ProductForm = ({ mutate, loading, updateId, title }) => {
     <Formik
       initialValues={{ ...watchEvent(oldData, updateId) }}
       validationSchema={YupObject({
-        ...ProductValidationSchema,
-        store_id: state?.isMultiVendor && nameSchema
+        ...ProductValidationSchema
+        // store_id: state?.isMultiVendor && nameSchema
       })}
       onSubmit={(values) => {
         if (updateId) {
