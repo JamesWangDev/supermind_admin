@@ -40,7 +40,7 @@ const MENUITEMS = [
     icon: <RiStore3Line />,
     type: "sub",
     children: [
-      { title: "AddSuperpower", path: "/superpower/create", displayTitle: "Add Superpower", permission: ["product.create"] },
+      { title: "AddSuperpower", path: "/superpower/create", displayTitle: "Add Superpower", permission: ["superpower.create"] },
       // { title: "AllSuperPowers", path: "/product", displayTitle: "All Superpowers", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["product.create"] },
       // { title: "Attributes", path: "/attribute", displayTitle: "All Attributes", permission: ["attribute.index", "attribute.create"] },
       // { title: "Categories", path: "/category", displayTitle: "Categories", permission: ["category.index"] },
