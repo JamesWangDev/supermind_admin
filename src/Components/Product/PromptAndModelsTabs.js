@@ -634,7 +634,7 @@ const LLMTool = () => {
           <div className="text-center d-flex" style={{ width: "15%" }}>
             <div className="d-flex flex-column w-100">
               <div className="h-50 flex border-bottom border-black">
-                <span className="m-auto text-center">How many rows to inject?</span>
+                <span className="m-auto text-center">Rows to inject</span>
               </div>
               <div className="h-50 flex">
                 <div className={rowInject === 2 ? "w-60" : "w-100"}>

@@ -19,6 +19,11 @@ export const user = "user";
 export const UserImportAPI = "user/csv/import";
 export const UserExportAPI = "user/csv/export";
 
+// prompts api
+export const prompt = "prompt";
+export const PromptImportAPI = "prompt/csv/import";
+export const PromptExportAPI = "prompt/csv/export";
+
 // attributes api
 export const attribute = "attribute";
 export const AttributeImportAPI = "attribute/csv/import";

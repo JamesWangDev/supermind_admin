@@ -38,6 +38,7 @@ export function ProductInitValues(oldData, updateId) {
     short_description: updateId ? oldData?.short_description || "" : "",
     description: updateId ? oldData?.description || "" : "",
     is_picture: updateId ? oldData?.is_picture === 1 ? true : false : false,
+    prompts: updateId ? oldData?.prompts?.map((item) => item.id) || [] : [],
     superpowers: updateId ? oldData?.superpowers?.map((item) => item.id) || [] : [],
     store_id: updateId ? Number(oldData?.store_id) || "" : "",
     // Inverntory  =>Type: Simple
