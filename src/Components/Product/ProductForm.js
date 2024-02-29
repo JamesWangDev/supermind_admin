@@ -1,4 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Form, Formik } from "formik";
 import { Row, Col, Card } from "reactstrap";
@@ -20,8 +21,18 @@ const ProductForm = ({ mutate, loading, updateId, title }) => {
   const { i18Lang } = useContext(I18NextContext);
   const { t } = useTranslation(i18Lang, 'common');
   const [activeTab, setActiveTab] = useState("1");
-  const { state } = useContext(SettingContext)
+  const { state } = useContext(SettingContext);
+  const searchParams = useSearchParams();
   const { data: oldData, isLoading: oldDataLoading, refetch, status } = useQuery([updateId], () => request({ url: `${product}/${updateId}` }), { refetchOnWindowFocus: false, enabled: false, select: (data) => data.data });
+
+  useEffect(() => {
+    // const {tab} = router.query;
+    const tab = searchParams.get('tab');
+    if (tab) {
+      setActiveTab(tab);
+    }
+  }, [])
+
   useEffect(() => {
     if (updateId) {
       refetch();

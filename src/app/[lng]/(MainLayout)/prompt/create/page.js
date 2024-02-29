@@ -11,7 +11,7 @@ const PromptCreate = () => {
   const { mutate, isLoading } = useCreate(
     prompt,
     false,
-    `/${i18Lang}/prompt`
+    `/${i18Lang}/product/create?tab=2`
   );
   return (
     <FormWrapper title="AddPrompt">

@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import request from "../../Utils/AxiosUtils";
@@ -10,6 +11,7 @@ import MultiSelectField from "../InputFields/MultiSelectField";
 import SelectField from "../InputFields/SelectField";
 import { Table } from "reactstrap";
 import Btn from "@/Elements/Buttons/Btn";
+import { RiPencilLine } from "react-icons/ri";
 
 const modelChoiceItems = [
   {
@@ -71,6 +73,7 @@ const PromptAndModels2 = ({ values, setFieldValue, errors, updateId }) => {
             <th className="sm-width">No</th>
             <th style={{width: "140px"}}>Name</th>
             <th>Prompt Text</th>
+            <th style={{width: "80px"}}>Edit</th>
           </tr>
         </thead>
         <tbody>
@@ -79,6 +82,11 @@ const PromptAndModels2 = ({ values, setFieldValue, errors, updateId }) => {
               <td>{index + 1}</td>
               <td>{prompts?.filter(item => item.id === prompt_id)[0]?.name}</td>
               <td>{prompts?.filter(item => item.id === prompt_id)[0]?.prompt_text}</td>
+              <td>
+                <Link href={`/${i18Lang}/${prompt}/update/${prompt_id}`}>
+                  <RiPencilLine />
+                </Link>
+              </td>
             </tr>
           ))}
         </tbody>

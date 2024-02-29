@@ -9,7 +9,7 @@ import { useContext } from "react";
 const UpdatePrompt = ({ params }) => {
   const { i18Lang } = useContext(I18NextContext);
 
-  const { mutate, isLoading } = useUpdate(prompt,params?.updateId,`/${i18Lang}/prompt`);
+  const { mutate, isLoading } = useUpdate(prompt,params?.updateId,`/${i18Lang}/product/create?tab=2`);
   return (
     params?.updateId && (
       <FormWrapper title="UpdatePrompt">
