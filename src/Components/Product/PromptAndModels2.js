@@ -12,6 +12,7 @@ import SelectField from "../InputFields/SelectField";
 import { Table } from "reactstrap";
 import Btn from "@/Elements/Buttons/Btn";
 import { RiPencilLine } from "react-icons/ri";
+import TableLoader from "../Table/TableLoader";
 
 const modelChoiceItems = [
   {
@@ -55,19 +56,21 @@ const PromptAndModels2 = ({ values, setFieldValue, errors, updateId }) => {
   const { state } = useContext(SettingContext);
   const [prompts, setPrompts] = useState([]);
   // Getting data from Cart API
-  const { data: promptData, isLoading: promptLoader } = useQuery(["prompt"], () => request({ url: prompt }), { refetchOnWindowFocus: false, select: (res) => res?.data });
+  const { data: promptData, isLoading: promptLoader } = useQuery(["prompt", values.prompts], () => request({ url: prompt }), { refetchOnWindowFocus: false, select: (res) => res?.data });
 
   useEffect(() => {
     if(!promptLoader && promptData) {
         setPrompts(promptData.data)
     }
-  }, [promptLoader])
+  }, [promptLoader, promptData])
 
   const selectOptions = useMemo(() => (prompts?.map(item => ({id: item.id, name: item.name}))), [prompts]);
+
   return (
     <>
       <MultiSelectField errors={errors} values={values} setFieldValue={setFieldValue} name="prompts" require="true" data={selectOptions} />
       {values?.prompts.length > 0 && <Table id="table_id" className={`role-table refund-table all-package theme-table datatable-wrapper`}>
+        <TableLoader fetchStatus={promptLoader} />
         <thead>
           <tr>
             <th className="sm-width">No</th>
