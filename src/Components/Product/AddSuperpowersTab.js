@@ -14,6 +14,7 @@ import { AddtoCartAPI } from "../../Utils/AxiosUtils/API";
 import { Row, Col } from "reactstrap";
 import CustomDropDown from "../CommonComponent/CustomDropDown/CustomDropDown";
 import MultiSelectField from "../InputFields/MultiSelectField";
+import ChatBox from "../Chat/ChatBox";
 
 const AddSuperpowersTab = ({ values, setFieldValue, errors, updateId }) => {
   const { i18Lang } = useContext(I18NextContext);
@@ -64,6 +65,7 @@ const AddSuperpowersTab = ({ values, setFieldValue, errors, updateId }) => {
 
       </div> */}
       <MultiSelectField errors={errors} values={values} setFieldValue={setFieldValue} name="superpowers" require="false" data={selectOptions} />
+      <ChatBox />
     </>
   );
 };

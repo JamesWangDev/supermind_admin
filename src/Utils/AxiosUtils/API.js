@@ -153,3 +153,6 @@ export const DashboardChartAPI = "/dashboard/chart"
 
 // Question And Answer
 export const QuestionNAnswerAPI = "/question-and-answer"
+
+// ChatGPT API endpoint
+export const ChatGPTAPI = "https://api.openai.com/v1/chat/completions"

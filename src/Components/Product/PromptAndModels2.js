@@ -9,7 +9,7 @@ import { useTranslation } from "@/app/i18n/client";
 import { prompt } from "../../Utils/AxiosUtils/API";
 import MultiSelectField from "../InputFields/MultiSelectField";
 import SelectField from "../InputFields/SelectField";
-import { Table } from "reactstrap";
+import { Table, Row, Col } from "reactstrap";
 import Btn from "@/Elements/Buttons/Btn";
 import { RiPencilLine } from "react-icons/ri";
 import TableLoader from "../Table/TableLoader";
@@ -68,7 +68,18 @@ const PromptAndModels2 = ({ values, setFieldValue, errors, updateId }) => {
 
   return (
     <>
-      <MultiSelectField errors={errors} values={values} setFieldValue={setFieldValue} name="prompts" require="true" data={selectOptions} />
+      <Row>
+        <Col xs={9}>
+          <MultiSelectField errors={errors} values={values} setFieldValue={setFieldValue} name="prompts" require="true" data={selectOptions} />
+        </Col>
+        <Col xs={3}>
+          <div className="w-100 flex justify-content-center">
+          <Btn title="Add New Prompt" className="align-items-center btn-theme add-button" onClick={() => {
+            router.push(`/${i18Lang}/${prompt}/create`)
+          }} />
+          </div>
+        </Col>
+      </Row>
       {values?.prompts.length > 0 && <Table id="table_id" className={`role-table refund-table all-package theme-table datatable-wrapper`}>
         <TableLoader fetchStatus={promptLoader} />
         <thead>
@@ -97,9 +108,6 @@ const PromptAndModels2 = ({ values, setFieldValue, errors, updateId }) => {
       <div className="mt-4">
         <SelectField errors={errors} values={values} inputprops={{name: "gpt_model", id: "gpt_model", options: modelChoiceItems}} setFieldValue={setFieldValue} name="gpt_model" require="true" data={selectOptions} />
       </div>
-      <Btn title="Add New Prompt" className="align-items-center btn-theme add-button" onClick={() => {
-        router.push(`/${i18Lang}/${prompt}/create`)
-      }} />
     </>
   );
 };

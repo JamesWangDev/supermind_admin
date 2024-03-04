@@ -5,9 +5,10 @@ const nextConfig = {
   swcMinify: true,
   env: {
     // For Local Server
-    // API_PROD_URL: "http://localhost:8000/api/",
-    API_PROD_URL: "http://142.93.64.125:8000/api/",
+    API_PROD_URL: "http://localhost:8000/api/",
+    // API_PROD_URL: "http://142.93.64.125:8000/api/",
     // API_PROD_URL: "https://laravel.pixelstrap.net/fastkart/api/",
+    OPENAI_API_KEY: "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"
   },
   images: {
     loader: "custom",
@@ -19,8 +20,8 @@ const nextConfig = {
       },
       {
         protocol: "http",
-        hostname: "142.93.64.125:8000",
-        // hostname: "localhost",
+        // hostname: "142.93.64.125:8000",
+        hostname: "localhost",
       },
       {
         protocol: "https",
