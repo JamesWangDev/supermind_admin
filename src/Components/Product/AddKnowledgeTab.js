@@ -10,11 +10,12 @@ const AddKnowledgeTab = ({ values, setFieldValue, errors, updateId }) => {
   const { i18Lang } = useContext(I18NextContext);
   const { accountData } = useContext(AccountContext)
   const { t } = useTranslation(i18Lang, 'common');
+  const [appState, setAppState] = useState('upload')
 
   return (
     <>
-      <FileUpload />
-      <ChatEngine />
+      {appState === "upload" && <FileUpload />}
+      {appState === "chat" && <ChatEngine />}
     </>
   );
 };

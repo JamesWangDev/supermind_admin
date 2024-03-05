@@ -1,8 +1,8 @@
 const ChunkSizingSlider = ({ chunkSize, handleSliderMovement }) => {
     return (
-        <div className="ChunkSizingSlider">
-        <div className="mt-3 text-center">Select chunk size.</div>
-        <div className="chunk-range p-4">
+        <div className="chunk-sizing-slider">
+        <div className="chunk-sizing-label">Select chunk size.</div>
+        <div className="chunk-range">
             <input 
                 className="w-full accent-indigo-600" 
                 type="range" 
