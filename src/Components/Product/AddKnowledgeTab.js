@@ -3,20 +3,18 @@ import I18NextContext from "@/Helper/I18NextContext";
 import { useTranslation } from "@/app/i18n/client";
 import ChatEngine from "./ChatEngine";
 import FileUpload from "./FileUpload";
+import AccountContext from "../../Helper/AccountContext";
 import { Row } from "reactstrap";
 
 const AddKnowledgeTab = ({ values, setFieldValue, errors, updateId }) => {
   const { i18Lang } = useContext(I18NextContext);
+  const { accountData } = useContext(AccountContext)
   const { t } = useTranslation(i18Lang, 'common');
 
   return (
     <>
-      <Row sm={9}>
-          <FileUpload />
-      </Row>
-      <Row sm={9}>
-        <ChatEngine />
-      </Row>
+      <FileUpload />
+      <ChatEngine />
     </>
   );
 };
