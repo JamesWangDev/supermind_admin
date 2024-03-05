@@ -10,6 +10,7 @@ import LLMTool from './PromptAndModelsTabs'
 import AddSuperpowersTab from './AddSuperpowersTab'
 import PersonalityLimitsTab from './PersonalityLimitsTab'
 import PromptAndModels2 from './PromptAndModels2'
+import ChatBox from '../Chat/ChatBox'
 
 const AllProductTabs = ({ values, setFieldValue, errors, updateId, activeTab }) => {
     return (
@@ -36,6 +37,7 @@ const AllProductTabs = ({ values, setFieldValue, errors, updateId, activeTab }) 
                 <TabPane tabId="7">
                     {/* <OptionsTab /> */}
                 </TabPane>
+                <ChatBox values={values} activeTab={activeTab} />
             </TabContent>
         </Col>
     )
