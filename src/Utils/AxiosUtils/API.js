@@ -156,3 +156,6 @@ export const QuestionNAnswerAPI = "/question-and-answer"
 
 // ChatGPT API endpoint
 export const ChatGPTAPI = "https://api.openai.com/v1/chat/completions"
+
+// AnyScale API endpoint
+export const AnyScaleAPI = "https://api.endpoints.anyscale.com/v1/chat/completions"

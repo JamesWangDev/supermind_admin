@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import Btn from "@/Elements/Buttons/Btn";
 import { ResetChat } from "./ResetChat";
 
-export const ChatInput = ({ onSend, onReset }) => {
+export const ChatInput = ({ onSend, onReset, loading }) => {
   const [content, setContent] = useState();
 
   const textareaRef = useRef(null);
@@ -51,9 +51,11 @@ export const ChatInput = ({ onSend, onReset }) => {
         rows={1}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
+        disabled={loading}
       />
       <div className="d-flex flex-row align-items-center">
         <button 
+            disabled={loading}
             className="ms-2 btn btn-sm btn-sm-base btn-dark h-100 font-weight-bold rounded-lg bg-light hover:bg-secondary focus:outline-none focus:ring-1 focus:ring-neutral-300"
             onClick={() => handleSend()}>
             Send

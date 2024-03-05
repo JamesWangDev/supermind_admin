@@ -8,7 +8,8 @@ const nextConfig = {
     // API_PROD_URL: "http://localhost:8000/api/",
     API_PROD_URL: "http://142.93.64.125:8000/api/",
     // API_PROD_URL: "https://laravel.pixelstrap.net/fastkart/api/",
-    OPENAI_API_KEY: "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"
+    OPENAI_API_KEY: "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",
+    ANYSCALE_API_KEY: "esecret_4kqwivwxj38wwycqyuglg8ah9q"
   },
   images: {
     loader: "custom",

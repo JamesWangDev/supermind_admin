@@ -4,6 +4,7 @@ import { OpenAIStream } from "@/Utils/OpenAIStream";
 import { useQuery } from "@tanstack/react-query";
 import request from "../../Utils/AxiosUtils";
 import { prompt } from "@/Utils/AxiosUtils/API";
+import { ChatGPTAPI, AnyScaleAPI } from "@/Utils/AxiosUtils/API";
 
 export default function ChatBox({activeTab, values}) {
   const [messages, setMessages] = useState([]);
@@ -29,6 +30,18 @@ export default function ChatBox({activeTab, values}) {
     const promptTexts = selectedPrompts.map(prom => ({role: "user", content: prom.prompt_text}))
     const updatedMessages = [...messages, message];
 
+    const getModelandAPI = (model) => {
+        if (model.includes("gpt")) {
+            return {model: model, api: ChatGPTAPI, api_key: process.env.OPENAI_API_KEY};
+        }
+        if (model.includes("anyscale")) {
+            return {model: model.replace("anyscale-", ""), api: AnyScaleAPI, api_key: process.env.ANYSCALE_API_KEY}
+        }
+        return {model: model, api: ChatGPTAPI, api_key: process.env.OPENAI_API_KEY};
+    }
+
+    const {model, api, api_key} = getModelandAPI(values["gpt_model"])
+
     setMessages(updatedMessages);
     setLoading(true);
 
@@ -51,23 +64,29 @@ export default function ChatBox({activeTab, values}) {
             messagesToSend.push(message);
         }
 
-        const stream = await OpenAIStream(messagesToSend);
-
-        const data = stream;
-
-        if (!data) {
-          return;
-        }
-
-        setMessages((messages) => [
-            ...messages,
-            {
-            role: "assistant",
-            content: data,
-            },
-        ]);
-    
-        setLoading(false);
+        OpenAIStream(messagesToSend, model, api, api_key)
+            .then(response => {
+                setMessages((messages) => [
+                    ...messages,
+                    {
+                    role: "assistant",
+                    content: response,
+                    },
+                ]);
+            
+                setLoading(false);
+            })
+            .catch(error => {
+                setLoading(false);
+                alert("Error while fetching from API!")
+                setMessages((messages) => [
+                    ...messages,
+                    {
+                    role: "assistant",
+                    content: "Fetch Error...",
+                    },
+                ]);
+            })
     } catch (error) {
         console.error(error);
         setLoading(false);

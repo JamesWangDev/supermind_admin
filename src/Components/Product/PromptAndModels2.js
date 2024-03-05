@@ -46,6 +46,26 @@ const modelChoiceItems = [
   {
     name: "gpt-4-vision-preview",
     id: "gpt-4-vision-preview",
+  },
+  {
+    name: "anyscale-google/gemma-7b-it",
+    id: "anyscale-google/gemma-7b-it",
+  },
+  {
+    name: "anyscale-meta-llama/Llama-2-7b-chat-hf",
+    id: "anyscale-meta-llama/Llama-2-7b-chat-hf",
+  },
+  {
+    name: "anyscale-codellama/CodeLlama-70b-Instruct-hf",
+    id: "anyscale-codellama/CodeLlama-70b-Instruct-hf",
+  },
+  {
+    name: "anyscale-mistralai/Mistral-7B-Instruct-v0.1",
+    id: "anyscale-mistralai/Mistral-7B-Instruct-v0.1",
+  },
+  {
+    name: "anyscale-mlabonne/NeuralHermes-2.5-Mistral-7B",
+    id: "anyscale-mlabonne/NeuralHermes-2.5-Mistral-7B",
   }
 ];
 

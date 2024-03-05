@@ -1,7 +1,6 @@
 import { ChatInput } from "./ChatInput";
 import { ChatLoader } from "./ChatLoader";
 import { ChatMessage } from "./ChatMessage";
-import { ResetChat } from "./ResetChat";
 
 export const Chat = ({ messages, loading, onSend, onReset }) => {
   return (
@@ -23,7 +22,7 @@ export const Chat = ({ messages, loading, onSend, onReset }) => {
         )}
 
         <div className="mt-4 mt-sm-8 bottom-56px left-0 w-100">
-          <ChatInput onSend={onSend} onReset={onReset} />
+          <ChatInput loading={loading} onSend={onSend} onReset={onReset} />
         </div>
       </div>
     </>
