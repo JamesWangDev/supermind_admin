@@ -1,13 +1,34 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
+import TypeAheadDropDown from "../InputFields/TypeAheadDropdown";
+import ToggleSwitch from '../InputFields/Toggleswitch';
+import AccountContext from "../../Helper/AccountContext";
+import ChunkSizingSlider from './ChunkSizingSlider';
+import { Row } from "reactstrap";
 
 const FileUpload = () => {
+    const { accountData } = useContext(AccountContext)
+    const [isChecked, setIsChecked] = useState(true)
+    const [isPublic, setIsPublic] = useState(false)
+    const [doesPartitionAlreadyExist, setDoesPartitionAlreadyExist] = useState(false)
     const [apiResponseMessageObject, setApiResponseMessageObject] = useState({ message: '', type: '' })
+    const [partitions, setPartitions] = useState([])
+    const [currentPartition, setCurrentPartition] = useState('')
     const [inputObject, setInputObject] = useState({
-        partitionName: '',
         file: '',
         content: '',
+        description: '',
+        chunkSize: 512
     })
     let fileReader
+    const regex = new RegExp(`^${currentPartition}`, `i`);
+
+    useEffect(() => {
+        if (accountData && accountData.id) {
+            fetch(`https://supermind-n396.onrender.com/partitions/${accountData.id}`)
+                .then(resp => resp.json())
+                .then(data => setPartitions(data))
+        }
+    }, [])
 
     useEffect(() => {
         if (inputObject.file) {
@@ -17,30 +38,77 @@ const FileUpload = () => {
         } 
     }, [inputObject.file])
 
+    useEffect(() => {
+        if (!isChecked && partitions.filter(((part) => part.partition_name === currentPartition)).length > 0) {
+            setDoesPartitionAlreadyExist(true)
+        } else {
+            setDoesPartitionAlreadyExist(false) 
+        }
+    }, [isChecked])
+
     // Handler for updating input fields
     const handleChange = (event, key) => {
+        console.log({event, key})
         const newInputObject = { ...inputObject, [key]: event.target.value }
         setInputObject(newInputObject)
+    }
+
+    const setPartitionName = name => {
+        setCurrentPartition(name)
+        const matchingPartitions = partitions.filter((n) => n.partition_name.toLowerCase() === name.toLowerCase())
+        if (isChecked && matchingPartitions.length > 0) {
+            const desc = matchingPartitions[0].partition_description
+            console.log({desc})
+            const newInputObject = { ...inputObject, "description": desc }
+            setInputObject(newInputObject)
+        } else if (!isChecked && matchingPartitions.length > 0) {
+            setDoesPartitionAlreadyExist(true)
+        } else (
+            setDoesPartitionAlreadyExist(false)
+        )
     }
 
     const handleFileRead = (e) => {
         const content = fileReader.result
         setInputObject({ ...inputObject, content })
-      };
+    };
+
+    const handleSliderMovement = (e) => {
+        const newInputObject = { ...inputObject, "chunkSize": e.target.value }
+        setInputObject(newInputObject)
+    }
 
     // Handle uploading of the file
     const uploadFile = (e) => {
         e.preventDefault()
         let file = e.target.files[0];
+        console.log({file})
         const newInputObject = { ...inputObject, "file": file }
         setInputObject(newInputObject)
     }
 
+    const updatePartitionDatabase = () => {
+        fetch('https://supermind-n396.onrender.com/partition', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "partition_name": currentPartition,
+                'partition_description': inputObject.description,
+                'partition_summary': 'The summary for this partition is currently unavailable',
+                'is_public': isPublic,
+                'created_by_user_id': 1
+            })
+        }).then(res => res.json()).then(data => console.log({data}))
+      }
+
     // Put request to /document with the partition name and content
     const putFile = async (inputObject) => {
         const url = "https://supermind-n396.onrender.com/document"
-        const partitionName = `${inputObject.partitionName}:${inputObject.file.name}`
+        const partitionName = `${currentPartition}:${inputObject.file.name}`
     
+
         const payload = {
             'content': inputObject.content,
             'partition_name': partitionName,
@@ -57,6 +125,9 @@ const FileUpload = () => {
             })
             .then(res => res.json())
             .then(() => {
+                if (!isChecked) {
+                    updatePartitionDatabase()
+                }
                 setApiResponseMessageObject({
                     message:`Successfully uploaded file ${inputObject.file.name}`,
                     type: 'success'
@@ -72,10 +143,36 @@ const FileUpload = () => {
 
     return (
         <>
-            <div className="mt-3">
-                <label className="block text-base mb-2">Enter a partition name. Or choose one from the dropdown.</label>
-                <input className="border w-full text-base px-2 py-1 focus:outline-none focus:ring-0 focus:border-gray-600 rounded-md" placeholder="Enter name" value={inputObject.partitionName} onChange={e => handleChange(e, "partitionName")} />
+            {/* Checkbox to indicate if this is a new partition or not */}
+            <div className="checkbox-wrapper">
+                <label>
+                    <input type="checkbox" checked={isChecked} onChange={() => setIsChecked((prev) => !prev)} />
+                    <span>{'Select an Existing Partition'}</span>
+                </label>
             </div>
+            {/* Component to select an old partition, or select a new one */}
+            <TypeAheadDropDown 
+                items={isChecked ? partitions.map(part => part.partition_name).sort().filter(v => regex.test(v)) : []} 
+                message={isChecked ? 'Select a partition' : 'Enter a new partition'} 
+                onChange={e => setPartitionName(e)} 
+                partitionName={currentPartition}
+            />
+            {/* Error message if New Partition is selected, but partition name already exists */}
+            {doesPartitionAlreadyExist && <div>{`${currentPartition} already exists. Please enter a new partition name.`}</div>}
+            {/* A toggle to allow the user to make their partition public */}
+            <div className="toggle-wrapper">
+                <div>Make Public?</div>
+                <ToggleSwitch 
+                    label="Make Public?" 
+                    checked={isChecked && partitions.filter(part => part.partition_name === currentPartition).length > 0 
+                                ? partitions.filter(part => part.partition_name === currentPartition)[0].is_public 
+                                : isPublic
+                            } 
+                    disabled={isChecked}
+                    onToggle={() => setIsPublic((prev) => !prev)}
+                />
+            </div>
+            {/* Component for uploading a file */}
             <div className="mt-3">
                 <label className="block text-base mb-2">Choose a file</label>
                 <div className="mt-3 flex">
@@ -88,13 +185,22 @@ const FileUpload = () => {
                     />
                 </div>
             </div>
+            {/* Partition description. Is disabled if this is an existing partition */}
+            {(!isChecked || inputObject.description.length > 0) && <Row>
+                <label>Enter a description for your partition below</label>
+                <textarea value={inputObject.description} disabled={isChecked} className="NewPartitionDescription" onChange={e => handleChange(e, "description")}/>
+            </Row>}
+            {/* Chunk slider component for determining chunk sizes */}
+            <ChunkSizingSlider chunkSize={inputObject.chunkSize} handleSliderMovement={handleSliderMovement}/>
+            {/* Upload Button */}
             <button 
-                disabled={!inputObject.partitionName.length || !inputObject.file || !inputObject.file.name}
+                disabled={!currentPartition || !inputObject.file || !inputObject.file.name || doesPartitionAlreadyExist}
                 className="mt-3"
                 onClick={() => putFile(inputObject)}
             >
             Upload
             </button>
+            {/* Display API Response */}
             {apiResponseMessageObject.message.length > 0 && <div>{apiResponseMessageObject.message}</div>}
         </>
     )
