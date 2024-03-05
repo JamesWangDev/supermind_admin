@@ -19,7 +19,7 @@ export default function ChatBox({activeTab, values}) {
         const selectedPromptData = promptData.data.filter(data => values['prompts'].includes(data.id));
         setSelectedPrompts(selectedPromptData)
     }
-  }, [promptLoader, promptData])
+  }, [promptLoader, promptData, values['prompts']])
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
