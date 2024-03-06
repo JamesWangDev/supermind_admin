@@ -64,11 +64,9 @@ const ImageUploadFieldGPT = ({ values, updateId, setFieldValue, errors, multiple
 
   async function getImageBlobFromURL(url) {
         //Fetch image data from url 
-        const imageData = await fetch(url, 
-        // {headers: {
-        //     'x-cors-api-key': "temp_368b76b526936e794eb3e109cc7fb026"
-        // }}
-        );
+        const imageData = await fetch('https://proxy.cors.sh/' + url, {headers: {
+            'x-cors-api-key': "temp_368b76b526936e794eb3e109cc7fb026"
+        }});
         //Create blob of image data
         const imageBlob = await imageData.blob();
         return new File([imageBlob], `${values['name']}.png`, { type: "image/png" });
@@ -83,9 +81,9 @@ const ImageUploadFieldGPT = ({ values, updateId, setFieldValue, errors, multiple
             alert("Please enter short description...");
             return;
         }
-        const prompt = values['name'] + values['short_description'] + values['description']
+        const prompt = values['name'] + "\n" + values['short_description'] + "\n" + values['description']
         setIsImgGenerating(true);
-        const response = await axios.post('https://api.openai.com/v1/images/generations', {
+        const response = await axios.post('https://proxy.cors.sh/'+'https://api.openai.com/v1/images/generations', {
           prompt: prompt,
           model: 'dall-e-2',
           response_format: "url",
@@ -95,7 +93,7 @@ const ImageUploadFieldGPT = ({ values, updateId, setFieldValue, errors, multiple
           headers: {
             'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
             'Content-Type': 'application/json',
-            // 'x-cors-api-key': "temp_368b76b526936e794eb3e109cc7fb026"
+            'x-cors-api-key': "temp_368b76b526936e794eb3e109cc7fb026"
           }
         });
 
