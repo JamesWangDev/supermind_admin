@@ -81,6 +81,10 @@ const ImageUploadFieldGPT = ({ values, updateId, setFieldValue, errors, multiple
             alert("Please enter short description...");
             return;
         }
+        if(!values['description']) {
+            alert("Please enter description...");
+            return;
+        }
         const prompt = values['name'] + "\n" + values['short_description'] + "\n" + values['description']
         setIsImgGenerating(true);
         const response = await axios.post('https://proxy.cors.sh/'+'https://api.openai.com/v1/images/generations', {
