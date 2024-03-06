@@ -11,6 +11,15 @@ const AddKnowledgeTab = ({ values, setFieldValue, errors, updateId }) => {
   const { t } = useTranslation(i18Lang, 'common');
   const [appState, setAppState] = useState('upload')
   const [disableSummary, setDisableSummary] = useState(true)
+  const [partitions, setPartitions] = useState([])
+
+  useEffect(() => {
+    // if (accountData && accountData.id) {
+        fetch(`https://supermind-n396.onrender.com/partitions/1`)
+            .then(resp => resp.json())
+            .then(data => setPartitions(data))
+    // }
+}, [])
 
   return (
     <>
@@ -21,8 +30,8 @@ const AddKnowledgeTab = ({ values, setFieldValue, errors, updateId }) => {
         <div>———</div>
         <div className="kb-tab" onClick={() => setAppState("chat")}>Chat!</div>
       </div>
-      {appState === "upload" && <FileUpload />}
-      {appState === "chat" && <ChatEngine />}
+      {appState === "upload" && <FileUpload partitions={partitions} />}
+      {appState === "chat" && <ChatEngine partitions={partitions} />}
     </>
   );
 };

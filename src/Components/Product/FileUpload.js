@@ -1,17 +1,14 @@
 import { useEffect, useState, useContext } from 'react'
 import TypeAheadDropDown from "../InputFields/TypeAheadDropdown";
 import ToggleSwitch from '../InputFields/Toggleswitch';
-import AccountContext from "../../Helper/AccountContext";
 import ChunkSizingSlider from './ChunkSizingSlider';
 import { Row } from "reactstrap";
 
-const FileUpload = () => {
-    const { accountData } = useContext(AccountContext)
+const FileUpload = ({ partitions }) => {
     const [isChecked, setIsChecked] = useState(true)
     const [isPublic, setIsPublic] = useState(false)
     const [partitionStatus, setPartitionStatus] = useState({ status: '', message: '' })
     const [apiResponseMessageObject, setApiResponseMessageObject] = useState({ message: '', type: '' })
-    const [partitions, setPartitions] = useState([])
     const [currentPartition, setCurrentPartition] = useState('')
     const [inputObject, setInputObject] = useState({
         file: '',
@@ -20,15 +17,6 @@ const FileUpload = () => {
         chunkSize: 512
     })
     let fileReader
-
-
-    useEffect(() => {
-        // if (accountData && accountData.id) {
-            fetch(`https://supermind-n396.onrender.com/partitions/1`)
-                .then(resp => resp.json())
-                .then(data => setPartitions(data))
-        // }
-    }, [])
 
     useEffect(() => {
         if (inputObject.file) {

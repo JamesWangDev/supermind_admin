@@ -19,7 +19,6 @@ const TypeAheadDropDown = ({ items, message, onChange }) => {
 
     const onTextChange = (e) => {
         const value = e.target.value;
-        console.log({value, text, suggestions})
         const regex = new RegExp(`^${value}`, `i`);
         const newSuggestions = items.sort().filter(v => regex.test(v));
         setText(value)
