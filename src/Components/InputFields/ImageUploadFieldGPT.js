@@ -35,8 +35,13 @@ const ImageUploadFieldGPT = ({ values, updateId, setFieldValue, errors, multiple
   }, [props?.uniquename, loading, showImage]);
   useEffect(() => {
     if(!isLoading && attachedImg) {
-        setFieldValue(props?.name, attachedImg.data[0].id);
-        storeImageObject && setFieldValue(storeImageObject, attachedImg.data[0]);
+        if(multiple) {
+            setFieldValue(props?.name, [attachedImg.data[0].id]);
+            setSelectedImage(attachedImg.data);
+        } else {
+            setFieldValue(props?.name, attachedImg.data[0].id);
+            storeImageObject && setFieldValue(storeImageObject, attachedImg.data[0]);
+        }
     }
   }, [isLoading, attachedImg])
 
