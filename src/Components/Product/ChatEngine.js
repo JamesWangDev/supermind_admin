@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react'
-import TypeAheadDropDown from '../InputFields/TypeAheadDropdown'
 
-const ChatEngine = ({ partitions }) => {
+const ChatEngine = ({ partitions, currentPartition }) => {
     const [query, setQuery] = useState('')
     const [queryResults, setQueryResults] = useState([])
-    const [currentPartition, setCurrentPartition] = useState('')
     const [partitionStatus, setPartitionStatus] = useState('invalid')
 
     useEffect(() => {
@@ -18,13 +16,6 @@ const ChatEngine = ({ partitions }) => {
         setQuery(textQuery)
     }
 
-    const handlePartitionEnter = name => {
-        setCurrentPartition(name)
-        partitions.map(p => p.partition_name).filter(name => name === name).length > 0 
-            ? setPartitionStatus('valid') 
-            : setPartitionStatus('invalid')
-    }
-
     const queryChatEngine = () => {
         const newResults = [...queryResults, query]
         fetch("https://supermind-n396.onrender.com/chat", {
@@ -34,6 +25,7 @@ const ChatEngine = ({ partitions }) => {
             },
             body: JSON.stringify({
                 'query': query,
+                'partition_name': currentPartition
             })
         })
         .then(res => res.json())
@@ -50,16 +42,7 @@ const ChatEngine = ({ partitions }) => {
 
     return (
         <>
-            <div style={{ display: 'block', width: '100%' }}>
-                {/* Component to select an old partition, or select a new one */}
-                <TypeAheadDropDown 
-                    items={partitions.map(part => part.partition_name)} 
-                    message={'Select a partition'} 
-                    onChange={handlePartitionEnter}
-                />
-                {/* Error message if New Partition is selected, but partition name already exists */}
-                {partitionStatus === 'invalid' && <div>{'Please select a valid partition'}</div>}
-            </div>
+            <div>{`Chatting about ${currentPartition}`}</div>
             <div className="mt-3">
                 <label className="block text-base mb-2">Enter a query.</label>
                 <div className="mt-3 flex">
