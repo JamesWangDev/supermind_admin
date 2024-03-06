@@ -11,7 +11,7 @@ export const ProductValidationSchema = {
   // quantity: ifTypeSimpleSchema,
   // price: ifTypeSimpleSchema, // if (type == simple)
   // discount: discountSchema, // if (type == simple)
-  // categories: dropDownScheme,
+  categories: dropDownScheme,
   // tax_id: nameSchema,
   // variations: variationSchema
 };
