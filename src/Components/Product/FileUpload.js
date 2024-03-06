@@ -4,7 +4,7 @@ import ToggleSwitch from '../InputFields/Toggleswitch';
 import ChunkSizingSlider from './ChunkSizingSlider';
 import { Row } from "reactstrap";
 
-const FileUpload = ({ partitions }) => {
+const FileUpload = ({ partitions, setAppState, setSummary }) => {
     const [isChecked, setIsChecked] = useState(true)
     const [isPublic, setIsPublic] = useState(false)
     const [partitionStatus, setPartitionStatus] = useState({ status: '', message: '' })
@@ -48,7 +48,7 @@ const FileUpload = ({ partitions }) => {
             const desc = matchingPartitions[0].partition_description
             const newInputObject = { ...inputObject, "description": desc }
             setInputObject(newInputObject)
-            setPartitionStatus({ status: 'validNewPartition', message: '' })
+            setPartitionStatus({ status: 'validExistingPartition', message: '' })
         } else if (isChecked && matchingPartitions.length === 0) {
             const newInputObject = { ...inputObject, "description": '' }
             setInputObject(newInputObject)
@@ -100,7 +100,7 @@ const FileUpload = ({ partitions }) => {
         const url = "https://supermind-n396.onrender.com/document"
         const partitionName = `${currentPartition}:${inputObject.file.name}`
     
-
+        setAppState("summary")
         const payload = {
             'content': inputObject.content,
             'partition_name': partitionName,
@@ -116,7 +116,7 @@ const FileUpload = ({ partitions }) => {
                 body: JSON.stringify(payload)
             })
             .then(res => res.json())
-            .then(() => {
+            .then((data) => {
                 if (!isChecked) {
                     updatePartitionDatabase()
                 }
@@ -124,6 +124,7 @@ const FileUpload = ({ partitions }) => {
                     message:`Successfully uploaded file ${inputObject.file.name}`,
                     type: 'success'
                 })
+                setSummary(data)
             })
         } catch (error) {
             setApiResponseMessageObject({
@@ -132,8 +133,6 @@ const FileUpload = ({ partitions }) => {
             })
         }
     }
-
-    console.log({currentPartition})
 
     return (
         <>
@@ -191,7 +190,12 @@ const FileUpload = ({ partitions }) => {
             <ChunkSizingSlider chunkSize={inputObject.chunkSize} handleSliderMovement={handleSliderMovement}/>
             {/* Upload Button */}
             <button 
-                disabled={!currentPartition || !inputObject.file || !inputObject.file.name || doesPartitionAlreadyExist}
+                disabled={
+                    !currentPartition || 
+                    !inputObject.file || 
+                    !inputObject.file.name || 
+                    (partitionStatus.status === 'invalidExistingName' || partitionStatus.status === 'alreadyExists')
+                }
                 className="mt-3"
                 onClick={() => putFile(inputObject)}
             >
