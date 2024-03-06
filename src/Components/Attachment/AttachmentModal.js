@@ -68,6 +68,7 @@ const AttachmentModal = (props) => {
                                     Object.values(values.attachments).forEach((el, i) => {
                                         formData.append(`attachments[${i}]`, el);
                                     });
+                                    console.log(formData, "jkldsfjkdsjfljdfl")
                                     mutate(formData);
                                 }}>
                                 {({ values, setFieldValue, errors }) => (

@@ -79,6 +79,7 @@ const FileUploadBrowser = ({ values, setFieldValue, dispatch, ...props }) => {
         if (event.currentTarget.files.length > 5) {
             return ToastNotification('error', `You've reached 5 file maximum.`)
         } else {
+            console.log(event.currentTarget.files[0], "lskdfjlksdjfkjsdfj")
             setFieldValue(props.name, props.multiple ? addFileFromFileList(event.currentTarget.files) : event.currentTarget.files[0], props.index);
         }
     }

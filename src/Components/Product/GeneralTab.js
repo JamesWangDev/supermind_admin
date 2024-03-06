@@ -10,6 +10,8 @@ import SettingContext from "../../Helper/SettingContext";
 import I18NextContext from "@/Helper/I18NextContext";
 import { useTranslation } from "@/app/i18n/client";
 import MultiSelectField from "../InputFields/MultiSelectField";
+import ImageUploadFieldGPT from "../InputFields/ImageUploadFieldGPT";
+import { getHelperText } from "@/Utils/CustomFunctions/getHelperText";
 
 const GeneralTab = ({ values, setFieldValue, errors, updateId }) => {
   const { i18Lang } = useContext(I18NextContext);
@@ -18,10 +20,13 @@ const GeneralTab = ({ values, setFieldValue, errors, updateId }) => {
   const { data: StoreData } = useQuery([store], () => request({ url: store, params: { status: 1 } }), { refetchOnWindowFocus: false, select: (data) => data.data.data.map((item) => ({ id: item.id, name: item.store_name })) });
   // Getting Category Data with type products
   const { data: categoryData } = useQuery([Category], () => request({ url: Category, params: { type: "product" } }), { refetchOnWindowFocus: false, select: (data) => data.data.data });
+
+  console.log(values, "klsdfjklsdjfjsdf")
   return (
     <>
       <SimpleInputField nameList={[{ name: "name", require: "true", placeholder: t("EnterName") }, { name: "short_description", require: "true", title: "ShortDescription", type: "textarea", rows: 3, placeholder: t("EnterShortDescription"), helpertext: "*Maximum length should be 300 characters." }]} />
       <DescriptionInput values={values} setFieldValue={setFieldValue} title={t('Description')} nameKey="description" errorMessage={"Descriptionisrequired"} />
+      <ImageUploadFieldGPT errors={errors} name="product_thumbnail_id" id="product_thumbnail_id" title="Thumbnail" type="file" values={values} setFieldValue={setFieldValue} updateId={updateId} helpertext={getHelperText('600x600px')} />
       <CheckBoxField name="is_picture" title="picture" />
       {state?.isMultiVendor && <SearchableSelectInput
         nameList={[
