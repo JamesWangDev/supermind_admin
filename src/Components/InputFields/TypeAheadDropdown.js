@@ -1,26 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const TypeAheadDropDown = ({ items, message, onChange, partitionName }) => {
+const TypeAheadDropDown = ({ items, message, onChange }) => {
     const [showSuggestions, setShowSuggestions] = useState(false)
+    const [suggestions, setSuggestions] = useState(items)
+    const [text, setText] = useState('')
+    
+    useEffect(() => {
+        if (items.length) {
+            const regex = new RegExp(`^${text}`, `i`);
+            const newSuggestions = items.sort().filter(v => regex.test(v));
+            setSuggestions(newSuggestions)
+        }
+    }, [items])
+
+    useEffect(() => {
+        setSuggestions(items)
+    }, [message])
 
     const onTextChange = (e) => {
-        e.preventDefault()
         const value = e.target.value;
-        if (value.length > 0) {
-            onChange(value)
-        } else {
-            onChange(value)
-        }
+        const regex = new RegExp(`^${value}`, `i`);
+        const newSuggestions = items.sort().filter(v => regex.test(v));
+        setText(value)
+        setSuggestions(newSuggestions)
+        onChange(value)
     }
     
+    
     const renderSuggestions = () => {
-        if (items.length === 0) {
+        if (suggestions.length === 0) {
             return null;
         }
 
         return (
             <ul>
-                {items.map(suggestion => <li key={suggestion} onClick={()=> onChange(suggestion)}>{suggestion}</li>)}
+                {suggestions.map(suggestion => <li key={Math.random()} onClick={()=> {
+                    setText(suggestion)
+                    setShowSuggestions(false)
+                    onChange(suggestion)
+                }}>{suggestion}</li>)}
             </ul>
         )
     }
@@ -31,7 +49,7 @@ const TypeAheadDropDown = ({ items, message, onChange, partitionName }) => {
             <input 
                 onChange={e => onTextChange(e)} 
                 placeholder={message}
-                value={partitionName} 
+                value={text} 
                 type="text" 
                 onClick={() => setShowSuggestions(!showSuggestions)}
             />
