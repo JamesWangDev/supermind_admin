@@ -21,7 +21,6 @@ const GeneralTab = ({ values, setFieldValue, errors, updateId }) => {
   // Getting Category Data with type products
   const { data: categoryData } = useQuery([Category], () => request({ url: Category, params: { type: "product" } }), { refetchOnWindowFocus: false, select: (data) => data.data.data });
 
-  console.log(values, "klsdfjklsdjfjsdf")
   return (
     <>
       <SimpleInputField nameList={[{ name: "name", require: "true", placeholder: t("EnterName") }, { name: "short_description", require: "true", title: "ShortDescription", type: "textarea", rows: 3, placeholder: t("EnterShortDescription"), helpertext: "*Maximum length should be 300 characters." }]} />
