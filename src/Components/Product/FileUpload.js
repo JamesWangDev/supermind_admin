@@ -61,7 +61,7 @@ const FileUpload = () => {
             const newInputObject = { ...inputObject, "description": desc }
             setInputObject(newInputObject)
             setPartitionStatus({ status: 'validNewPartition', message: '' })
-        } else if (isChecked && !matchingPartitions.length) {
+        } else if (isChecked && matchingPartitions.length === 0) {
             const newInputObject = { ...inputObject, "description": '' }
             setInputObject(newInputObject)
             setPartitionStatus({ status: 'invalidExistingName', message: 'Please choose a valid existing partition' })

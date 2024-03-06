@@ -4,16 +4,23 @@ import { useTranslation } from "@/app/i18n/client";
 import ChatEngine from "./ChatEngine";
 import FileUpload from "./FileUpload";
 import AccountContext from "../../Helper/AccountContext";
-import { Row } from "reactstrap";
 
 const AddKnowledgeTab = ({ values, setFieldValue, errors, updateId }) => {
   const { i18Lang } = useContext(I18NextContext);
   const { accountData } = useContext(AccountContext)
   const { t } = useTranslation(i18Lang, 'common');
   const [appState, setAppState] = useState('upload')
+  const [disableSummary, setDisableSummary] = useState(true)
 
   return (
     <>
+      <div className="knowledge-tab-navigation">
+        <div className="kb-tab" onClick={() => setAppState("upload")}>Upload a File</div>
+        <div>———</div>
+        <div className={`kb-tab${disableSummary ? '-disabled' : ''}`} onClick={() => disableSummary ? {} : setAppState("summary")}>Review Summary</div>
+        <div>———</div>
+        <div className="kb-tab" onClick={() => setAppState("chat")}>Chat!</div>
+      </div>
       {appState === "upload" && <FileUpload />}
       {appState === "chat" && <ChatEngine />}
     </>

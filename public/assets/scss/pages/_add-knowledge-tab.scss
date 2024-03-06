@@ -172,3 +172,18 @@
       }
     }
   }
+
+  .knowledge-tab-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 10px 45px 10px;
+  }
+
+  .kb-tab:hover {
+    color:rgb(206, 200, 200);
+    cursor: pointer;
+  }
+
+  .kb-tab-disabled {
+    color:rgb(161, 157, 157);
+  }

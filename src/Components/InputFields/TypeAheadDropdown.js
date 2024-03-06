@@ -38,6 +38,7 @@ const TypeAheadDropDown = ({ items, message, onChange }) => {
                 {suggestions.map(suggestion => <li key={Math.random()} onClick={()=> {
                     setText(suggestion)
                     setShowSuggestions(false)
+                    onChange(suggestion)
                 }}>{suggestion}</li>)}
             </ul>
         )
