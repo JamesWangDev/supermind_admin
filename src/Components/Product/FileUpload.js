@@ -4,12 +4,11 @@ import ToggleSwitch from '../InputFields/Toggleswitch';
 import ChunkSizingSlider from './ChunkSizingSlider';
 import { Row } from "reactstrap";
 
-const FileUpload = ({ partitions, setAppState, setSummary }) => {
+const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, setCurrentPartition }) => {
     const [isChecked, setIsChecked] = useState(true)
     const [isPublic, setIsPublic] = useState(false)
     const [partitionStatus, setPartitionStatus] = useState({ status: '', message: '' })
     const [apiResponseMessageObject, setApiResponseMessageObject] = useState({ message: '', type: '' })
-    const [currentPartition, setCurrentPartition] = useState('')
     const [inputObject, setInputObject] = useState({
         file: '',
         content: '',

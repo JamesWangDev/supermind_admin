@@ -13,6 +13,7 @@ const AddKnowledgeTab = ({ values, setFieldValue, errors, updateId }) => {
   const [appState, setAppState] = useState('upload')
   const [disableSummary, setDisableSummary] = useState(true)
   const [partitions, setPartitions] = useState([])
+  const [currentPartition, setCurrentPartition] = useState('')
   const [summary, setSummary] = useState('')
 
   useEffect(() => {
@@ -37,9 +38,15 @@ const AddKnowledgeTab = ({ values, setFieldValue, errors, updateId }) => {
         <div>———</div>
         <div className="kb-tab" onClick={() => setAppState("chat")}>Chat!</div>
       </div>
-      {appState === "upload" && <FileUpload partitions={partitions} setAppState={setAppState} setSummary={setSummary} />}
+      {appState === "upload" && 
+                    <FileUpload partitions={partitions} 
+                      setAppState={setAppState} 
+                      setSummary={setSummary} 
+                      currentPartition={currentPartition} 
+                      setCurrentPartition={setCurrentPartition}
+                    />}
       {appState === "summary" && <KnowledgeSummaryPage summary={summary} setAppState={setAppState} />}
-      {appState === "chat" && <ChatEngine partitions={partitions} />}
+      {appState === "chat" && <ChatEngine partitions={partitions} currentPartition={currentPartition} />}
     </>
   );
 };
