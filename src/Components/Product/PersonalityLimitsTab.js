@@ -90,7 +90,7 @@ const PersonalityLimitsTab = ({ values, setFieldValue }) => {
       /> */}
       <CheckBoxField name="is_use_username" title="Use Users Name ?" />
       <SimpleInputField nameList={[
-        {name: "conversation_limits", type: "number", placeholder: t("Enter the Conversation Limits"), title: "Conversation Limits", helpertext: ""},
+        {name: "conversation_limits", type: "textarea", rows: 3, placeholder: t("Enter the Conversation Limits"), title: "Conversation Limits", helpertext: ""},
         { name: "llm_prompt", require: "false", title: "Generated Prompt from your personality", type: "textarea", rows: 7, placeholder: t("Generated Prompt from your personality. But you can edit it as you need."), helpertext: "" }
       ]} />
       {/* <SearchableSelectInput
