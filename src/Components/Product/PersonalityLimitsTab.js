@@ -28,7 +28,6 @@ const PersonalityLimitsTab = ({ values, setFieldValue }) => {
   const { i18Lang } = useContext(I18NextContext);
   const { t } = useTranslation(i18Lang, 'common');
   const { state } = useContext(SettingContext);
-  const [llmPrompt, setLlmPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const generatePrompt = () => {
@@ -40,7 +39,7 @@ const PersonalityLimitsTab = ({ values, setFieldValue }) => {
     setIsLoading(true)
 
     const prompts = [
-      {role: "user", content: "Generate a prompt to cause an LLM to follow these guidelines in its responses."},
+      {role: "user", content: "You are a prompt writing LLM. You write prompts to cause other LLMs to behave in particular ways. Use the following guidelines to create a prompt that forces another LLM to behave according to these guidelines."},
       {role: "user", content: `Personality: ${values['personality_desc']}`},
       {role: "user", content: `Length of Responses: ${values['res_length']}`},
       {role: "user", content: `Will use user name ?: ${values['is_use_username'] ? "yes" : "no"}`},
@@ -49,7 +48,6 @@ const PersonalityLimitsTab = ({ values, setFieldValue }) => {
 
     OpenAIStream(prompts, "gpt-4-turbo-preview", ChatGPTAPI, process.env.OPENAI_API_KEY)
       .then(response => {
-          setLlmPrompt(response)
           setFieldValue("llm_prompt", response)
           setIsLoading(false)
       })
