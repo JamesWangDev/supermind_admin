@@ -5,10 +5,10 @@ export const OpenAIStream = async (messages, model, api, api_key) => {
         axios.post(api, {
             model: model ? model : "gpt-3.5-turbo",
             messages: [
-            {
-                role: "system",
-                content: `You are a helpful, friendly, assistant.`
-            },
+            // {
+            //     role: "system",
+            //     content: `You are a helpful, friendly, assistant.`
+            // },
             ...messages
             ],
             max_tokens: 800,
