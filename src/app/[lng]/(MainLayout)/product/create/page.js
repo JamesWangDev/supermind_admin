@@ -6,7 +6,7 @@ import { useState } from "react";
 
 const ProductCreate = () => {
   const [resetKey, setResetKey] = useState(false);
-  const { mutate, isLoading } = useCreate(product,false,product,false,
+  const { mutate, isLoading } = useCreate(product,false,false,false,
     (resDta) => {
       if (resDta?.status == 200 || resDta?.status == 201) {
         setResetKey(true);

@@ -37,7 +37,7 @@ const ProductForm = ({ mutate, loading, updateId, title }) => {
     if (updateId) {
       refetch();
     }
-  }, [updateId]);
+  }, [updateId, loading]);
   const watchEvent = useCallback((oldData, updateId) => {
     return ProductInitValues(oldData, updateId)
   }, [oldData, updateId])

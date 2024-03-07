@@ -39,6 +39,7 @@ const ImageUploadFieldGPT = ({ values, updateId, setFieldValue, errors, multiple
             setFieldValue(props?.name, [attachedImg.data[0].id]);
             setSelectedImage(attachedImg.data);
         } else {
+            setFieldValue('product_galleries_id', [attachedImg.data[0].id]);
             setFieldValue(props?.name, attachedImg.data[0].id);
             storeImageObject && setFieldValue(storeImageObject, attachedImg.data[0]);
         }
@@ -142,7 +143,7 @@ const ImageUploadFieldGPT = ({ values, updateId, setFieldValue, errors, multiple
             title="Generate from DALL-E"
             className="btn justify-content-center"
             onClick={generateThumbnail}
-            loading={isImgGenerating}
+            loading={isImgGenerating || isLoading}
         />
       </div>
       {errors?.[props?.name] ? <ErrorMessage name={props.name} render={(msg) => <div className="">{t(handleModifier(storeImageObject).split(' ').join(""))} {t('IsRequired')}</div>} /> : null}
