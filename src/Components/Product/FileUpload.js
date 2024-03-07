@@ -4,7 +4,7 @@ import ToggleSwitch from '../InputFields/Toggleswitch';
 import ChunkSizingSlider from './ChunkSizingSlider';
 import { Row } from "reactstrap";
 
-const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, setCurrentPartition }) => {
+const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, setCurrentPartition, updatePartitions }) => {
     const [isChecked, setIsChecked] = useState(true)
     const [isPublic, setIsPublic] = useState(false)
     const [partitionStatus, setPartitionStatus] = useState({ status: '', message: '' })
@@ -91,7 +91,9 @@ const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, set
                 'is_public': isPublic,
                 'created_by_user_id': 1
             })
-        }).then(res => res.json()).then(data => console.log({data}))
+        })
+        .then(res => res.json())
+        .then(() => updatePartitions())
       }
 
     // Put request to /document with the partition name and content
@@ -123,6 +125,7 @@ const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, set
                     message:`Successfully uploaded file ${inputObject.file.name}`,
                     type: 'success'
                 })
+                setCurrentPartition(currentPartition)
                 setSummary(data)
             })
         } catch (error) {

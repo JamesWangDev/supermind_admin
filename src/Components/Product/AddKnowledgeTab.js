@@ -16,13 +16,15 @@ const AddKnowledgeTab = ({ values, setFieldValue, errors, updateId }) => {
   const [currentPartition, setCurrentPartition] = useState('')
   const [summary, setSummary] = useState('')
 
-  useEffect(() => {
+  useEffect(() => updatePartitions(), [])
+
+  const updatePartitions = () => {
     // if (accountData && accountData.id) {
-        fetch(`https://supermind-n396.onrender.com/partitions/1`)
-            .then(resp => resp.json())
-            .then(data => setPartitions(data))
+      fetch(`https://supermind-n396.onrender.com/partitions/1`)
+          .then(resp => resp.json())
+          .then(data => setPartitions(data))
     // }
-  }, [])
+  }
 
   useEffect(() => appState === "summary" ? setDisableSummary(false) : setDisableSummary(true), [appState])
 
@@ -44,6 +46,7 @@ const AddKnowledgeTab = ({ values, setFieldValue, errors, updateId }) => {
                       setSummary={setSummary} 
                       currentPartition={currentPartition} 
                       setCurrentPartition={setCurrentPartition}
+                      updatePartitions={updatePartitions}
                     />}
       {appState === "summary" && <KnowledgeSummaryPage summary={summary} setAppState={setAppState} />}
       {appState === "chat" && <ChatEngine partitions={partitions} currentPartition={currentPartition} />}
