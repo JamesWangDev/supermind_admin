@@ -39,11 +39,11 @@ const PersonalityLimitsTab = ({ values, setFieldValue }) => {
     setIsLoading(true)
 
     const prompts = [
-      {role: "user", content: "You are a prompt writing LLM. You write prompts to cause other LLMs to behave in particular ways. Use the following guidelines to create a prompt that forces another LLM to behave according to these guidelines."},
+      {role: "user", content: "You are a prompt writing LLM. You write prompts to cause other LLMs to behave in particular ways. Use the following guidelines to create a prompt that forces another LLM to behave according to these guidelines. Make sure to cover 'personality' ' response length' 'users name' and 'topic limits' in your prompt."},
       {role: "user", content: `Personality: ${values['personality_desc']}`},
-      {role: "user", content: `Length of Responses: ${values['res_length']}`},
-      {role: "user", content: `Will use user name ?: ${values['is_use_username'] ? "yes" : "no"}`},
-      {role: "user", content: `Conversation Limits: ${values['conversation_limits']}`},
+      {role: "user", content: `Response length: ${values['res_length']}`},
+      {role: "user", content: `Users name: ${values['is_use_username'] ? "yes" : "no"}`},
+      {role: "user", content: `Topic limits: ${values['conversation_limits']}`},
     ]
 
     OpenAIStream(prompts, "gpt-4-turbo-preview", ChatGPTAPI, process.env.OPENAI_API_KEY)
