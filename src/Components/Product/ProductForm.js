@@ -23,7 +23,7 @@ const ProductForm = ({ mutate, loading, updateId, title }) => {
   const [activeTab, setActiveTab] = useState("1");
   const { state } = useContext(SettingContext);
   const searchParams = useSearchParams();
-  const { data: oldData, isLoading: oldDataLoading, refetch, status } = useQuery([updateId], () => request({ url: `${product}/${updateId}` }), { refetchOnWindowFocus: false, enabled: false, select: (data) => data.data });
+  const { data: oldData, isLoading: oldDataLoading, refetch, status } = useQuery([updateId, loading], () => request({ url: `${product}/${updateId}` }), { refetchOnWindowFocus: false, enabled: false, select: (data) => data.data });
 
   useEffect(() => {
     // const {tab} = router.query;

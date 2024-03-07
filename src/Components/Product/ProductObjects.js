@@ -37,6 +37,7 @@ export function ProductInitValues(oldData, updateId) {
     name: updateId ? oldData?.name || "" : "",
     short_description: updateId ? oldData?.short_description || "" : "",
     description: updateId ? oldData?.description || "" : "",
+    greetings:  updateId ? oldData?.greetings || "" : "",
     is_picture: updateId ? oldData?.is_picture === 1 ? true : false : false,
     prompts: updateId ? oldData?.prompts?.map((item) => item.id) || [] : [],
     gpt_model: updateId ? oldData?.gpt_model || "" : "",
