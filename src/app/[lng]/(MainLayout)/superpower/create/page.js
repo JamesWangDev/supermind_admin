@@ -1,5 +1,5 @@
 "use client";
-import SuperPowerForm from "@/Components/Product/SuperPowerForm";
+import SuperPowerForm from "@/Components/Superpower/SuperPowerForm";
 import { product } from "@/Utils/AxiosUtils/API";
 import useCreate from "@/Utils/Hooks/useCreate";
 import { useState } from "react";
