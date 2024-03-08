@@ -1,5 +1,4 @@
 import { Col, TabContent, TabPane } from 'reactstrap'
-import GeneralTab from '../Product/GeneralTab'
 import InventoryTab from '../Product/InventoryTab'
 import SetupTab from '../Product/SetupTab'
 import ImagesTab from '../Product/ImagesTab'
@@ -10,12 +9,14 @@ import LLMTool from '../Product/PromptAndModelsTabs'
 import AddSuperpowersTab from '../Product/AddSuperpowersTab'
 import PersonalityLimitsTab from '../Product/PersonalityLimitsTab'
 import AddKnowledgeTab from './AddKnowledgeTab'
+import GeneralTab from './GeneralTab'
 
 const AllSuperPowerTabs = ({ values, setFieldValue, errors, updateId, activeTab }) => {
     return (
         <Col xl="9" lg="9">
             <TabContent activeTab={activeTab}>
                 <TabPane tabId="1">
+                    <GeneralTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
                 </TabPane>
                 <TabPane tabId="2">
                 </TabPane>

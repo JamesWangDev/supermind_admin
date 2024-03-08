@@ -64,6 +64,9 @@ export const coupon = "/coupon";
 export const product = "/product";
 export const Approved = '/approve'
 
+// superpower api
+export const superpower = "/superpower";
+
 // shipping api
 export const shipping = "/shipping";
 

@@ -13,7 +13,7 @@ import axios from "axios";
 import { createAttachment } from "../../Utils/AxiosUtils/API";
 import useCreate from "../../Utils/Hooks/useCreate";
 
-const ImageUploadFieldGPT = ({ values, updateId, setFieldValue, errors, multiple, loading, showImage, ...props }) => {
+const ImageUploadFieldGPT = ({ values, updateId, setFieldValue, errors, multiple, loading, showImage, galleryName, ...props }) => {
   const { i18Lang } = useContext(I18NextContext);
   const { t } = useTranslation(i18Lang, 'common');
   const [modal, setModal] = useState(false);
@@ -39,7 +39,7 @@ const ImageUploadFieldGPT = ({ values, updateId, setFieldValue, errors, multiple
             setFieldValue(props?.name, [attachedImg.data[0].id]);
             setSelectedImage(attachedImg.data);
         } else {
-            setFieldValue('product_galleries_id', [attachedImg.data[0].id]);
+            setFieldValue(galleryName, [attachedImg.data[0].id]);
             setFieldValue(props?.name, attachedImg.data[0].id);
             storeImageObject && setFieldValue(storeImageObject, attachedImg.data[0]);
         }

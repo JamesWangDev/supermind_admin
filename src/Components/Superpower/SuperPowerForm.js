@@ -5,7 +5,7 @@ import { Row, Col, Card } from "reactstrap";
 import { SuperPowerTabTitleListData } from "../../Data/TabTitleListData";
 import FormBtn from "../../Elements/Buttons/FormBtn";
 import request from "../../Utils/AxiosUtils";
-import { product } from "../../Utils/AxiosUtils/API";
+import { superpower } from "../../Utils/AxiosUtils/API";
 import { YupObject, nameSchema } from "../../Utils/Validation/ValidationSchemas";
 import Loader from "../CommonComponent/Loader";
 import TabTitle from "../Coupon/TabTitle";
@@ -21,7 +21,7 @@ const SuperPowerForm = ({ mutate, loading, updateId, title }) => {
   const { t } = useTranslation(i18Lang, 'common');
   const [activeTab, setActiveTab] = useState("1");
   const { state } = useContext(SettingContext)
-  const { data: oldData, isLoading: oldDataLoading, refetch, status } = useQuery([updateId], () => request({ url: `${product}/${updateId}` }), { refetchOnWindowFocus: false, enabled: false, select: (data) => data.data });
+  const { data: oldData, isLoading: oldDataLoading, refetch, status } = useQuery([updateId], () => request({ url: `${superpower}/${updateId}` }), { refetchOnWindowFocus: false, enabled: false, select: (data) => data.data });
   useEffect(() => {
     if (updateId) {
       refetch();
