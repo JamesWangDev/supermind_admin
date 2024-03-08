@@ -10,6 +10,7 @@ import AddSuperpowersTab from '../Product/AddSuperpowersTab'
 import PersonalityLimitsTab from '../Product/PersonalityLimitsTab'
 import AddKnowledgeTab from './AddKnowledgeTab'
 import GeneralTab from './GeneralTab'
+import PromptAndModels2 from './PromptAndModels2'
 
 const AllSuperPowerTabs = ({ values, setFieldValue, errors, updateId, activeTab }) => {
     return (
@@ -19,6 +20,7 @@ const AllSuperPowerTabs = ({ values, setFieldValue, errors, updateId, activeTab 
                     <GeneralTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
                 </TabPane>
                 <TabPane tabId="2">
+                    <PromptAndModels2 values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
                 </TabPane>
                 <TabPane tabId="3">
                 </TabPane>
