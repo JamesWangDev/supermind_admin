@@ -8,9 +8,9 @@ import OptionsTab from '../Product/OptionsTab'
 import LLMTool from '../Product/PromptAndModelsTabs'
 import AddSuperpowersTab from '../Product/AddSuperpowersTab'
 import PersonalityLimitsTab from '../Product/PersonalityLimitsTab'
-import AddKnowledgeTab from './AddKnowledgeTab'
 import GeneralTab from './GeneralTab'
 import PromptAndModels2 from './PromptAndModels2'
+import AddKnowledgeTab from './AddKnowledgeTab'
 
 const AllSuperPowerTabs = ({ values, setFieldValue, errors, updateId, activeTab }) => {
     return (
@@ -25,7 +25,7 @@ const AllSuperPowerTabs = ({ values, setFieldValue, errors, updateId, activeTab 
                 <TabPane tabId="3">
                 </TabPane>
                 <TabPane tabId="4">
-                    {/* <AddKnowledgeTab /> */}
+                    <AddKnowledgeTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
                 </TabPane>
                 <TabPane tabId="5">
                 </TabPane>

@@ -1,11 +1,11 @@
 'use client'
 
-import AddKnowledgeTab from "@/Components/Superpower/AddKnowledgeTab";
+import AddKnowledge from "@/Components/Superpower/AddKnowledge";
 
 const KnowLedge = () => {
     return (
         <div>
-        <AddKnowledgeTab />
+            <AddKnowledge />
         </div>
         );
     };
