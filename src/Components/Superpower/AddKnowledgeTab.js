@@ -13,47 +13,69 @@ import { Table, Row, Col } from "reactstrap";
 import Btn from "@/Elements/Buttons/Btn";
 import { RiPencilLine } from "react-icons/ri";
 import TableLoader from "../Table/TableLoader";
+import axios from "axios";
 
 const AddKnowledgeTab = ({ values, setFieldValue, errors, updateId }) => {
   const { i18Lang } = useContext(I18NextContext);
   const router = useRouter();
-  const { t } = useTranslation(i18Lang, 'common');
+  const { t } = useTranslation(i18Lang, "common");
   const { state } = useContext(SettingContext);
-//   const [prompts, setPrompts] = useState([]);
+  const [partitionOptions, setPartitionOptions] = useState([]);
+  const { data: partitions, isLoading } = useQuery(
+    ["partitions"],
+    () => axios.get(`https://supermind-n396.onrender.com/partitions/1`),
+    { refetchOnWindowFocus: false, select: (res) => res.data }
+  );
+  //   const [prompts, setPrompts] = useState([]);
   // Getting data from Cart API
-//   const { data: promptData, isLoading: promptLoader } = useQuery(["prompt", values.prompts], () => request({ url: prompt }), { refetchOnWindowFocus: false, select: (res) => res?.data });
+  //   const { data: promptData, isLoading: promptLoader } = useQuery(["prompt", values.prompts], () => request({ url: prompt }), { refetchOnWindowFocus: false, select: (res) => res?.data });
 
-//   useEffect(() => {
-//     if(!promptLoader && promptData) {
-//         setPrompts(promptData.data)
-//     }
-//   }, [promptLoader, promptData])
+  //   useEffect(() => {
+  //     if(!promptLoader && promptData) {
+  //         setPrompts(promptData.data)
+  //     }
+  //   }, [promptLoader, promptData])
 
+  useEffect(() => {
+    if (partitions && !isLoading) {
+      setPartitionOptions(
+        partitions.map((partition) => ({
+          id: partition.partition_name,
+          name: partition.partition_name,
+        }))
+      );
+    }
+  }, [partitions, isLoading]);
 
   return (
     <>
+      <div className="w-100 flex justify-content-end mb-3">
+        <Btn
+          title="Add New Knowledge"
+          className="align-items-center btn-theme add-button"
+          onClick={() => {
+            router.push(`/${i18Lang}/knowledge`);
+          }}
+        />
+      </div>
       <Row>
-        <Col xs={9}>
-          <MultiSelectField errors={errors} values={values} setFieldValue={setFieldValue} name="Knowledges" require="true" data={[]} />
-        </Col>
-        <Col xs={3}>
-          <div className="w-100 flex justify-content-center">
-          <Btn title="Add New Knowledge" className="align-items-center btn-theme add-button" onClick={() => {
-            router.push(`/${i18Lang}/knowledge`)
-          }} />
-          </div>
-        </Col>
-      </Row>
-      <Row>
-        <Col xs={9}>
-          <MultiSelectField errors={errors} values={values} setFieldValue={setFieldValue} name="Knowledges" require="true" data={[]} />
-        </Col>
-        <Col xs={3}>
-          <div className="w-100 flex justify-content-center">
-          <Btn title="Add New Knowledge" className="align-items-center btn-theme add-button" onClick={() => {
-            router.push(`/${i18Lang}/knowledge`)
-          }} />
-          </div>
+        <Col xs={12}>
+          <MultiSelectField
+            errors={errors}
+            values={values}
+            setFieldValue={setFieldValue}
+            name="always_knowledges"
+            require="false"
+            data={partitionOptions}
+          />
+          <MultiSelectField
+            errors={errors}
+            values={values}
+            setFieldValue={setFieldValue}
+            name="library_knowledges"
+            require="false"
+            data={partitionOptions}
+          />
         </Col>
       </Row>
       {/* {values?.prompts.length > 0 && <Table id="table_id" className={`role-table refund-table all-package theme-table datatable-wrapper`}>
@@ -81,9 +103,6 @@ const AddKnowledgeTab = ({ values, setFieldValue, errors, updateId }) => {
           ))}
         </tbody>
       </Table>} */}
-      {/* <div className="mt-4">
-        <SelectField errors={errors} values={values} inputprops={{name: "gpt_model", id: "gpt_model", options: modelChoiceItems}} setFieldValue={setFieldValue} name="gpt_model" require="true" data={selectOptions} />
-      </div> */}
     </>
   );
 };

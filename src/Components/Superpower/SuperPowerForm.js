@@ -9,8 +9,8 @@ import { superpower } from "../../Utils/AxiosUtils/API";
 import { YupObject, nameSchema } from "../../Utils/Validation/ValidationSchemas";
 import Loader from "../CommonComponent/Loader";
 import TabTitle from "../Coupon/TabTitle";
-import { ProductInitValues, ProductValidationSchema } from "../Product/ProductObjects";
-import ProductSubmitFunction from "../Product/ProductSubmitFunction";
+import { SuperpowerInitValues, SuperpowerValidationSchema } from "./SuperpowerObjects";
+import SuperpowerSubmitFunction from "./SuperpowerSubmitFunction";
 import SettingContext from "../../Helper/SettingContext";
 import AllSuperPowerTabs from "./AllSuperPowerTabs";
 import I18NextContext from "@/Helper/I18NextContext";
@@ -28,7 +28,7 @@ const SuperPowerForm = ({ mutate, loading, updateId, title }) => {
     }
   }, [updateId]);
   const watchEvent = useCallback((oldData, updateId) => {
-    return ProductInitValues(oldData, updateId)
+    return SuperpowerInitValues(oldData, updateId)
   }, [oldData, updateId])
 
   if ((updateId && oldDataLoading)) return <Loader />;
@@ -36,14 +36,13 @@ const SuperPowerForm = ({ mutate, loading, updateId, title }) => {
     <Formik
       initialValues={{ ...watchEvent(oldData, updateId) }}
       validationSchema={YupObject({
-        ...ProductValidationSchema,
-        store_id: state?.isMultiVendor && nameSchema
+        ...SuperpowerValidationSchema,
       })}
       onSubmit={(values) => {
         if (updateId) {
           values["_method"] = "put"
         }
-        ProductSubmitFunction(mutate, values, updateId);
+        SuperpowerSubmitFunction(mutate, values, updateId);
       }}>
       {({ values, setFieldValue, errors, touched }) => (
         <Form className="theme-form theme-form-2 mega-form vertical-tabs">
