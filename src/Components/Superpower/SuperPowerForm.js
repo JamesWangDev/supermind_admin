@@ -50,7 +50,7 @@ const SuperPowerForm = ({ mutate, loading, updateId, title }) => {
             <Col>
               <Card>
                 <div className="title-header option-title">
-                  <h5>{t(title)}</h5>
+                  <h5>{t(title)} - {values['name']}</h5>
                 </div>
                 <Row>
                   <Col xl="3" lg="4">
