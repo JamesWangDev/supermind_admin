@@ -25,7 +25,7 @@ const AllSuperPowerTabs = ({ values, setFieldValue, errors, updateId, activeTab 
                 <TabPane tabId="3">
                 </TabPane>
                 <TabPane tabId="4">
-                    <AddKnowledgeTab />
+                    {/* <AddKnowledgeTab /> */}
                 </TabPane>
                 <TabPane tabId="5">
                 </TabPane>

@@ -43,7 +43,7 @@ const MENUITEMS = [
     children: [
       { title: "AddSuperpower", path: "/superpower/create", displayTitle: "Add Superpower", permission: ["superpower.create"] },
       { title: "AllSuperPowers", path: "/superpower", displayTitle: "All Superpowers", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["superpower.create"] },
-      // { title: "Attributes", path: "/attribute", displayTitle: "All Attributes", permission: ["attribute.index", "attribute.create"] },
+      { title: "AddKnowledge", path: "/knowledge", displayTitle: "Add Knowledge", permission: ["superpower.create"] },
       // { title: "Categories", path: "/category", displayTitle: "Categories", permission: ["category.index"] },
       // { title: "Tags", path: "/tag", displayTitle: "All Tag", permission: ["tag.index", "tag.create"] },
       // { title: "Q&A", path: "/qna", displayTitle: "All Tag", permission: ["question_and_answer.index", "question_and_answer.create"] },
