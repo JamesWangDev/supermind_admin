@@ -22,7 +22,7 @@ const AllSuperpowerTable = ({ data, ...props }) => {
     noEdit: edit ? false : true,
     optionHead: { title: "Action" },
     column: [
-      { title: "Image", apiKey: "superpower_thumbnail", type: 'image', placeHolderImage: placeHolderImage },
+      { title: "Image", apiKey: "product_thumbnail", type: 'image', placeHolderImage: placeHolderImage },
       { title: "Name", apiKey: "name", sorting: true, sortBy: "desc" },
     ],
     data: data || []
