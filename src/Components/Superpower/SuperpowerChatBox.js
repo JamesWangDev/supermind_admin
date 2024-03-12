@@ -21,7 +21,7 @@ export default function SuperpowerChatBox({values}) {
     setLoading(true);
 
     try {
-        axios.post("https://supermind-n396.onrender.com/chat", {
+        axios.post("https://sea-turtle-app-qcwo5.ondigitalocean.app/chat", {
             query: message.content,
             partition_name: values['always_knowledges'][0]
         }, {headers: {
