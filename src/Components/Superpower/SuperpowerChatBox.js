@@ -23,7 +23,7 @@ export default function SuperpowerChatBox({values}) {
     try {
         axios.post("https://sea-turtle-app-qcwo5.ondigitalocean.app/chat", {
             query: message.content,
-            partition_names: [values['always_knowledges'][0]]
+            partition_names: values['always_knowledges']
         }, {headers: {
             "Content-Type": "application/json"
         }}).then(response => {
