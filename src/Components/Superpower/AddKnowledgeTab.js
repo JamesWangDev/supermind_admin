@@ -19,7 +19,7 @@ const AddKnowledgeTab = ({ values, setFieldValue, errors, updateId }) => {
   const [partitionOptions, setPartitionOptions] = useState([]);
   const { data: partitions, isLoading } = useQuery(
     ["partitions"],
-    () => axios.get(`https://supermind-n396.onrender.com/partitions/1`),
+    () => axios.get(`https://sea-turtle-app-qcwo5.ondigitalocean.app/partitions/1`),
     { refetchOnWindowFocus: false, select: (res) => res.data }
   );
 
