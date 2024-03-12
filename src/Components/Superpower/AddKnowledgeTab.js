@@ -9,6 +9,7 @@ import { Table, Row, Col } from "reactstrap";
 import Btn from "@/Elements/Buttons/Btn";
 import TableLoader from "../Table/TableLoader";
 import axios from "axios";
+import SuperpowerChatBox from "./SuperpowerChatBox";
 
 const AddKnowledgeTab = ({ values, setFieldValue, errors, updateId }) => {
   const { i18Lang } = useContext(I18NextContext);
@@ -102,7 +103,7 @@ const AddKnowledgeTab = ({ values, setFieldValue, errors, updateId }) => {
             </Table>}
         </Col>
       </Row>
-      
+     {values['always_knowledges'].length > 0 &&  <SuperpowerChatBox values={values} />}
     </>
   );
 };

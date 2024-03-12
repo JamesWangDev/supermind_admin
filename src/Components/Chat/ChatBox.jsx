@@ -1,5 +1,5 @@
 import { Chat } from "./Chat";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { OpenAIStream } from "@/Utils/OpenAIStream";
 import { useQuery } from "@tanstack/react-query";
 import request from "../../Utils/AxiosUtils";
