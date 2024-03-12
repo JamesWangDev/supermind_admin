@@ -20,7 +20,7 @@ const AddKnowledgeTab = ({ values, setFieldValue, errors, updateId }) => {
 
   const updatePartitions = () => {
     // if (accountData && accountData.id) {
-      fetch(`https://supermind-n396.onrender.com/partitions/1`)
+      fetch(`https://sea-turtle-app-qcwo5.ondigitalocean.app/partitions/1`)
           .then(resp => resp.json())
           .then(data => setPartitions(data))
     // }

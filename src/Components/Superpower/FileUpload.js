@@ -79,7 +79,7 @@ const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, set
     }
 
     const updatePartitionDatabase = () => {
-        fetch('https://supermind-n396.onrender.com/partition', {
+        fetch('https://sea-turtle-app-qcwo5.ondigitalocean.app/partition', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -98,7 +98,7 @@ const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, set
 
     // Put request to /document with the partition name and content
     const putFile = async (inputObject) => {
-        const url = "https://supermind-n396.onrender.com/document"
+        const url = "https://sea-turtle-app-qcwo5.ondigitalocean.app/document"
         const partitionName = `${currentPartition}:${inputObject.file.name}`
     
         setAppState("summary")

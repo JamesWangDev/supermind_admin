@@ -18,14 +18,14 @@ const ChatEngine = ({ partitions, currentPartition }) => {
 
     const queryChatEngine = () => {
         const newResults = [...queryResults, query]
-        fetch("https://supermind-n396.onrender.com/chat", {
+        fetch("https://sea-turtle-app-qcwo5.ondigitalocean.app/chat", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 'query': query,
-                'partition_name': currentPartition
+                'partition_names': [currentPartition]
             })
         })
         .then(res => res.json())
