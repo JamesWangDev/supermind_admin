@@ -6,7 +6,7 @@ import useCreate from "@/Utils/Hooks/useCreate";
 
 const UpdateProduct = ({ params }) => {
   const [resetKey, setResetKey] = useState(false)
-  const { mutate, isLoading } = useCreate(product, params?.updateId, false, false, (resDta) => {
+  const { mutate, isLoading } = useCreate(product, params?.updateId, product, false, (resDta) => {
     if (resDta?.status == 200 || resDta?.status == 201) {
       setResetKey(true)
     }
