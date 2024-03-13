@@ -6,7 +6,6 @@ import CustomDropDown from "../CommonComponent/CustomDropDown/CustomDropDown";
 export default function SuperpowerChatBox({values}) {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [selectedPartition, setSelectedPartition] = useState("");
 
   const messagesEndRef = useRef(null);
 
