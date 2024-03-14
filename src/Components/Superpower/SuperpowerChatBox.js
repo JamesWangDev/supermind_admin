@@ -25,10 +25,10 @@ export default function SuperpowerChatBox({values}) {
                 ...messages,
                 {
                 role: "assistant",
-                content: response,
+                content: response.data.answer,
                 },
             ]);
-        
+            console.log(`To answer the following question: ${message.content}\nThe following context was sent to the LLM:\n${response.data.context}`)
             setLoading(false);
         }).then(() => {
           // TODO: asyncio or Threading in API should be able to take care of this

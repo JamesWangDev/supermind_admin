@@ -30,13 +30,13 @@ const ChatEngine = ({ partitions, currentPartition }) => {
         })
         .then(res => res.json())
         .then(data => {
-            if (data.length > 1) {
-                newResults.push(data)
+            if (data.answer.length > 1) {
+                newResults.push(data.answer)
             } else {
-                newResults.push(data)
+                newResults.push(data.answer)
             }
+            console.log(`To answer the following question: ${query}\nThe following context was sent to the LLM:\n${data.context}`)
             setQueryResults(newResults)
-            console.log({data})
         })
     }
 
@@ -56,7 +56,7 @@ const ChatEngine = ({ partitions, currentPartition }) => {
                     <div>
                         {queryResults.map((text, i) => {
                             return (
-                                <div>{text}</div>
+                                <div key={i}>{text}</div>
                             )
                         })}
                     </div>
