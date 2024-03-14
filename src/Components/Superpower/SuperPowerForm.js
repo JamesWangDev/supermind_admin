@@ -26,7 +26,7 @@ const SuperPowerForm = ({ mutate, loading, updateId, title }) => {
     if (updateId) {
       refetch();
     }
-  }, [updateId]);
+  }, [updateId, loading]);
   const watchEvent = useCallback((oldData, updateId) => {
     return SuperpowerInitValues(oldData, updateId)
   }, [oldData, updateId])

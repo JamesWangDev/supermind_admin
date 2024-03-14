@@ -25,13 +25,18 @@ export const ChatInput = ({ onSend, onReset, loading }) => {
     onSend({ role: "user", content });
     setContent("");
   };
-
+  
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
     }
   };
+  
+  const handleClickSend = (e) => {
+    e.preventDefault();
+    handleSend();
+  }
 
 //   useEffect(() => {
 //     if (textareaRef && textareaRef.current) {
@@ -57,7 +62,7 @@ export const ChatInput = ({ onSend, onReset, loading }) => {
         <button 
             disabled={loading}
             className="ms-2 btn btn-sm btn-sm-base btn-dark h-100 font-weight-bold rounded-lg bg-light hover:bg-secondary focus:outline-none focus:ring-1 focus:ring-neutral-300"
-            onClick={() => handleSend()}>
+            onClick={handleClickSend}>
             Send
         </button>
       </div>

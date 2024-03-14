@@ -27,8 +27,8 @@ const AddKnowledgeTab = ({ values, setFieldValue, errors, updateId }) => {
     if (partitions && !isLoading) {
       setPartitionOptions(
         partitions.map((partition) => ({
-          id: partition.partition_name,
-          name: partition.partition_name,
+          id: partition.partition_name.trim(),
+          name: partition.partition_name.trim(),
         }))
       );
     }
@@ -68,8 +68,8 @@ const AddKnowledgeTab = ({ values, setFieldValue, errors, updateId }) => {
                     {values?.always_knowledges.map((prompt_id, index) => (
                         <tr key={`prompt_table_${index}`}>
                             <td>{index + 1}</td>
-                            <td>{partitions?.filter(item => item.partition_name === prompt_id)[0]?.partition_name}</td>
-                            <td>{partitions?.filter(item => item.partition_name === prompt_id)[0]?.partition_description}</td>
+                            <td>{partitions?.filter(item => item.partition_name.trim() === prompt_id)[0]?.partition_name}</td>
+                            <td>{partitions?.filter(item => item.partition_name.trim() === prompt_id)[0]?.partition_description}</td>
                         </tr>
                     ))}
                 </tbody>
@@ -95,8 +95,8 @@ const AddKnowledgeTab = ({ values, setFieldValue, errors, updateId }) => {
                 {values?.library_knowledges.map((prompt_id, index) => (
                     <tr key={`prompt_table_${index}`}>
                         <td>{index + 1}</td>
-                        <td>{partitions?.filter(item => item.partition_name === prompt_id)[0]?.partition_name}</td>
-                        <td>{partitions?.filter(item => item.partition_name === prompt_id)[0]?.partition_description}</td>
+                        <td>{partitions?.filter(item => item.partition_name.trim() === prompt_id)[0]?.partition_name}</td>
+                        <td>{partitions?.filter(item => item.partition_name.trim() === prompt_id)[0]?.partition_description}</td>
                     </tr>
                 ))}
                 </tbody>

@@ -29,7 +29,7 @@ const GeneralTab = ({ values, setFieldValue, errors, updateId }) => {
       <ImageUploadFieldGPT errors={errors} name="product_thumbnail_id" galleryName="product_galleries_id" id="product_thumbnail_id" title="Thumbnail" type="file" values={values} setFieldValue={setFieldValue} updateId={updateId} helpertext={getHelperText('600x600px')} />
       {/* <ImageUploadFieldGPT errors={errors} name="product_galleries_id" id="product_galleries_id" title="Images" type="file" multiple={true} values={values} setFieldValue={setFieldValue} updateId={updateId} helpertext={getHelperText('600x600px')} /> */}
       {/* <CheckBoxField name="is_picture" title="picture" /> */}
-      {state?.isMultiVendor && <SearchableSelectInput
+      {/* {state?.isMultiVendor && <SearchableSelectInput
         nameList={[
           {
             name: "store_id",
@@ -43,7 +43,7 @@ const GeneralTab = ({ values, setFieldValue, errors, updateId }) => {
             },
           },
         ]}
-      />}
+      />} */}
       <MultiSelectField errors={errors} values={values} setFieldValue={setFieldValue} name="categories" require="true" data={categoryData} />
     </>
   );

@@ -1,7 +1,8 @@
 const SuperpowerSubmitFunction = (mutate, value, updateId) => {
-  value['always_knowledges'] = value['always_knowledges'].toString();
-  value['library_knowledges'] = value['library_knowledges'].toString();
-  mutate(value);
+  let updatedData = {...value};
+  updatedData['always_knowledges'] = updatedData['always_knowledges'].join();
+  updatedData['library_knowledges'] = updatedData['library_knowledges'].join();
+  mutate(updatedData);
 };
 
 export default SuperpowerSubmitFunction;
