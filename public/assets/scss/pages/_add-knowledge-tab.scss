@@ -34,6 +34,8 @@
     width: 100%;
     z-index: 2;
     border-radius: 8px;
+    height: 300px;
+    overflow-y: scroll;
 }
 
 .TypeAheadDropDown li {
@@ -79,7 +81,7 @@
 }
 
 .NewPartitionDescription {
-    height: 180px;
+    height: 120px;
     width: 100%;
 }
 
@@ -186,4 +188,22 @@
 
   .kb-tab-disabled {
     color:rgb(161, 157, 157);
+  }
+
+  .file-upload-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 8px;
+  }
+
+  .file-upload-input {
+    border: 1px solid rgb(241, 237, 237);
+    border-radius: 8px;
+    padding: 8px;
+  }
+
+  .partition-documents {
+    border: 1px solid rgb(241, 237, 237);
+    border-radius: 8px;
+    padding: 8px;
   }

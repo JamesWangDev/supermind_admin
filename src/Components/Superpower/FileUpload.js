@@ -8,6 +8,7 @@ const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, set
     const [isChecked, setIsChecked] = useState(true)
     const [isPublic, setIsPublic] = useState(false)
     const [partitionStatus, setPartitionStatus] = useState({ status: '', message: '' })
+    const [partitionDocuments, setPartitionDocuments] = useState([])
     const [apiResponseMessageObject, setApiResponseMessageObject] = useState({ message: '', type: '' })
     const [inputObject, setInputObject] = useState({
         file: '',
@@ -40,6 +41,14 @@ const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, set
         setInputObject(newInputObject)
     }
 
+    const fetchPartitionDocuments = (matchingPartitions) => {
+        if (matchingPartitions.length === 0) return
+        const partitionId = matchingPartitions[0].partition_id
+        fetch(`https://sea-turtle-app-qcwo5.ondigitalocean.app/documents/${partitionId}`)
+            .then(res => res.json())
+            .then(data => setPartitionDocuments(data))
+    }
+
     const setPartitionName = name => {
         setCurrentPartition(name)
         const matchingPartitions = partitions.filter((n) => n.partition_name.toLowerCase() === name.toLowerCase())
@@ -48,6 +57,7 @@ const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, set
             const newInputObject = { ...inputObject, "description": desc }
             setInputObject(newInputObject)
             setPartitionStatus({ status: 'validExistingPartition', message: '' })
+            fetchPartitionDocuments(matchingPartitions)
         } else if (isChecked && matchingPartitions.length === 0) {
             const newInputObject = { ...inputObject, "description": '' }
             setInputObject(newInputObject)
@@ -136,6 +146,7 @@ const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, set
         }
     }
 
+
     return (
         <>
             <div style={{ display: 'flex' }}>
@@ -157,6 +168,11 @@ const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, set
                     {partitionStatus.message.length > 0 && <div>{partitionStatus.message}</div>}
                 </div>
             </div>
+            {/* Partition description. Is disabled if this is an existing partition */}
+            {(!isChecked || inputObject.description.length > 0) && <Row>
+                <label>Enter a description for your partition below</label>
+                <textarea value={inputObject.description} disabled={isChecked} className="NewPartitionDescription" onChange={e => handleChange(e, "description")}/>
+            </Row>}
             {/* A toggle to allow the user to make their partition public */}
             <div className="toggle-wrapper">
                 <div style={{ paddingTop: '6px', marginRight: '10px' }}>Make Public?</div>
@@ -171,23 +187,28 @@ const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, set
                 />
             </div>
             {/* Component for uploading a file */}
-            <div className="mt-3">
-                <label className="block text-base mb-2">Choose a file</label>
-                <div className="mt-3 flex">
-                    <input 
-                        type="file" 
-                        className="border w-full text-base px-2 py-1 focus:outline-none focus:ring-0 focus:border-gray-600 rounded-md" 
-                        placeholder="Upload file" 
-                        value={inputObject.password} 
-                        onChange={ e => uploadFile(e)} 
-                    />
+            <div className="file-upload-container">
+                <div className="file-upload-input">
+                    <label className="block text-base mb-2">Choose a file</label>
+                    <div className="mt-3 flex">
+                        <input 
+                            type="file" 
+                            className="border w-full text-base px-2 py-1 focus:outline-none focus:ring-0 focus:border-gray-600 rounded-md" 
+                            placeholder="Upload file" 
+                            value={inputObject.password} 
+                            onChange={ e => uploadFile(e)} 
+                        />
+                    </div>
+                </div>
+                <div className="partition-documents">
+                    <div>Previously Uploaded Files:</div>
+                    {partitionDocuments.length > 0 && <ul style={{ height: '100px', overflowY: 'scroll' }}>
+                        {partitionDocuments.map((document, idx) => 
+                            <li>{document.name}</li>
+                        )}
+                    </ul>}
                 </div>
             </div>
-            {/* Partition description. Is disabled if this is an existing partition */}
-            {(!isChecked || inputObject.description.length > 0) && <Row>
-                <label>Enter a description for your partition below</label>
-                <textarea value={inputObject.description} disabled={isChecked} className="NewPartitionDescription" onChange={e => handleChange(e, "description")}/>
-            </Row>}
             {/* Chunk slider component for determining chunk sizes */}
             <ChunkSizingSlider chunkSize={inputObject.chunkSize} handleSliderMovement={handleSliderMovement}/>
             {/* Upload Button */}

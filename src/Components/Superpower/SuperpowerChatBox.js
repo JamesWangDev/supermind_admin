@@ -30,6 +30,8 @@ export default function SuperpowerChatBox({values}) {
             ]);
         
             setLoading(false);
+        }).then(() => {
+          if (values['always_knowledges'].includes('wikipedia')) axios.put("https://sea-turtle-app-qcwo5.ondigitalocean.app/documents")
         }).catch(error => {
             setLoading(false);
             alert("Error while fetching from API!")
