@@ -31,6 +31,7 @@ export default function SuperpowerChatBox({values}) {
         
             setLoading(false);
         }).then(() => {
+          // TODO: asyncio or Threading in API should be able to take care of this
           if (values['always_knowledges'].includes('wikipedia')) axios.put("https://sea-turtle-app-qcwo5.ondigitalocean.app/documents")
         }).catch(error => {
             setLoading(false);
