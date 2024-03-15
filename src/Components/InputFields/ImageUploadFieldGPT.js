@@ -103,7 +103,7 @@ const ImageUploadFieldGPT = ({ values, updateId, setFieldValue, errors, multiple
         const response = await axios.post('https://proxy.cors.sh/'+'https://api.openai.com/v1/images/generations', {
           prompt: prompt,
           model: 'dall-e-3',
-          "size": "1024x1024"
+          size: "1024x1024"
         }, {
           headers: {
             'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
