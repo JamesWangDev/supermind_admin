@@ -12,6 +12,7 @@ import Btn from "@/Elements/Buttons/Btn";
 import axios from "axios";
 import { createAttachment } from "../../Utils/AxiosUtils/API";
 import useCreate from "../../Utils/Hooks/useCreate";
+import { base64toBlob } from "@/Utils/BlobUtil/base64toBlob";
 
 const PRE_PROMPT = `DIRECTIVE: Your goal is to take a description of an AI assistant and translate it into a detailed, creative prompt suitable for generating an Avatar image with DALL·E. Your response should balance creativity with specificity to ensure the resulting image aligns closely with the user's vision.
                     Steps:
@@ -75,14 +76,9 @@ const ImageUploadFieldGPT = ({ values, updateId, setFieldValue, errors, multiple
     </>;
   }
 
-  async function getImageBlobFromURL(url) {
-        //Fetch image data from url 
-        const imageData = await fetch('https://proxy.cors.sh/' + url, {headers: {
-            'x-cors-api-key': "temp_368b76b526936e794eb3e109cc7fb026"
-        }});
-        //Create blob of image data
-        const imageBlob = await imageData.blob();
-        return new File([imageBlob], `${values['name']}.png`, { type: "image/png" });
+  async function getImageBlobFromURL(base64JsonImage) {
+    const blob = base64toBlob(base64JsonImage, 'image/png');
+    return new File([blob], `${values['name']}.png`, { type: "image/png" })
   };
   const generateThumbnail = async () => {
     try {
@@ -98,21 +94,22 @@ const ImageUploadFieldGPT = ({ values, updateId, setFieldValue, errors, multiple
             alert("Please enter description...");
             return;
         }
-        const prompt = PRE_PROMPT + values['name'] + "\n" + values['short_description'] + "\n" + values['description']
+        const prompt = values['name'] + "\n" + values['short_description'] + "\n" + values['description']
         setIsImgGenerating(true);
-        const response = await axios.post('https://proxy.cors.sh/'+'https://api.openai.com/v1/images/generations', {
+        const response = await axios.post('https://api.openai.com/v1/images/generations', {
           prompt: prompt,
           model: 'dall-e-3',
-          size: "1024x1024"
+          size: "1024x1024",
+          response_format: 'b64_json'
         }, {
           headers: {
             'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
             'Content-Type': 'application/json',
-            'x-cors-api-key': "temp_368b76b526936e794eb3e109cc7fb026"
+            // 'x-cors-api-key': "temp_368b76b526936e794eb3e109cc7fb026"
           }
         });
 
-        const file = await getImageBlobFromURL(response.data.data[0].url);
+        const file = await getImageBlobFromURL(response.data.data[0].b64_json);
         let formData = new FormData();
         formData.append(`attachments[0]`, file);
         mutate(formData);
