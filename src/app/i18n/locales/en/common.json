@@ -165,6 +165,7 @@
   "ShippingCreatedSuccessFully": "Shipping Created SuccessFully",
   "AddProduct": "Add Supermind",
   "AddSuperpower": "Add Superpower",
+  "CreateActions": "Create Actions",
   "AddKnowledge": "Add Knowledge",
   "Inventory": "Prompts & Models",
   "Setup": "Setup",
@@ -916,6 +917,7 @@
   "EnterCode": "Enter Code",
   "AllProducts": "All Superminds",
   "AllSuperPowers": "All Superpowers",
+  "AllActions": "All Actions",
   "AllBlogs": "All blogs",
   "Currencies": "Currencies",
   "ThemeOptions": "Theme Options",
@@ -946,5 +948,8 @@
   "TotalRevenue":"Total Revenue",
   "Symbolisarequired":"Symbol is required",
   "QuicLinks":"Quick Links",
-  "EnterApiUrl": "Enter API URL"
+  "EnterApiUrl": "Enter API URL",
+  "ApiSpecType": "Api Spec Type",
+  "API_SPEC": "API SPEC",
+  "ENTER_API_SPEC": "Enter API SPEC"
 }
