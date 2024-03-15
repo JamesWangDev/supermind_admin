@@ -1,6 +1,5 @@
 import { Chat } from "../Chat/Chat";
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
 import { GetKnowldege } from "@/Utils/GetKnowldege/GetKnowldege";
 
 export default function SuperpowerChatBox({values}) {
