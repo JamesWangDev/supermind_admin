@@ -11,6 +11,7 @@ import PersonalityLimitsTab from '../Product/PersonalityLimitsTab'
 import GeneralTab from './GeneralTab'
 import PromptAndModels2 from './PromptAndModels2'
 import AddKnowledgeTab from './AddKnowledgeTab'
+import AddActions from './AddActions'
 
 const AllSuperPowerTabs = ({ values, setFieldValue, errors, updateId, activeTab }) => {
     return (
@@ -23,6 +24,7 @@ const AllSuperPowerTabs = ({ values, setFieldValue, errors, updateId, activeTab 
                     <PromptAndModels2 values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
                 </TabPane>
                 <TabPane tabId="3">
+                    <AddActions values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
                 </TabPane>
                 <TabPane tabId="4">
                     <AddKnowledgeTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
