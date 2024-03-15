@@ -25,11 +25,13 @@ export default function SuperpowerChatBox({values}) {
                 ...messages,
                 {
                 role: "assistant",
-                content: response,
+                content: response.answer,
                 },
             ]);
-        
             setLoading(false);
+        }).then(() => {
+          // TODO: asyncio or Threading in API should be able to take care of this
+          if (values['always_knowledges'].includes('wikipedia')) axios.put("https://sea-turtle-app-qcwo5.ondigitalocean.app/documents")
         }).catch(error => {
             setLoading(false);
             alert("Error while fetching from API!")
