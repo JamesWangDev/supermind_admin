@@ -37,7 +37,7 @@ const AddActions = ({ values, setFieldValue, errors, updateId }) => {
   }, [actionLoader, actionData]);
 
   const selectOptions = useMemo(
-    () => actions?.map((item) => ({ id: item.id, name: item.name })),
+    () => actions?.map((item) => ({ id: item.name, name: item.name })),
     [actions]
   );
 
@@ -88,7 +88,7 @@ const AddActions = ({ values, setFieldValue, errors, updateId }) => {
           <tbody>
             {values?.actions.map((action_id, index) => {
               const action = actions?.filter(
-                (item) => item.id === action_id
+                (item) => item.name === action_id
               )[0];
               return (
                 <tr
