@@ -29,7 +29,7 @@ const MENUITEMS = [
       // { title: "AddSuperpower", path: "/superpower/create", displayTitle: "Add Superpower", permission: ["product.create"] },
       { title: "AllProducts", path: "/product", displayTitle: "All Product", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["product.create"] },
       { title: "Attributes", path: "/attribute", displayTitle: "All Attributes", permission: ["attribute.index", "attribute.create"] },
-      { title: "Prompts", path: "/prompt", displayTitle: "All Attributes", permission: ["attribute.index", "attribute.create"] },
+      { title: "Prompts", path: "/prompt", displayTitle: "All Prompts", permission: ["prompt.index", "prompt.create"] },
       { title: "Categories", path: "/category", displayTitle: "Categories", permission: ["category.index"] },
       { title: "Tags", path: "/tag", displayTitle: "All Tag", permission: ["tag.index", "tag.create"] },
       { title: "Q&A", path: "/qna", displayTitle: "All Tag", permission: ["question_and_answer.index", "question_and_answer.create"] },
@@ -48,6 +48,14 @@ const MENUITEMS = [
       // { title: "Tags", path: "/tag", displayTitle: "All Tag", permission: ["tag.index", "tag.create"] },
       // { title: "Q&A", path: "/qna", displayTitle: "All Tag", permission: ["question_and_answer.index", "question_and_answer.create"] },
     ],
+  },
+  {
+    title: "CustomModels",
+    displayTitle: "CustomModels",
+    icon: <RiStore3Line />,
+    path: "/gptmodel",
+    type: "link",
+    permission: ["gptmodel.index", "gptmodel.create"]
   },
   {
     title: "Stores",

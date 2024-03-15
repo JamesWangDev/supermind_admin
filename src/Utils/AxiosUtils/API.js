@@ -24,6 +24,11 @@ export const prompt = "prompt";
 export const PromptImportAPI = "prompt/csv/import";
 export const PromptExportAPI = "prompt/csv/export";
 
+// gptmodels api
+export const gptmodel = "gptmodel";
+export const gptmodelImportAPI = "gptmodel/csv/import";
+export const gptmodelExportAPI = "gptmodel/csv/export";
+
 // attributes api
 export const attribute = "attribute";
 export const AttributeImportAPI = "attribute/csv/import";
