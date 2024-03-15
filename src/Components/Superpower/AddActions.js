@@ -67,7 +67,7 @@ const AddActions = ({ values, setFieldValue, errors, updateId }) => {
               title="Add New Action"
               className="align-items-center btn-theme add-button"
               onClick={() => {
-                router.push(`/${i18Lang}/actions/create`);
+                router.push(`/${i18Lang}/action/create`);
               }}
             />
           </div>
