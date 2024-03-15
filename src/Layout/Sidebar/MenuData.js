@@ -43,8 +43,8 @@ const MENUITEMS = [
     children: [
       { title: "AddSuperpower", path: "/superpower/create", displayTitle: "Add Superpower", permission: ["superpower.create"] },
       { title: "AllSuperPowers", path: "/superpower", displayTitle: "All Superpowers", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["superpower.create"] },
-      { title: "CreateActions", path: "/actions/create", displayTitle: "Create Superpower", permission: ["superpower.create"] },
-      { title: "AllActions", path: "/actions", displayTitle: "All Actions", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["superpower.create"] },
+      { title: "CreateActions", path: "/actions/create", displayTitle: "Create Superpower", permission: ["action.create"] },
+      { title: "AllActions", path: "/actions", displayTitle: "All Actions", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["action.create"] },
       { title: "AddKnowledge", path: "/knowledge", displayTitle: "Add Knowledge", permission: ["superpower.create"] },
       // { title: "Categories", path: "/category", displayTitle: "Categories", permission: ["category.index"] },
       // { title: "Tags", path: "/tag", displayTitle: "All Tag", permission: ["tag.index", "tag.create"] },
