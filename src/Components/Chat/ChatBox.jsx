@@ -4,8 +4,7 @@ import { OpenAIStream } from "@/Utils/OpenAIStream";
 import { useQuery } from "@tanstack/react-query";
 import request from "../../Utils/AxiosUtils";
 import { prompt } from "@/Utils/AxiosUtils/API";
-import { ChatGPTAPI, AnyScaleAPI } from "@/Utils/AxiosUtils/API";
-import { superpower } from "@/Utils/AxiosUtils/API";
+import { ChatGPTAPI, AnyScaleAPI, superpower } from "@/Utils/AxiosUtils/API";
 import { GetKnowldege } from "@/Utils/GetKnowldege/GetKnowldege";
 
 export default function ChatBox({activeTab, values}) {
@@ -46,13 +45,13 @@ export default function ChatBox({activeTab, values}) {
     const {model, api, api_key} = getModelandAPI(values["gpt_model"])
 
     setMessages(updatedMessages);
+    setLoading(true);
 
     let knowledgeText = "";
 
     if (values['superpowers'] && values['superpowers'].length > 0) {
       knowledgeText = await handleGetKnowledges(message.content);
     }
-    setLoading(true);
 
     try {
         const charLimit = 12000;
