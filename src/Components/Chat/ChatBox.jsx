@@ -17,7 +17,7 @@ export default function ChatBox({activeTab, values}) {
   const { data: promptData, isLoading: promptLoader } = useQuery(["prompts", values['prompts']], () => request({ url: prompt }), { refetchOnWindowFocus: false, select: (res) => res?.data });
   const { data: superpowers, isLoading: superpowerloading } = useQuery([superpower, values['superpowers']], () => request({ url: superpower, method: 'get', params: {ids: values['superpowers'].join()} }), { refetchOnWindowFocus: false, select: (res) => res?.data.data });
   const { data: customModelData, isLoading: modelLoader, refetch, fetchStatus } = useQuery([gptmodel, values['gpt_model']], () => request({
-    url: `${gptmodel}/${values['gpt_model']}`}), { refetchOnWindowFocus: false, select: (res) => res?.data });
+    url: `${gptmodel}/${values['gpt_model']} ? ${values['gpt_model']} : false`}), { refetchOnWindowFocus: false, select: (res) => res?.data });
 
   useEffect(() => {
     if(!promptLoader && promptData) {
@@ -31,6 +31,11 @@ export default function ChatBox({activeTab, values}) {
   };
 
   const handleSend = async (message) => {
+    if (!customModelData) {
+      alert("Model has not selected yet....");
+      return;
+    }
+
     const promptTexts = selectedPrompts.map(prom => ({role: "user", content: prom.prompt_text}))
     const updatedMessages = [...messages, message];
 
