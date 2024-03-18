@@ -6,68 +6,13 @@ import request from "../../Utils/AxiosUtils";
 import SettingContext from "../../Helper/SettingContext";
 import I18NextContext from "@/Helper/I18NextContext";
 import { useTranslation } from "@/app/i18n/client";
-import { prompt } from "../../Utils/AxiosUtils/API";
+import { prompt, gptmodel } from "../../Utils/AxiosUtils/API";
 import MultiSelectField from "../InputFields/MultiSelectField";
 import SelectField from "../InputFields/SelectField";
 import { Table, Row, Col } from "reactstrap";
 import Btn from "@/Elements/Buttons/Btn";
 import { RiPencilLine } from "react-icons/ri";
 import TableLoader from "../Table/TableLoader";
-
-const modelChoiceItems = [
-  {
-    name: "gpt-3.5-turbo",
-    id: "gpt-3.5-turbo"
-  },
-  {
-    name: "gpt-3.5-turbo-0125",
-    id: "gpt-3.5-turbo-0125",
-  },
-  {
-    name: "gpt-3.5-turbo-1106",
-    id: "gpt-3.5-turbo-1106",
-  },
-  {
-    name: "gpt-3.5-turbo-instruct",
-    id: "gpt-3.5-turbo-instruct",
-  },
-  {
-    name: "gpt-3.5-turbo-16k-0613",
-    id: "gpt-3.5-turbo-16k-0613",
-  },
-  {
-    name: "gpt-4-0125-preview",
-    id: "gpt-4-0125-preview",
-  },
-  {
-    name: "gpt-4-turbo-preview",
-    id: "gpt-4-turbo-preview",
-  },
-  {
-    name: "gpt-4-vision-preview",
-    id: "gpt-4-vision-preview",
-  },
-  {
-    name: "anyscale-google/gemma-7b-it",
-    id: "anyscale-google/gemma-7b-it",
-  },
-  {
-    name: "anyscale-meta-llama/Llama-2-7b-chat-hf",
-    id: "anyscale-meta-llama/Llama-2-7b-chat-hf",
-  },
-  {
-    name: "anyscale-codellama/CodeLlama-70b-Instruct-hf",
-    id: "anyscale-codellama/CodeLlama-70b-Instruct-hf",
-  },
-  {
-    name: "anyscale-mistralai/Mistral-7B-Instruct-v0.1",
-    id: "anyscale-mistralai/Mistral-7B-Instruct-v0.1",
-  },
-  {
-    name: "anyscale-mlabonne/NeuralHermes-2.5-Mistral-7B",
-    id: "anyscale-mlabonne/NeuralHermes-2.5-Mistral-7B",
-  }
-];
 
 const PromptAndModels2 = ({ values, setFieldValue, errors, updateId }) => {
   const { i18Lang } = useContext(I18NextContext);
@@ -77,6 +22,8 @@ const PromptAndModels2 = ({ values, setFieldValue, errors, updateId }) => {
   const [prompts, setPrompts] = useState([]);
   // Getting data from Cart API
   const { data: promptData, isLoading: promptLoader } = useQuery(["prompt", values.prompts], () => request({ url: prompt }), { refetchOnWindowFocus: false, select: (res) => res?.data });
+  const { data: customModelData, isLoading: modelLoader, refetch, fetchStatus } = useQuery([gptmodel], () => request({
+    url: gptmodel, method: 'get'}, router), { refetchOnWindowFocus: false, select: (res) => res?.data.data });
 
   useEffect(() => {
     if(!promptLoader && promptData) {
@@ -126,7 +73,7 @@ const PromptAndModels2 = ({ values, setFieldValue, errors, updateId }) => {
         </tbody>
       </Table>}
       <div className="mt-4">
-        <SelectField errors={errors} values={values} inputprops={{name: "gpt_model", id: "gpt_model", options: modelChoiceItems}} setFieldValue={setFieldValue} name="gpt_model" require="true" data={selectOptions} />
+        <SelectField errors={errors} values={values} inputprops={{name: "gpt_model", id: "gpt_model", options: customModelData}} setFieldValue={setFieldValue} name="gpt_model" require="true" data={customModelData} />
       </div>
     </>
   );

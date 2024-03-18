@@ -14,6 +14,7 @@ const GptmodelTable = ({ data, ...props }) => {
       { title: "Description", apiKey: "description", sorting: false },
       { title: "API URL", apiKey: "api_url", sorting: false },
       { title: "API KEY", apiKey: "api_key", sorting: false },
+      { title: "Is Public", apiKey: "is_public" },
       { title: "status", apiKey: "status", type: 'switch' }
     ],
     data: data || []

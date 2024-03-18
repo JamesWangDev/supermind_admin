@@ -10,6 +10,7 @@ const GptmodelInputs = () => {
     return (
         <>
             <SimpleInputField nameList={[{ name: "name", require: "true", placeholder: t("EnterName") }, { name: "description", require: "true", title: "Description", type: "textarea", rows: 3, placeholder: t("EnterDescription"), helpertext: "*Maximum length should be 300 characters." }, { name: "api_url", require: "true", placeholder: t("EnterAPIUrl") }, { name: "api_key", require: "true", placeholder: t("EnterAPIKey") }]} />
+            <CheckBoxField name="is_public" />
             <CheckBoxField name="status" />
         </>
     )

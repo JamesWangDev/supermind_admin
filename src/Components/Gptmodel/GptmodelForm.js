@@ -32,10 +32,11 @@ const GptmodelForm = ({ mutate, updateId, loading }) => {
         description: updateId ? oldData?.description : "",
         api_url: updateId ? oldData?.api_url : "",
         api_key: updateId ? oldData?.api_key : "",
+        is_public: updateId ? Boolean(Number(oldData?.is_public)) : true,
         status: updateId ? Boolean(Number(oldData?.status)) : true,
       }}
       validationSchema={YupObject({ name: nameSchema, description: descriptionSchema, api_url: nameSchema, api_key: nameSchema })}
-      onSubmit={(values) => mutate({ ...values, status: Number(values.status) })}>
+      onSubmit={(values) => mutate({ ...values, is_public: Number(values.is_public), status: Number(values.status) })}>
       {() => (
         <Form className="theme-form theme-form-2 mega-form">
           <GptmodelInputs />
