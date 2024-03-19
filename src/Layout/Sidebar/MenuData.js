@@ -32,49 +32,41 @@ const MENUITEMS = [
     ],
   },
   {
-    title: "Superpowers",
-    displayTitle: "Superpowers",
+    title: "ActionSuperPowers",
+    displayTitle: "ActionSuperPowers",
     icon: <RiStore3Line />,
     type: "sub",
     children: [
-      {
-        title: "ActionSuperPowers",
-        displayTitle: "ActionSuperPowers",
-        icon: <RiListUnordered />,
-        type: "sub",
-        children: [
-          { title: "CreateActionSuperPower", path: "", displayTitle: "CreateActionSuperPower", permission: [""] },
-          { title: "AllActionSuperPowers", path: "/action", displayTitle: "AllActionSuperPowers", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["action.create"] },
-          { title: "CreateActionProcedures", path: "/action/create", displayTitle: "CreateActionProcedures", permission: ["action.create"] },
-          { title: "AllProcedures", path: "", displayTitle: "AllProcedures", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: [""] },
-          { title: "AllActionsAPI", path: "", displayTitle: "AllActions/API", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: [""] },
-        ]
-      },
-      {
-        title: "KnowledgeSuperPowers",
-        displayTitle: "KnowledgeSuperPowers",
-        icon: <RiListUnordered />,
-        type: "sub",
-        children: [
-          { title: "CreateKnowledgeSuperPower", path: "/superpower/create", displayTitle: "CreateKnowledgeSuperPower", permission: ["superpower.create"] },
-          { title: "AllKnowledgeSuperPowers", path: "/knowledge", displayTitle: "AllKnowledgeSuperPowers", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["superpower.create"] },
-          { title: "CreateKnowledgeBases", path: "/superpower", displayTitle: "CreateKnowledgeBases", permission: ["superpower.index"] },
-          { title: "AllKnowledgeBases", path: "", displayTitle: "AllKnowledgeBases", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: [""] },
-        ]
-      },
-      {
-        title: "UISuperPowers",
-        displayTitle: "UISuperPowers",
-        icon: <RiListUnordered />,
-        type: "sub",
-        children: [
-          { title: "CreateUISuperPower", path: "", displayTitle: "CreateUISuperPower", permission: [""] },
-          { title: "AllUISuperPowers", path: "", displayTitle: "AllUISuperPowers", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["superpower.index"] },
-          { title: "CreateUIFunctions", path: "", displayTitle: "CreateUIFunctions", permission: [""] },
-          { title: "AllUIFunctions", path: "", displayTitle: "AllUIFunctions", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: [""] },
-        ]
-      }
-    ],
+      { title: "CreateActionSuperPower", path: "/action-superpower/create", displayTitle: "CreateActionSuperPower", permission: ["action-superpower.create"] },
+      { title: "AllActionSuperPowers", path: "/action-superpower", displayTitle: "AllActionSuperPowers", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["action-superpower.index"] },
+      { title: "CreateActionProcedures", path: "/action/create", displayTitle: "CreateActionProcedures", permission: ["action.create"] },
+      { title: "AllProcedures", path: "/action", displayTitle: "AllProcedures", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["action.create"] },
+      { title: "AllActionsAPI", path: "", displayTitle: "AllActions/API", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: [""] },
+    ]
+  },
+  {
+    title: "KnowledgeSuperPowers",
+    displayTitle: "KnowledgeSuperPowers",
+    icon: <RiStore3Line />,
+    type: "sub",
+    children: [
+      { title: "CreateKnowledgeSuperPower", path: "/knowledge-superpower/create", displayTitle: "CreateKnowledgeSuperPower", permission: ["knowledge-superpower.create"] },
+      { title: "AllKnowledgeSuperPowers", path: "/knowledge-superpower", displayTitle: "AllKnowledgeSuperPowers", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["knowledge-superpower.index"] },
+      { title: "CreateKnowledgeBases", path: "/knowledge", displayTitle: "CreateKnowledgeBases", permission: ["superpower.index"] },
+      { title: "AllKnowledgeBases", path: "", displayTitle: "AllKnowledgeBases", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: [""] },
+    ]
+  },
+  {
+    title: "UISuperPowers",
+    displayTitle: "UISuperPowers",
+    icon: <RiStore3Line />,
+    type: "sub",
+    children: [
+      { title: "CreateUISuperPower", path: "/ui-superpower/create", displayTitle: "CreateUISuperPower", permission: ["ui-superpower.create"] },
+      { title: "AllUISuperPowers", path: "/ui-superpower", displayTitle: "AllUISuperPowers", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["ui-superpower.index"] },
+      { title: "CreateUIFunctions", path: "", displayTitle: "CreateUIFunctions", permission: [""] },
+      { title: "AllUIFunctions", path: "", displayTitle: "AllUIFunctions", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: [""] },
+    ]
   },
   // {
   //   title: "Superpowers",
@@ -98,18 +90,10 @@ const MENUITEMS = [
     icon: <RiStore3Line />,
     type: "sub",
     children: [
-      { title: "AddModel", icon: <RiListUnordered />, path: "/gptmodel/create", displayTitle: "AddModel", permission: ["gptmodel.create"] },
-      {
-        title: "FineTuneModel",
-        displayTitle: "FineTuneModel",
-        icon: <RiListUnordered />,
-        type: "sub",
-        children: [
-          { title: "AddTrainingData", path: "/gptmodel/create", displayTitle: "AddTrainingData", permission: ["gptmodel.create"] },
-          { title: "CreateTrainingData", path: "/gptmodel/create", displayTitle: "CreateTrainingData", permission: ["gptmodel.create"] },
-          { title: "AllFineTuneModel", path: "/gptmodel", displayTitle: "AllFineTuneModel", permission: ["gptmodel.index"] },
-        ]
-      },
+      { title: "AddModel", path: "/gptmodel/create", displayTitle: "AddModel", permission: ["gptmodel.create"] },
+      { title: "AllModels", path: "/gptmodel", displayTitle: "AllModels", permission: ["gptmodel.index"] },
+      { title: "AddTrainingData", path: "/gptmodel/create", displayTitle: "AddTrainingData", permission: ["gptmodel.create"] },
+      { title: "CreateTrainingData", path: "/gptmodel/create", displayTitle: "CreateTrainingData", permission: ["gptmodel.create"] },
     ],
   },
   // {

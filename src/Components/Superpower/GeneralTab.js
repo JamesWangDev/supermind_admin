@@ -3,8 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import request from "../../Utils/AxiosUtils";
 import { store, Category } from "../../Utils/AxiosUtils/API";
 import SimpleInputField from "../InputFields/SimpleInputField";
-import SearchableSelectInput from "../InputFields/SearchableSelectInput";
-import CheckBoxField from "../InputFields/CheckBoxField";
 import SettingContext from "../../Helper/SettingContext";
 import I18NextContext from "@/Helper/I18NextContext";
 import { useTranslation } from "@/app/i18n/client";
@@ -25,25 +23,7 @@ const GeneralTab = ({ values, setFieldValue, errors, updateId }) => {
     <>
       <SimpleInputField nameList={[{ name: "name", require: "true", placeholder: t("EnterName") }, { name: "short_description", require: "true", title: "ShortDescription", type: "textarea", rows: 3, placeholder: t("EnterShortDescription"), helpertext: "*Maximum length should be 300 characters." }]} />
       <DescriptionInput values={values} setFieldValue={setFieldValue} title={t('Description')} nameKey="description" errorMessage={"Descriptionisrequired"} />
-      {/* <SimpleInputField nameList={[{ name: "greetings", require: "false", title: "Greetings", type: "textarea", rows: 3, placeholder: t("Enter greetings"), helpertext: "*Maximum length should be 300 characters." }]} /> */}
       <ImageUploadFieldGPT errors={errors} name="product_thumbnail_id" galleryName="product_galleries_id" id="product_thumbnail_id" title="Thumbnail" type="file" values={values} setFieldValue={setFieldValue} updateId={updateId} helpertext={getHelperText('600x600px')} />
-      {/* <ImageUploadFieldGPT errors={errors} name="product_galleries_id" id="product_galleries_id" title="Images" type="file" multiple={true} values={values} setFieldValue={setFieldValue} updateId={updateId} helpertext={getHelperText('600x600px')} /> */}
-      {/* <CheckBoxField name="is_picture" title="picture" /> */}
-      {/* {state?.isMultiVendor && <SearchableSelectInput
-        nameList={[
-          {
-            name: "store_id",
-            title: "Store",
-            require: "true",
-            inputprops: {
-              name: "store_id",
-              id: "store_id",
-              options: StoreData || [],
-              close: true
-            },
-          },
-        ]}
-      />} */}
       <MultiSelectField errors={errors} values={values} setFieldValue={setFieldValue} name="categories" require="true" data={categoryData} />
     </>
   );

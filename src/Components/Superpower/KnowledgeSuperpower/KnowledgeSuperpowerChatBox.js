@@ -1,4 +1,4 @@
-import { Chat } from "../Chat/Chat";
+import { Chat } from "../../Chat/Chat";
 import { useEffect, useRef, useState } from "react";
 import { GetKnowldege } from "@/Utils/GetKnowldege/GetKnowldege";
 

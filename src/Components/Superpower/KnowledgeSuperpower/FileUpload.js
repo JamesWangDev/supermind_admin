@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from 'react'
-import TypeAheadDropDown from "../InputFields/TypeAheadDropdown";
-import ToggleSwitch from '../InputFields/Toggleswitch';
-import ChunkSizingSlider from '../Product/ChunkSizingSlider';
+import TypeAheadDropDown from "../../InputFields/TypeAheadDropdown";
+import ToggleSwitch from '../../InputFields/Toggleswitch';
+import ChunkSizingSlider from '../../Product/ChunkSizingSlider';
 import { Row } from "reactstrap";
 
 const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, setCurrentPartition, updatePartitions }) => {

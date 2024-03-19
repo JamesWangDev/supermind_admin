@@ -3,7 +3,7 @@ import I18NextContext from "@/Helper/I18NextContext";
 import { useTranslation } from "@/app/i18n/client";
 import ChatEngine from "./ChatEngine";
 import FileUpload from "./FileUpload";
-import AccountContext from "../../Helper/AccountContext";
+import AccountContext from "../../../Helper/AccountContext";
 import KnowledgeSummaryPage from "./KnowledgeSummaryPage";
 
 const AddKnowledge = ({ values, setFieldValue, errors, updateId }) => {

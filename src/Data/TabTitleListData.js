@@ -42,15 +42,15 @@ export const ProductTabTitleListData = [
 
 export const SuperPowerTabTitleListData = [
   { title: "General", icon: <RiSettingsLine />, inputs: ["name", "description", "short_description", 'description', "store_id"] },
-  { title: "PromptAndModels", icon: <RiFileListLine />, inputs: [] },
   { title: "Add Actions", icon: <RiImageLine />, inputs: ["product_thumbnail", "product_images"] },
-  { title: "Add Knowledge", icon: <RiFileListLine />, inputs: [] },
-  { title: "Task Decomposition Tools & Chains", icon: <RiFileListLine />, inputs: [] },
-  { title: "Create chains & workflows", icon: <RiFileListLine />, inputs: [] },
-  { title: "Fine Tune Model", icon: <RiFileListLine />, inputs: [] },
-  { title: "Market Place Listing Info", icon: <RiFileListLine />, inputs: [] },
-  { title: "Test", icon: <RiFileListLine />, inputs: [] },
-  { title: "Payments and Pricing", icon: <RiFileListLine />, inputs: [] },
+  // { title: "PromptAndModels", icon: <RiFileListLine />, inputs: [] },
+  // { title: "Add Knowledge", icon: <RiFileListLine />, inputs: [] },
+  // { title: "Task Decomposition Tools & Chains", icon: <RiFileListLine />, inputs: [] },
+  // { title: "Create chains & workflows", icon: <RiFileListLine />, inputs: [] },
+  // { title: "Fine Tune Model", icon: <RiFileListLine />, inputs: [] },
+  // { title: "Market Place Listing Info", icon: <RiFileListLine />, inputs: [] },
+  // { title: "Test", icon: <RiFileListLine />, inputs: [] },
+  // { title: "Payments and Pricing", icon: <RiFileListLine />, inputs: [] },
 ];
 
 export const CouponTabTitleListData = [

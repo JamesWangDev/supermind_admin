@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import request from "../../Utils/AxiosUtils";
+import request from "../../../Utils/AxiosUtils";
 import I18NextContext from "@/Helper/I18NextContext";
-import MultiSelectField from "../InputFields/MultiSelectField";
+import MultiSelectField from "../../InputFields/MultiSelectField";
 import { Table, Row, Col } from "reactstrap";
 import Btn from "@/Elements/Buttons/Btn";
-import TableLoader from "../Table/TableLoader";
+import TableLoader from "../../Table/TableLoader";
 import { Modal, ModalHeader, ModalBody } from "reactstrap";
 import dynamic from "next/dynamic";
 const Markdown = dynamic(() => import("react-markdown"), {
