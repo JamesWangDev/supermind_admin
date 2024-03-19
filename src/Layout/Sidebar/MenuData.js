@@ -26,13 +26,9 @@ const MENUITEMS = [
     type: "sub",
     children: [
       { title: "AddProduct", path: "/product/create", displayTitle: "Add Product", permission: ["product.create"] },
-      // { title: "AddSuperpower", path: "/superpower/create", displayTitle: "Add Superpower", permission: ["product.create"] },
       { title: "AllProducts", path: "/product", displayTitle: "All Product", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["product.create"] },
-      { title: "Attributes", path: "/attribute", displayTitle: "All Attributes", permission: ["attribute.index", "attribute.create"] },
       { title: "Prompts", path: "/prompt", displayTitle: "All Prompts", permission: ["prompt.index", "prompt.create"] },
       { title: "Categories", path: "/category", displayTitle: "Categories", permission: ["category.index"] },
-      { title: "Tags", path: "/tag", displayTitle: "All Tag", permission: ["tag.index", "tag.create"] },
-      { title: "Q&A", path: "/qna", displayTitle: "All Tag", permission: ["question_and_answer.index", "question_and_answer.create"] },
     ],
   },
   {
@@ -41,24 +37,89 @@ const MENUITEMS = [
     icon: <RiStore3Line />,
     type: "sub",
     children: [
-      { title: "AddSuperpower", path: "/superpower/create", displayTitle: "Add Superpower", permission: ["superpower.create"] },
-      { title: "AllSuperPowers", path: "/superpower", displayTitle: "All Superpowers", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["superpower.create"] },
-      { title: "CreateActions", path: "/action/create", displayTitle: "Create Superpower", permission: ["action.create"] },
-      { title: "AllActions", path: "/action", displayTitle: "All Actions", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["action.create"] },
-      { title: "AddKnowledge", path: "/knowledge", displayTitle: "Add Knowledge", permission: ["superpower.create"] },
-      // { title: "Categories", path: "/category", displayTitle: "Categories", permission: ["category.index"] },
-      // { title: "Tags", path: "/tag", displayTitle: "All Tag", permission: ["tag.index", "tag.create"] },
-      // { title: "Q&A", path: "/qna", displayTitle: "All Tag", permission: ["question_and_answer.index", "question_and_answer.create"] },
+      {
+        title: "ActionSuperPowers",
+        displayTitle: "ActionSuperPowers",
+        icon: <RiListUnordered />,
+        type: "sub",
+        children: [
+          { title: "CreateActionSuperPower", path: "", displayTitle: "CreateActionSuperPower", permission: [""] },
+          { title: "AllActionSuperPowers", path: "/action", displayTitle: "AllActionSuperPowers", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["action.create"] },
+          { title: "CreateActionProcedures", path: "/action/create", displayTitle: "CreateActionProcedures", permission: ["action.create"] },
+          { title: "AllProcedures", path: "", displayTitle: "AllProcedures", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: [""] },
+          { title: "AllActionsAPI", path: "", displayTitle: "AllActions/API", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: [""] },
+        ]
+      },
+      {
+        title: "KnowledgeSuperPowers",
+        displayTitle: "KnowledgeSuperPowers",
+        icon: <RiListUnordered />,
+        type: "sub",
+        children: [
+          { title: "CreateKnowledgeSuperPower", path: "/superpower/create", displayTitle: "CreateKnowledgeSuperPower", permission: ["superpower.create"] },
+          { title: "AllKnowledgeSuperPowers", path: "/knowledge", displayTitle: "AllKnowledgeSuperPowers", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["superpower.create"] },
+          { title: "CreateKnowledgeBases", path: "/superpower", displayTitle: "CreateKnowledgeBases", permission: ["superpower.index"] },
+          { title: "AllKnowledgeBases", path: "", displayTitle: "AllKnowledgeBases", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: [""] },
+        ]
+      },
+      {
+        title: "UISuperPowers",
+        displayTitle: "UISuperPowers",
+        icon: <RiListUnordered />,
+        type: "sub",
+        children: [
+          { title: "CreateUISuperPower", path: "", displayTitle: "CreateUISuperPower", permission: [""] },
+          { title: "AllUISuperPowers", path: "", displayTitle: "AllUISuperPowers", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["superpower.index"] },
+          { title: "CreateUIFunctions", path: "", displayTitle: "CreateUIFunctions", permission: [""] },
+          { title: "AllUIFunctions", path: "", displayTitle: "AllUIFunctions", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: [""] },
+        ]
+      }
     ],
   },
+  // {
+  //   title: "Superpowers",
+  //   displayTitle: "Superpowers",
+  //   icon: <RiStore3Line />,
+  //   type: "sub",
+  //   children: [
+  //     { title: "AddSuperpower", path: "/superpower/create", displayTitle: "Add Superpower", permission: ["superpower.create"] },
+  //     { title: "AllSuperPowers", path: "/superpower", displayTitle: "All Superpowers", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["superpower.create"] },
+  //     { title: "CreateActions", path: "/action/create", displayTitle: "Create Superpower", permission: ["action.create"] },
+  //     { title: "AllActions", path: "/action", displayTitle: "All Actions", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["action.create"] },
+  //     { title: "AddKnowledge", path: "/knowledge", displayTitle: "Add Knowledge", permission: ["superpower.create"] },
+  //     // { title: "Categories", path: "/category", displayTitle: "Categories", permission: ["category.index"] },
+  //     // { title: "Tags", path: "/tag", displayTitle: "All Tag", permission: ["tag.index", "tag.create"] },
+  //     // { title: "Q&A", path: "/qna", displayTitle: "All Tag", permission: ["question_and_answer.index", "question_and_answer.create"] },
+  //   ],
+  // },
   {
-    title: "CustomModels",
-    displayTitle: "CustomModels",
+    title: "Models",
+    displayTitle: "Models",
     icon: <RiStore3Line />,
-    path: "/gptmodel",
-    type: "link",
-    permission: ["gptmodel.index", "gptmodel.create"]
+    type: "sub",
+    children: [
+      { title: "AddModel", icon: <RiListUnordered />, path: "/gptmodel/create", displayTitle: "AddModel", permission: ["gptmodel.create"] },
+      {
+        title: "FineTuneModel",
+        displayTitle: "FineTuneModel",
+        icon: <RiListUnordered />,
+        type: "sub",
+        children: [
+          { title: "AddTrainingData", path: "/gptmodel/create", displayTitle: "AddTrainingData", permission: ["gptmodel.create"] },
+          { title: "CreateTrainingData", path: "/gptmodel/create", displayTitle: "CreateTrainingData", permission: ["gptmodel.create"] },
+          { title: "AllFineTuneModel", path: "/gptmodel", displayTitle: "AllFineTuneModel", permission: ["gptmodel.index"] },
+        ]
+      },
+    ],
   },
+  // {
+  //   title: "CustomModels",
+  //   displayTitle: "CustomModels",
+  //   icon: <RiStore3Line />,
+  //   path: "/gptmodel",
+  //   type: "link",
+  //   permission: ["gptmodel.index", "gptmodel.create"]
+  // },
   {
     title: "Stores",
     displayTitle: "Store",
