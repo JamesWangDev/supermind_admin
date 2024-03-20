@@ -1,5 +1,4 @@
-import { descriptionSchema, discountSchema, dropDownScheme, ifTypeSimpleSchema, nameSchema, variationSchema, externalUrlSchema } from "../../Utils/Validation/ValidationSchemas";
-
+import { descriptionSchema, dropDownScheme, nameSchema } from "@/Utils/Validation/ValidationSchemas";
 export const SuperpowerValidationSchema = {
   name: nameSchema,
   short_description: nameSchema,
@@ -13,11 +12,7 @@ export function SuperpowerInitValues(oldData, updateId) {
     name: updateId ? oldData?.name || "" : "",
     short_description: updateId ? oldData?.short_description || "" : "",
     description: updateId ? oldData?.description || "" : "",
-    llm_prompt: updateId ? oldData?.llm_prompt || "" : "",
     categories: updateId ? oldData?.categories?.map((item) => item.id) || [] : [],
-    prompts: updateId ? oldData?.prompts?.map((item) => item.id) || [] : [],
-    gpt_model: updateId ? oldData?.gpt_model || "" : "",
-    actions: updateId ? oldData?.actions?.map((item) => item.id) || [] : [],
     product_thumbnail: updateId ? oldData?.product_thumbnail || "" : "",
     product_thumbnail_id: updateId ? oldData?.product_thumbnail?.id || "" : "",
     product_galleries: updateId ? oldData?.product_galleries?.map((img) => img) || "" : "",

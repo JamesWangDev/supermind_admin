@@ -1,12 +1,12 @@
 'use client'
 import { useState } from "react";
-import { superpower } from "@/Utils/AxiosUtils/API";
+import { UISuperpowerAPI } from "@/Utils/AxiosUtils/API";
 import useCreate from "@/Utils/Hooks/useCreate";
-import SuperPowerForm from "@/Components/Superpower/SuperPowerForm";
+import SuperPowerForm from "@/Components/Superpower/UISuperpower/UISuperPowerForm";
 
 const UpdateProduct = ({ params }) => {
   const [resetKey, setResetKey] = useState(false)
-  const { mutate, isLoading } = useCreate(superpower, params?.updateId, superpower, false, (resDta) => {
+  const { mutate, isLoading } = useCreate(UISuperpowerAPI, params?.updateId, UISuperpowerAPI, false, (resDta) => {
     if (resDta?.status == 200 || resDta?.status == 201) {
       setResetKey(true)
     }

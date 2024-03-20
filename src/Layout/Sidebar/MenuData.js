@@ -39,9 +39,10 @@ const MENUITEMS = [
     children: [
       { title: "CreateActionSuperPower", path: "/action-superpower/create", displayTitle: "CreateActionSuperPower", permission: ["action-superpower.create"] },
       { title: "AllActionSuperPowers", path: "/action-superpower", displayTitle: "AllActionSuperPowers", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["action-superpower.index"] },
-      { title: "CreateActionProcedures", path: "/action/create", displayTitle: "CreateActionProcedures", permission: ["action.create"] },
+      { title: "CreateActions", path: "/action/create", displayTitle: "CreateActions", permission: ["action.create"] },
+      { title: "AllActions", path: "/action", displayTitle: "AllActions", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["action.create"] },
+      { title: "CreateProcedures", path: "/action/create", displayTitle: "CreateProcedures", permission: ["action.create"] },
       { title: "AllProcedures", path: "/action", displayTitle: "AllProcedures", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["action.create"] },
-      { title: "AllActionsAPI", path: "", displayTitle: "AllActions/API", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: [""] },
     ]
   },
   {
@@ -52,8 +53,8 @@ const MENUITEMS = [
     children: [
       { title: "CreateKnowledgeSuperPower", path: "/knowledge-superpower/create", displayTitle: "CreateKnowledgeSuperPower", permission: ["knowledge-superpower.create"] },
       { title: "AllKnowledgeSuperPowers", path: "/knowledge-superpower", displayTitle: "AllKnowledgeSuperPowers", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["knowledge-superpower.index"] },
-      { title: "CreateKnowledgeBases", path: "/knowledge", displayTitle: "CreateKnowledgeBases", permission: ["superpower.index"] },
-      { title: "AllKnowledgeBases", path: "", displayTitle: "AllKnowledgeBases", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: [""] },
+      { title: "CreateKnowledgeBases", path: "/knowledge", displayTitle: "CreateKnowledgeBases", permission: ["knowledge-superpower.create"] },
+      { title: "AllKnowledgeBases", path: "", displayTitle: "AllKnowledgeBases", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: [] },
     ]
   },
   {
@@ -64,8 +65,8 @@ const MENUITEMS = [
     children: [
       { title: "CreateUISuperPower", path: "/ui-superpower/create", displayTitle: "CreateUISuperPower", permission: ["ui-superpower.create"] },
       { title: "AllUISuperPowers", path: "/ui-superpower", displayTitle: "AllUISuperPowers", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["ui-superpower.index"] },
-      { title: "CreateUIFunctions", path: "", displayTitle: "CreateUIFunctions", permission: [""] },
-      { title: "AllUIFunctions", path: "", displayTitle: "AllUIFunctions", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: [""] },
+      { title: "CreateUIFunctions", path: "", displayTitle: "CreateUIFunctions", permission: [] },
+      { title: "AllUIFunctions", path: "", displayTitle: "AllUIFunctions", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: [] },
     ]
   },
   // {

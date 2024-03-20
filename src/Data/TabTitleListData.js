@@ -40,17 +40,19 @@ export const ProductTabTitleListData = [
   { title: "Publish Website", icon: <RiFileListLine />, inputs: [] }
 ];
 
-export const SuperPowerTabTitleListData = [
+export const KnowledgeSuperPowerTabTitleListData = [
   { title: "General", icon: <RiSettingsLine />, inputs: ["name", "description", "short_description", 'description', "store_id"] },
-  { title: "Add Actions", icon: <RiImageLine />, inputs: ["product_thumbnail", "product_images"] },
-  // { title: "PromptAndModels", icon: <RiFileListLine />, inputs: [] },
-  // { title: "Add Knowledge", icon: <RiFileListLine />, inputs: [] },
-  // { title: "Task Decomposition Tools & Chains", icon: <RiFileListLine />, inputs: [] },
-  // { title: "Create chains & workflows", icon: <RiFileListLine />, inputs: [] },
-  // { title: "Fine Tune Model", icon: <RiFileListLine />, inputs: [] },
-  // { title: "Market Place Listing Info", icon: <RiFileListLine />, inputs: [] },
-  // { title: "Test", icon: <RiFileListLine />, inputs: [] },
-  // { title: "Payments and Pricing", icon: <RiFileListLine />, inputs: [] },
+  { title: "Add Knowledge", icon: <RiImageLine />, inputs: ["always_knowledges", "library_knowledges"] },
+];
+
+export const ActionSuperPowerTabTitleListData = [
+  { title: "General", icon: <RiSettingsLine />, inputs: ["name", "description", "short_description", 'description', "store_id"] },
+  { title: "Add Actions", icon: <RiImageLine />, inputs: ["actions"] }
+];
+
+export const UISuperPowerTabTitleListData = [
+  { title: "General", icon: <RiSettingsLine />, inputs: ["name", "description", "short_description", 'description', "store_id"] },
+  { title: "Add UI Functions", icon: <RiImageLine />, inputs: ["uis"] }
 ];
 
 export const CouponTabTitleListData = [

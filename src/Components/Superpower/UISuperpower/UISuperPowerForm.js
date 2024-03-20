@@ -2,17 +2,17 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Form, Formik } from "formik";
 import { Row, Col, Card } from "reactstrap";
-import { SuperPowerTabTitleListData } from "../../Data/TabTitleListData";
-import FormBtn from "../../Elements/Buttons/FormBtn";
-import request from "../../Utils/AxiosUtils";
-import { superpower } from "../../Utils/AxiosUtils/API";
-import { YupObject, nameSchema } from "../../Utils/Validation/ValidationSchemas";
-import Loader from "../CommonComponent/Loader";
-import TabTitle from "../Coupon/TabTitle";
-import { SuperpowerInitValues, SuperpowerValidationSchema } from "./SuperpowerObjects";
-import SuperpowerSubmitFunction from "./SuperpowerSubmitFunction";
-import SettingContext from "../../Helper/SettingContext";
-import AllSuperPowerTabs from "./AllSuperPowerTabs";
+import { UISuperPowerTabTitleListData } from "@/Data/TabTitleListData";
+import FormBtn from "@/Elements/Buttons/FormBtn";
+import request from "@/Utils/AxiosUtils";
+import { UISuperpowerAPI } from "@/Utils/AxiosUtils/API";
+import { YupObject } from "@/Utils/Validation/ValidationSchemas";
+import Loader from "@/Components/CommonComponent/Loader";
+import TabTitle from "@/Components/Coupon/TabTitle";
+import { SuperpowerInitValues, SuperpowerValidationSchema } from "./UISuperpowerObjects";
+import SuperpowerSubmitFunction from "./UISuperpowerSubmitFunction";
+import SettingContext from "@/Helper/SettingContext";
+import AllSuperPowerTabs from "./AllUISuperPowerTabs";
 import I18NextContext from "@/Helper/I18NextContext";
 import { useTranslation } from "@/app/i18n/client";
 
@@ -21,7 +21,7 @@ const SuperPowerForm = ({ mutate, loading, updateId, title }) => {
   const { t } = useTranslation(i18Lang, 'common');
   const [activeTab, setActiveTab] = useState("1");
   const { state } = useContext(SettingContext)
-  const { data: oldData, isLoading: oldDataLoading, refetch, status } = useQuery([updateId], () => request({ url: `${superpower}/${updateId}` }), { refetchOnWindowFocus: false, enabled: false, select: (data) => data.data });
+  const { data: oldData, isLoading: oldDataLoading, refetch, status } = useQuery([updateId], () => request({ url: `${UISuperpowerAPI}/${updateId}` }), { refetchOnWindowFocus: false, enabled: false, select: (data) => data.data });
   useEffect(() => {
     if (updateId) {
       refetch();
@@ -54,7 +54,7 @@ const SuperPowerForm = ({ mutate, loading, updateId, title }) => {
                 </div>
                 <Row>
                   <Col xl="3" lg="4">
-                    <TabTitle activeTab={activeTab} setActiveTab={setActiveTab} titleList={SuperPowerTabTitleListData} errors={errors} touched={touched} />
+                    <TabTitle activeTab={activeTab} setActiveTab={setActiveTab} titleList={UISuperPowerTabTitleListData} errors={errors} touched={touched} />
                   </Col>
                   <AllSuperPowerTabs values={values} activeTab={activeTab} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
                   <FormBtn loading={loading} />
