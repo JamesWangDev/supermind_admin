@@ -47,6 +47,9 @@ export function ProductInitValues(oldData, updateId) {
     prompts: updateId ? oldData?.prompts?.map((item) => item.id) || [] : [],
     gpt_model: updateId ? oldData?.gpt_model || "" : "",
     superpowers: updateId ? oldData?.superpowers?.map((item) => item.id) || [] : [],
+    action_superpowers: updateId ? oldData?.action_superpowers?.map((item) => item.id) || [] : [],
+    knowledge_superpowers: updateId ? oldData?.knowledge_superpowers?.map((item) => item.id) || [] : [],
+    ui_superpowers: updateId ? oldData?.ui_superpowers?.map((item) => item.id) || [] : [],
     store_id: updateId ? Number(oldData?.store_id) || "" : "",
     // Inverntory  =>Type: Simple
     type: updateId ? oldData?.type || "" : "simple",
