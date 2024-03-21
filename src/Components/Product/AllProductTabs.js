@@ -13,6 +13,7 @@ import PromptAndModels2 from './PromptAndModels2'
 import ChatBox from '../Chat/ChatBox'
 import AddUISuperpowersTab from './AddUISuperpowersTab'
 import AddActionSuperpowersTab from './AddActionSuperpowersTab'
+import PaymentAndPricingTab from './PaymentAndPricingTab'
 
 const AllProductTabs = ({ values, setFieldValue, errors, updateId, activeTab }) => {
     return (
@@ -37,7 +38,7 @@ const AllProductTabs = ({ values, setFieldValue, errors, updateId, activeTab }) 
                     <AddUISuperpowersTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
                 </TabPane>
                 <TabPane tabId="7">
-                    {/* <OptionsTab /> */}
+                    <PaymentAndPricingTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
                 </TabPane>
                 <TabPane tabId="8">
                     {/* <OptionsTab /> */}
