@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import TableWarper from "../../Utils/HOC/TableWarper";
-import ShowTable from "../Table/ShowTable";
-import Loader from "../CommonComponent/Loader";
-import AccountContext from "../../Helper/AccountContext";
+import TableWarper from "../../../Utils/HOC/TableWarper";
+import ShowTable from "../../Table/ShowTable";
+import Loader from "../../CommonComponent/Loader";
+import AccountContext from "../../../Helper/AccountContext";
 import { Modal, ModalHeader, ModalBody } from "reactstrap";
 import dynamic from "next/dynamic";
 const Markdown = dynamic(() => import("react-markdown"), {

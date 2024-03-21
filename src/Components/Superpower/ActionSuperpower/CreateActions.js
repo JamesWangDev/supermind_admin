@@ -1,9 +1,9 @@
 import React, { useContext, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import SimpleInputField from "../InputFields/SimpleInputField";
+import SimpleInputField from "../../InputFields/SimpleInputField";
 import I18NextContext from "@/Helper/I18NextContext";
 import { useTranslation } from "@/app/i18n/client";
-import MultiSelectField from "../InputFields/MultiSelectField";
+import MultiSelectField from "../../InputFields/MultiSelectField";
 import { useDebouncedCallback } from 'use-debounce';
 import { UncontrolledAccordion, AccordionBody, AccordionHeader, AccordionItem} from 'reactstrap'
 import FormBtn from "@/Elements/Buttons/FormBtn";

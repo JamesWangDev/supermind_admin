@@ -1,15 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import SettingContext from "../../Helper/SettingContext";
+import SettingContext from "@/Helper/SettingContext";
 import I18NextContext from "@/Helper/I18NextContext";
 import { useTranslation } from "@/app/i18n/client";
-import MultiSelectField from "../InputFields/MultiSelectField";
+import MultiSelectField from "../../InputFields/MultiSelectField";
 import { Table, Row, Col } from "reactstrap";
 import Btn from "@/Elements/Buttons/Btn";
-import TableLoader from "../Table/TableLoader";
+import TableLoader from "../../Table/TableLoader";
 import axios from "axios";
-import SuperpowerChatBox from "./SuperpowerChatBox";
+import SuperpowerChatBox from "./KnowledgeSuperpowerChatBox";
 
 const AddKnowledgeTab = ({ values, setFieldValue, errors, updateId }) => {
   const { i18Lang } = useContext(I18NextContext);

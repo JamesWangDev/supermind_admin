@@ -1,10 +1,10 @@
 import { useContext,useEffect } from "react";
-import TableWarper from "../../Utils/HOC/TableWarper";
-import ShowTable from "../Table/ShowTable";
-import Loader from "../CommonComponent/Loader";
-import usePermissionCheck from "../../Utils/Hooks/usePermissionCheck";
-import placeHolderImage from "../../../public/assets/images/placeholder.png";
-import AccountContext from "../../Helper/AccountContext";
+import TableWarper from "@/Utils/HOC/TableWarper";
+import ShowTable from "@/Components/Table/ShowTable";
+import Loader from "@/Components/CommonComponent/Loader";
+import usePermissionCheck from "@/Utils/Hooks/usePermissionCheck";
+import placeHolderImage from "../../../../public/assets/images/placeholder.png";
+import AccountContext from "@/Helper/AccountContext";
 
 const AllSuperpowerTable = ({ data, ...props }) => {
   const [edit, destroy] = usePermissionCheck(["edit", "destroy"]);

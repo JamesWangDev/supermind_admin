@@ -167,3 +167,12 @@ export const ChatGPTAPI = "https://api.openai.com/v1/chat/completions"
 
 // AnyScale API endpoint
 export const AnyScaleAPI = "https://api.endpoints.anyscale.com/v1/chat/completions"
+
+// superpower api
+export const KnowledgeSuperpowerAPI = "/knowledge-superpower";
+
+// superpower api
+export const ActionSuperpowerAPI = "/action-superpower";
+
+// superpower api
+export const UISuperpowerAPI = "/ui-superpower";

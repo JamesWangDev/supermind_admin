@@ -1,6 +1,6 @@
 'use client'
 
-import CreateActions from "@/Components/Superpower/CreateActions";
+import CreateActions from "@/Components/Superpower/ActionSuperpower/CreateActions";
 
 const ActionsCreate = () => {
     return (

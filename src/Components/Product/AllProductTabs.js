@@ -11,6 +11,8 @@ import AddSuperpowersTab from './AddSuperpowersTab'
 import PersonalityLimitsTab from './PersonalityLimitsTab'
 import PromptAndModels2 from './PromptAndModels2'
 import ChatBox from '../Chat/ChatBox'
+import AddUISuperpowersTab from './AddUISuperpowersTab'
+import AddActionSuperpowersTab from './AddActionSuperpowersTab'
 
 const AllProductTabs = ({ values, setFieldValue, errors, updateId, activeTab }) => {
     return (
@@ -20,21 +22,24 @@ const AllProductTabs = ({ values, setFieldValue, errors, updateId, activeTab }) 
                     <GeneralTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
                 </TabPane>
                 <TabPane tabId="2">
-                    <PromptAndModels2 values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
-                </TabPane>
-                <TabPane tabId="3">
-                    <AddSuperpowersTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
-                </TabPane>
-                <TabPane tabId="4">
                     <PersonalityLimitsTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
                 </TabPane>
+                <TabPane tabId="3">
+                    <PromptAndModels2 values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
+                </TabPane>
+                <TabPane tabId="4">
+                    <AddActionSuperpowersTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
+                </TabPane>
                 <TabPane tabId="5">
-                    {/* <SeoTab values={values} setFieldValue={setFieldValue} updateId={updateId} /> */}
+                    <AddSuperpowersTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
                 </TabPane>
                 <TabPane tabId="6">
-                    {/* <ShippingTaxTab /> */}
+                    <AddUISuperpowersTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
                 </TabPane>
                 <TabPane tabId="7">
+                    {/* <OptionsTab /> */}
+                </TabPane>
+                <TabPane tabId="8">
                     {/* <OptionsTab /> */}
                 </TabPane>
                 <ChatBox values={values} activeTab={activeTab} />

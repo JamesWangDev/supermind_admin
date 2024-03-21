@@ -62,7 +62,7 @@ export function ProductInitValues(oldData, updateId) {
     is_sale_enable: updateId ? oldData?.is_sale_enable || false : false,
     sale_starts_at: updateId ? oldData?.sale_starts_at || new Date() : new Date(),
     sale_expired_at: updateId ? oldData?.sale_expired_at || new Date() : new Date(new Date().getTime() + 10 * 24 * 60 * 60 * 1000),
-    // Inventory  =>Type: Classified
+    // PromptAndModels  =>Type: Classified
     variations: updateId ? oldData?.variations : [],
     combination: updateId ? attr_combination() : [{}],
     attributesName: updateId ? oldData?.attributes : [],

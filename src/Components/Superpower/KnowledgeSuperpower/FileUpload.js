@@ -1,7 +1,7 @@
-import { useEffect, useState, useContext } from 'react';
-import TypeAheadDropDown from "../InputFields/TypeAheadDropdown";
-import ToggleSwitch from '../InputFields/Toggleswitch';
-import ChunkSizingSlider from '../Product/ChunkSizingSlider';
+import { useEffect, useState, useContext } from 'react'
+import TypeAheadDropDown from "../../InputFields/TypeAheadDropdown";
+import ToggleSwitch from '../../InputFields/Toggleswitch';
+import ChunkSizingSlider from '../../Product/ChunkSizingSlider';
 import ShowModal from '@/Elements/Alerts&Modals/Modal';
 import { Row } from "reactstrap";
 import Btn from "@/Elements/Buttons/Btn";

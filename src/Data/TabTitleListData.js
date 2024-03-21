@@ -30,32 +30,29 @@ import themeOption6 from "../../public/assets/images/theme-option/shop/06.jpg"
 import themeOption7 from "../../public/assets/images/theme-option/shop/07.jpg"
 
 export const ProductTabTitleListData = [
-  { title: "General", icon: <RiSettingsLine />, inputs: ["name", "description", "short_description", 'is_picture', "store_id"] },
-  { title: "Inventory", icon: <RiFileListLine />, inputs: [] },
-  { title: "Add Superpowers", icon: <RiImageLine />, inputs: ["product_thumbnail", "product_images"] },
-  { title: "Personality & Limits", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
-  { title: "Market Place Listing Info", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
-  { title: "Publish Website", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
-  { title: "Test Supermind", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
-  { title: "Payments and Pricing", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
-
-  // { title: "Setup", icon: <RiToolsLine />, inputs: ["tags", "categories", "cross_sell_product_id"] },
-  // { title: "SEO", icon: <RiEarthLine />, inputs: ["meta_title", "meta_description ", "product_meta_image"] },
-  // { title: "Shipping&Tax", icon: <RiTruckLine />, inputs: ["is_return", "is_cod", "shipping_days", "tax_id"] },
-  // { title: "Status", icon: <RiCheckboxCircleLine />, inputs: ["status", "is_free_shipping", "is_changeable", "is_refundable"] },
+  { title: "General", icon: <RiFileListLine />, inputs: ["name", "description", "short_description", 'is_picture', "greetings", "product_thumbnail_id", "categories"] },
+  { title: "Personality & Limits", icon: <RiFileListLine />, inputs: ["personality_desc", "res_length", "is_use_username", "conversation_limits", "llm_prompt"] },
+  { title: "PromptAndModels", icon: <RiFileListLine />, inputs: ["prompts", "gpt_model"] },
+  { title: "Add Action Superpowers", icon: <RiFileListLine />, inputs: [] },
+  { title: "Add Knowledge Superpowers", icon: <RiFileListLine />, inputs: ["superpowers"] },
+  { title: "Add UI Superpowers", icon: <RiFileListLine />, inputs: [] },
+  { title: "Payments and Pricing", icon: <RiFileListLine />, inputs: [] },
+  { title: "Publish Website", icon: <RiFileListLine />, inputs: [] }
 ];
 
-export const SuperPowerTabTitleListData = [
+export const KnowledgeSuperPowerTabTitleListData = [
   { title: "General", icon: <RiSettingsLine />, inputs: ["name", "description", "short_description", 'description', "store_id"] },
-  { title: "Inventory", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
-  { title: "Add Actions", icon: <RiImageLine />, inputs: ["product_thumbnail", "product_images"] },
-  { title: "Add Knowledge", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
-  { title: "Task Decomposition Tools & Chains", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
-  { title: "Create chains & workflows", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
-  { title: "Fine Tune Model", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
-  { title: "Market Place Listing Info", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
-  { title: "Test", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
-  { title: "Payments and Pricing", icon: <RiFileListLine />, inputs: ["type", "stock_status", "sku", "quantity", "price", "sale_price", 'show_stock_quantity', "discount", "visible_time", "variations"] },
+  { title: "Add Knowledge", icon: <RiImageLine />, inputs: ["always_knowledges", "library_knowledges"] },
+];
+
+export const ActionSuperPowerTabTitleListData = [
+  { title: "General", icon: <RiSettingsLine />, inputs: ["name", "description", "short_description", 'description', "store_id"] },
+  { title: "Add Actions", icon: <RiImageLine />, inputs: ["actions"] }
+];
+
+export const UISuperPowerTabTitleListData = [
+  { title: "General", icon: <RiSettingsLine />, inputs: ["name", "description", "short_description", 'description', "store_id"] },
+  { title: "Add UI Functions", icon: <RiImageLine />, inputs: ["uis"] }
 ];
 
 export const CouponTabTitleListData = [

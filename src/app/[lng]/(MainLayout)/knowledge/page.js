@@ -1,6 +1,6 @@
 'use client'
 
-import AddKnowledge from "@/Components/Superpower/AddKnowledge";
+import AddKnowledge from "@/Components/Superpower/KnowledgeSuperpower/AddKnowledge";
 
 const KnowLedge = () => {
     return (

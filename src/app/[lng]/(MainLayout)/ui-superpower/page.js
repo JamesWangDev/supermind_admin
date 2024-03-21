@@ -1,15 +1,16 @@
 "use client";
 import { useState } from "react";
 import { Col } from "reactstrap";
-import AllActionsTable from "@/Components/Superpower/ActionSuperpower/AllActionsTable";
+import AllUISuperpowerTable from "@/Components/Superpower/UISuperpower/AllUISuperpowerTable";
+import { UISuperpowerAPI } from "@/Utils/AxiosUtils/API";
 
-const AllActions = () => {
+const AllUsers = () => {
   const [isCheck, setIsCheck] = useState([]);
   return (
     <Col sm="12">
-      <AllActionsTable
-        url={"http://134.209.37.239:3010/getDescriptions"}
-        moduleName="Actions"
+      <AllUISuperpowerTable
+        url={UISuperpowerAPI}
+        moduleName="Ui-Superpower"
         isCheck={isCheck}
         setIsCheck={setIsCheck}
         isReplicate={{ title: "Duplicate", replicateAPI: "replicate" }}
@@ -18,4 +19,4 @@ const AllActions = () => {
   );
 };
 
-export default AllActions;
+export default AllUsers;
