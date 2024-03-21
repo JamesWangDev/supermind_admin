@@ -23,6 +23,8 @@ const PaymentAndPricingTab = ({ values, setFieldValue, errors, updateId }) => {
 
         <SimpleInputField nameList={[{ name: "cost_per_token", require: "true", type: "number", placeholder: t("Enter Cost per Token"), title: "Cost per Token" }, { name: "downstream_cost", require: "true", type: "number", placeholder: t("Enter Downstream Costs"), title: "Downstream Costs" }]} />
       </div>
+      <div className="content-color mb-4" style={{fontSize: 16, fontWeight: 600}}>Tier Two:</div>
+      <div className="content-color mb-4 mt-4" style={{fontSize: 16, fontWeight: 600}}>Tier Three:</div>
     </>
   );
 };
