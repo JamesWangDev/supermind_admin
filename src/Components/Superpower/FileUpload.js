@@ -1,14 +1,17 @@
-import { useEffect, useState, useContext } from 'react'
+import { useEffect, useState, useContext } from 'react';
 import TypeAheadDropDown from "../InputFields/TypeAheadDropdown";
 import ToggleSwitch from '../InputFields/Toggleswitch';
 import ChunkSizingSlider from '../Product/ChunkSizingSlider';
+import ShowModal from '@/Elements/Alerts&Modals/Modal';
 import { Row } from "reactstrap";
+import Btn from "@/Elements/Buttons/Btn";
 
 const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, setCurrentPartition, updatePartitions }) => {
     const [isChecked, setIsChecked] = useState(true)
     const [isPublic, setIsPublic] = useState(false)
     const [partitionStatus, setPartitionStatus] = useState({ status: '', message: '' })
     const [partitionDocuments, setPartitionDocuments] = useState([])
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [apiResponseMessageObject, setApiResponseMessageObject] = useState({ message: '', type: '' })
     const [inputObject, setInputObject] = useState({
         file: '',
@@ -146,6 +149,31 @@ const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, set
         }
     }
 
+    const deletePartition = () => {
+        console.log({currentPartition})
+        const partitionId = partitions.filter(n => n.partition_name === currentPartition)[0].partition_id
+        console.log({partitionId})
+        fetch(`https://sea-turtle-app-qcwo5.ondigitalocean.app/partition/${partitionId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            updatePartitions()
+            setShowDeleteModal(false)
+            setCurrentPartition('')
+            setPartitionStatus({ status: 'invalidExistingName', message: 'Please choose a valid existing partition' })
+            setInputObject({
+                file: '',
+                content: '',
+                description: '',
+                chunkSize: 512
+            })
+        })
+    }
+
 
     return (
         <>
@@ -212,20 +240,38 @@ const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, set
             {/* Chunk slider component for determining chunk sizes */}
             <ChunkSizingSlider chunkSize={inputObject.chunkSize} handleSliderMovement={handleSliderMovement}/>
             {/* Upload Button */}
-            <button 
-                disabled={
-                    !currentPartition || 
-                    !inputObject.file || 
-                    !inputObject.file.name || 
-                    (partitionStatus.status === 'invalidExistingName' || partitionStatus.status === 'alreadyExists')
-                }
-                className="mt-3"
-                onClick={() => putFile(inputObject)}
-            >
-            Upload
-            </button>
+            <div>
+                <button 
+                    disabled={
+                        !currentPartition || 
+                        !inputObject.file || 
+                        !inputObject.file.name || 
+                        (partitionStatus.status === 'invalidExistingName' || partitionStatus.status === 'alreadyExists')
+                    }
+                    className="mt-3"
+                    onClick={() => putFile(inputObject)}
+                >
+                Upload
+                </button>
+                <button onClick={() => setShowDeleteModal(true)}>
+                    Delete Partition
+                </button>
+            </div>
             {/* Display API Response */}
             {apiResponseMessageObject.message.length > 0 && <div>{apiResponseMessageObject.message}</div>}
+            <ShowModal 
+                title={"DeletePartition"} 
+                open={showDeleteModal} 
+                setModal={setShowDeleteModal}
+                buttons={
+                    <>
+                        <Btn title="Cancel" onClick={() => setShowDeleteModal(false)} className="btn--no btn-md fw-bold" />
+                        <Btn title="Delete" onClick={() => deletePartition()} className="btn-theme btn-md fw-bold"/>
+                    </>
+                }
+            >
+                <div>This will delete the current partition. Are you sure you want to proceed?</div>
+            </ShowModal>
         </>
     )
 }

@@ -1,4 +1,10 @@
 import { useState, useEffect } from 'react'
+import {
+    Dropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,
+  } from "reactstrap"
 
 const ChatEngine = ({ partitions, currentPartition }) => {
     const [query, setQuery] = useState('')
@@ -6,6 +12,9 @@ const ChatEngine = ({ partitions, currentPartition }) => {
     const [partitionStatus, setPartitionStatus] = useState('invalid')
     const [referenceDocuments, setReferenceDocuments] = useState([])
     const [componentState, setComponentState] = useState('chat')
+    const [maxContextLength, setMaxContextLength] = useState(512)
+    const [topKResults, setTopKResults] = useState(3)
+    const [showDropdown, setShowDropdown] = useState(false)
 
     useEffect(() => {
         partitions.map(p => p.partition_name).filter(name => name === currentPartition).length > 0 
@@ -28,7 +37,9 @@ const ChatEngine = ({ partitions, currentPartition }) => {
                 },
                 body: JSON.stringify({
                     'query': query,
-                    'partition_names': [currentPartition]
+                    'partition_names': [currentPartition],
+                    'max_context_tokens': maxContextLength,
+                    'top_k': topKResults
                 })
             })
             .then(res => res.json())
@@ -62,6 +73,38 @@ const ChatEngine = ({ partitions, currentPartition }) => {
                     <div className="mt-3 flex">
                         <input placeholder="Enter query" value={query} onChange={e => handleQueryInput(e)} />
                     </div>
+                </div>
+                <div style={{ marginTop: '16px' }}>
+                    <div>Select the number of results you'd like to return for Context:</div>
+                    <Dropdown isOpen={showDropdown} toggle={() => setShowDropdown(prev => !prev)}>
+                        <DropdownToggle
+                            caret
+                            variant="dark"
+                            className="dropdown-toggle-chat"
+                            type="button"
+                            size="sm"
+                        >
+                            {topKResults}
+                        <DropdownMenu className="dropdown-menu-end sm-dropdown-menu w-100">
+                            {[1, 2, 3, 4, 5].map((item, index) => (
+                                <DropdownItem
+                                    id={`${item}${index}-1`}
+                                    key={`${item}${index}-1`}
+                                    onClick={() => {
+                                        setTopKResults(item)
+                                        setShowDropdown(false)
+                                    }}
+                                >
+                                    {item}
+                                </DropdownItem>
+                            ))}
+                        </DropdownMenu>
+                        </DropdownToggle>
+                    </Dropdown>
+                </div>
+                <div style={{ marginTop: '16px' }}>
+                    <div>Enter max context length:</div>
+                    <input type="number" value={maxContextLength} onChange={e => setMaxContextLength(e.target.value)}/>
                 </div>
                 {partitionStatus === 'valid' && <button className="mt-3" onClick={queryChatEngine}>Chat</button>}
                 {queryResults.length > 0 && 
