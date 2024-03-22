@@ -105,29 +105,29 @@ const MENUITEMS = [
   //   type: "link",
   //   permission: ["gptmodel.index", "gptmodel.create"]
   // },
-  {
-    title: "Stores",
-    displayTitle: "Store",
-    icon: <RiStore2Line />,
-    type: "sub",
-    children: [
-      { title: "AddStore", path: "/store/create", displayTitle: "Add Store", permission: ["store.create"] },
-      { title: "AllStores", path: "/store", displayTitle: "All Stores", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["store.index"] },
-      { title: "Wallet", path: "/vendor_wallet", displayTitle: "Wallets", permission: ["vendor_wallet.index"] },
-      { title: "CommissionHistory", path: "/commission_history", displayTitle: "Commission History", permission: ["commission_history.index"] },
-      { title: "PaymentDetails", path: "/payment_account", displayTitle: "Payment Details", permission: ["payment_account.create"] },
-      { title: "Withdrawal", displayTitle: "Withdrawal", path: "/withdraw_request", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["withdraw_request.index"] },
-    ],
-  },
-  {
-    title: "Orders",
-    displayTitle: "Orders",
-    icon: <RiListUnordered />,
-    type: "sub",
-    children: [
-      { title: "AllOrders", path: "/order", displayTitle: "All Orders", permission: ["order.index"] },
-      { title: "CreateOrder", path: "/order/create", displayTitle: "Create Order", permission: ["order.create"] }],
-  },
+  // {
+  //   title: "Stores",
+  //   displayTitle: "Store",
+  //   icon: <RiStore2Line />,
+  //   type: "sub",
+  //   children: [
+  //     { title: "AddStore", path: "/store/create", displayTitle: "Add Store", permission: ["store.create"] },
+  //     { title: "AllStores", path: "/store", displayTitle: "All Stores", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["store.index"] },
+  //     { title: "Wallet", path: "/vendor_wallet", displayTitle: "Wallets", permission: ["vendor_wallet.index"] },
+  //     { title: "CommissionHistory", path: "/commission_history", displayTitle: "Commission History", permission: ["commission_history.index"] },
+  //     { title: "PaymentDetails", path: "/payment_account", displayTitle: "Payment Details", permission: ["payment_account.create"] },
+  //     { title: "Withdrawal", displayTitle: "Withdrawal", path: "/withdraw_request", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["withdraw_request.index"] },
+  //   ],
+  // },
+  // {
+  //   title: "Orders",
+  //   displayTitle: "Orders",
+  //   icon: <RiListUnordered />,
+  //   type: "sub",
+  //   children: [
+  //     { title: "AllOrders", path: "/order", displayTitle: "All Orders", permission: ["order.index"] },
+  //     { title: "CreateOrder", path: "/order/create", displayTitle: "Create Order", permission: ["order.create"] }],
+  // },
   {
     title: "Media",
     displayTitle: "Media",
@@ -147,78 +147,78 @@ const MENUITEMS = [
       { title: "Tags", path: "/blog/tag", displayTitle: "Tags", permission: ["tag.index", "tag.create"] },
     ],
   },
-  {
-    title: "Pages",
-    displayTitle: "Pages",
-    icon: <RiPagesLine />,
-    path: "/page", permission: ["page.index"],
-    type: "link"
-  },
-  {
-    title: "Taxes",
-    displayTitle: "Taxes",
-    icon: <RiPercentLine />,
-    path: "/tax", permission: ["tax.index"],
-    type: "link"
-  },
+  // {
+  //   title: "Pages",
+  //   displayTitle: "Pages",
+  //   icon: <RiPagesLine />,
+  //   path: "/page", permission: ["page.index"],
+  //   type: "link"
+  // },
+  // {
+  //   title: "Taxes",
+  //   displayTitle: "Taxes",
+  //   icon: <RiPercentLine />,
+  //   path: "/tax", permission: ["tax.index"],
+  //   type: "link"
+  // },
 
-  {
-    title: "Shipping",
-    displayTitle: "Shipping",
-    icon: <RiTruckLine />,
-    path: "/shipping",
-    permission: ["shipping.index"],
-    type: "link"
-  },
-  {
-    title: "Coupons",
-    displayTitle: "Coupons",
-    icon: <RiCoupon2Line />,
-    path: "/coupon",
-    permission: ["coupon.index"],
-    type: "link"
-  },
-  {
-    title: "Currencies",
-    displayTitle: "Currency",
-    icon: <RiCurrencyFill />,
-    path: "/currency",
-    permission: ["currency.index"],
-    type: "link"
-  },
-  {
-    title: "Points",
-    displayTitle: "Point",
-    icon: <RiCoinsLine />,
-    path: "/point",
-    permission: ["point.index"],
-    type: "link"
-  },
-  {
-    title: "Wallet",
-    displayTitle: "Wallet",
-    icon: <RiWalletLine />,
-    path: "/wallet",
-    permission: ["wallet.index"],
-    type: "link"
-  },
-  {
-    title: "Refund",
-    displayTitle: "Refund",
-    icon: <RiExchangeDollarFill />,
-    path: "/refund",
-    permission: ["refund.index"],
-    badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0,
-    type: "link"
-  },
-  {
-    title: "Reviews",
-    displayTitle: "Reviews",
-    icon: <RiRefund2Line />,
-    path: "/review",
-    permission: ["review.index"],
-    type: "link"
-  },
+  // {
+  //   title: "Shipping",
+  //   displayTitle: "Shipping",
+  //   icon: <RiTruckLine />,
+  //   path: "/shipping",
+  //   permission: ["shipping.index"],
+  //   type: "link"
+  // },
+  // {
+  //   title: "Coupons",
+  //   displayTitle: "Coupons",
+  //   icon: <RiCoupon2Line />,
+  //   path: "/coupon",
+  //   permission: ["coupon.index"],
+  //   type: "link"
+  // },
+  // {
+  //   title: "Currencies",
+  //   displayTitle: "Currency",
+  //   icon: <RiCurrencyFill />,
+  //   path: "/currency",
+  //   permission: ["currency.index"],
+  //   type: "link"
+  // },
+  // {
+  //   title: "Points",
+  //   displayTitle: "Point",
+  //   icon: <RiCoinsLine />,
+  //   path: "/point",
+  //   permission: ["point.index"],
+  //   type: "link"
+  // },
+  // {
+  //   title: "Wallet",
+  //   displayTitle: "Wallet",
+  //   icon: <RiWalletLine />,
+  //   path: "/wallet",
+  //   permission: ["wallet.index"],
+  //   type: "link"
+  // },
+  // {
+  //   title: "Refund",
+  //   displayTitle: "Refund",
+  //   icon: <RiExchangeDollarFill />,
+  //   path: "/refund",
+  //   permission: ["refund.index"],
+  //   badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0,
+  //   type: "link"
+  // },
+  // {
+  //   title: "Reviews",
+  //   displayTitle: "Reviews",
+  //   icon: <RiRefund2Line />,
+  //   path: "/review",
+  //   permission: ["review.index"],
+  //   type: "link"
+  // },
   {
     title: "FAQ's",
     displayTitle: "FAQ's",
