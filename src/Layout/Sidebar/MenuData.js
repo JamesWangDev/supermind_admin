@@ -186,22 +186,22 @@ const MENUITEMS = [
   //   permission: ["currency.index"],
   //   type: "link"
   // },
-  // {
-  //   title: "Points",
-  //   displayTitle: "Point",
-  //   icon: <RiCoinsLine />,
-  //   path: "/point",
-  //   permission: ["point.index"],
-  //   type: "link"
-  // },
-  // {
-  //   title: "Wallet",
-  //   displayTitle: "Wallet",
-  //   icon: <RiWalletLine />,
-  //   path: "/wallet",
-  //   permission: ["wallet.index"],
-  //   type: "link"
-  // },
+  {
+    title: "Points",
+    displayTitle: "Point",
+    icon: <RiCoinsLine />,
+    path: "/point",
+    permission: ["point.index"],
+    type: "link"
+  },
+  {
+    title: "Wallet",
+    displayTitle: "Wallet",
+    icon: <RiWalletLine />,
+    path: "/wallet",
+    permission: ["wallet.index"],
+    type: "link"
+  },
   // {
   //   title: "Refund",
   //   displayTitle: "Refund",
@@ -211,14 +211,14 @@ const MENUITEMS = [
   //   badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0,
   //   type: "link"
   // },
-  // {
-  //   title: "Reviews",
-  //   displayTitle: "Reviews",
-  //   icon: <RiRefund2Line />,
-  //   path: "/review",
-  //   permission: ["review.index"],
-  //   type: "link"
-  // },
+  {
+    title: "Reviews",
+    displayTitle: "Reviews",
+    icon: <RiRefund2Line />,
+    path: "/review",
+    permission: ["review.index"],
+    type: "link"
+  },
   {
     title: "FAQ's",
     displayTitle: "FAQ's",
