@@ -25,11 +25,11 @@ const AllProductTable = ({ data, ...props }) => {
     column: [
       { title: "Image", apiKey: "product_thumbnail", type: 'image', placeHolderImage: placeHolderImage },
       { title: "Name", apiKey: "name", sorting: true, sortBy: "desc" },
-      { title: "Price", apiKey: "sale_price", sorting: true, sortBy: "desc", type: 'price' },
-      { title: "Stock", apiKey: "stock_status", type: 'stock_status' },
-      { title: "StoreName", apiKey: "store", subKey: ["store_name"] },
-      { title: "Approved", apiKey: "is_approved", type: 'switch', url: `${product}${Approved}` },
-      { title: "Status", apiKey: "status", type: 'switch' }
+      { title: "Price", apiKey: "monthly", sorting: true, sortBy: "desc", type: 'price' },
+      // { title: "Stock", apiKey: "stock_status", type: 'stock_status' },
+      // { title: "StoreName", apiKey: "store", subKey: ["store_name"] },
+      // { title: "Approved", apiKey: "is_approved", type: 'switch', url: `${product}${Approved}` },
+      // { title: "Status", apiKey: "status", type: 'switch' }
     ],
     data: data || []
   };
