@@ -27,7 +27,7 @@ const PaymentAndPricingTab = ({ values, setFieldValue, errors, updateId }) => {
   return (
     <>
       {/* <div className="content-color mb-4" style={{fontSize: 16, fontWeight: 600}}>Supermind Subscribers:</div> */}
-      <CheckBoxField name="is_sub_participate" title="Participate" />
+      <CheckBoxField name="is_sub_participate" title="Participate Supermind subscriber system" />
       <div className="ms-5">
         <SelectField errors={errors} values={values} inputprops={{name: "participate_type", id: "participate_type", options: participate_options}} setFieldValue={setFieldValue} name="participate_type" require="true" data={participate_options} />
       </div>
