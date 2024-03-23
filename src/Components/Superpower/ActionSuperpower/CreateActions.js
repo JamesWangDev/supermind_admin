@@ -25,7 +25,7 @@ const CreateActions = () => {
   const { t } = useTranslation(i18Lang, 'common');
   const [spec, setSpec] = useState("")
   const [specType, setSpecType] = useState("spec")
-  const [authKey, setAuthKey] = useState("second")
+  const [authKey, setAuthKey] = useState("");
   const [refetchApiInfo, setRefetchApiInfo] = useState(0)
 
   const { error, data: apiInfo, isLoading } = useQuery(["apiInfo", refetchApiInfo, specType], async () => {
