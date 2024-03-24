@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Col } from "reactstrap";
-import AllProceduresTable from "@/Components/Superpower/ProcedureSuperpower/AllProceduresTable";
+import AllProceduresTable from "@/Components/Superpower/ProcedureSuperPower/AllProceduresTable";
 
 const AllProcedures = () => {
   const [isCheck, setIsCheck] = useState([]);
