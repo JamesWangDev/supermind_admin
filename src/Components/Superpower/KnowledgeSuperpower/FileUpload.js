@@ -3,7 +3,13 @@ import TypeAheadDropDown from "../../InputFields/TypeAheadDropdown";
 import ToggleSwitch from '../../InputFields/Toggleswitch';
 import ChunkSizingSlider from '../../Product/ChunkSizingSlider';
 import ShowModal from '@/Elements/Alerts&Modals/Modal';
-import { Row } from "reactstrap";
+import {
+    Dropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,
+    Row,
+  } from "reactstrap"
 import Btn from "@/Elements/Buttons/Btn";
 
 const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, setCurrentPartition, updatePartitions }) => {
@@ -13,11 +19,14 @@ const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, set
     const [partitionDocuments, setPartitionDocuments] = useState([])
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [apiResponseMessageObject, setApiResponseMessageObject] = useState({ message: '', type: '' })
+    const [showDropdown, setShowDropdown] = useState(false)
     const [inputObject, setInputObject] = useState({
         file: '',
         content: '',
         description: '',
-        chunkSize: 512
+        chunkSize: 512,
+        topK: 3,
+        maxContextTokens: 512
     })
     let fileReader
 
@@ -39,7 +48,6 @@ const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, set
 
     // Handler for updating input fields
     const handleChange = (event, key) => {
-        console.log({event, key})
         const newInputObject = { ...inputObject, [key]: event.target.value }
         setInputObject(newInputObject)
     }
@@ -102,7 +110,9 @@ const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, set
                 'partition_description': inputObject.description,
                 'partition_summary': 'The summary for this partition is currently unavailable',
                 'is_public': isPublic,
-                'created_by_user_id': 1
+                'created_by_user_id': 1,
+                'top_k': inputObject.topK,
+                'max_context_tokens': inputObject.maxContextTokens
             })
         })
         .then(res => res.json())
@@ -160,7 +170,7 @@ const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, set
             }
         })
         .then(res => res.json())
-        .then(data => {
+        .then(() => {
             updatePartitions()
             setShowDeleteModal(false)
             setCurrentPartition('')
@@ -169,7 +179,9 @@ const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, set
                 file: '',
                 content: '',
                 description: '',
-                chunkSize: 512
+                chunkSize: 512,
+                topK: 3,
+                maxContextTokens: 512
             })
         })
     }
@@ -239,6 +251,46 @@ const FileUpload = ({ partitions, setAppState, setSummary, currentPartition, set
             </div>
             {/* Chunk slider component for determining chunk sizes */}
             <ChunkSizingSlider chunkSize={inputObject.chunkSize} handleSliderMovement={handleSliderMovement}/>
+            {/* Inputs for Top K and Max Context Tokens */}
+            <div>
+                <div style={{ marginTop: '16px' }}>
+                    <div>Select the default number of results you'd like to return for Context during chat:</div>
+                    <Dropdown isOpen={showDropdown && !isChecked} toggle={() => !isChecked ? setShowDropdown(prev => !prev) : {}}>
+                        <DropdownToggle
+                            caret
+                            variant="dark"
+                            className="dropdown-toggle-chat"
+                            type="button"
+                            size="sm"
+                        >
+                            {inputObject.topK}
+                        <DropdownMenu className="dropdown-menu-end sm-dropdown-menu w-100">
+                            {[1, 2, 3, 4, 5].map((item, index) => (
+                                <DropdownItem
+                                    id={`${item}${index}-1`}
+                                    key={`${item}${index}-1`}
+                                    onClick={(e) => {
+                                        setInputObject({ ...inputObject, 'topK': item })
+                                        setShowDropdown(false)
+                                    }}
+                                >
+                                    {item}
+                                </DropdownItem>
+                            ))}
+                        </DropdownMenu>
+                        </DropdownToggle>
+                    </Dropdown>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <label>Enter default number of context tokens for chat:</label>
+                    <input
+                        disabled={isChecked} 
+                        value={inputObject.maxContextTokens} 
+                        style={{ width: '25%' }}
+                        onChange={e => handleChange(e, 'maxContextTokens')}
+                    />
+                </div>
+            </div>
             {/* Upload Button */}
             <div>
                 <button 
