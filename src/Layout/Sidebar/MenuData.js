@@ -41,8 +41,8 @@ const MENUITEMS = [
       { title: "AllActionSuperPowers", path: "/action-superpower", displayTitle: "AllActionSuperPowers", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["action-superpower.index"] },
       { title: "CreateActions", path: "/action/create", displayTitle: "CreateActions", permission: ["action.create"] },
       { title: "AllActions", path: "/action", displayTitle: "AllActions", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["action.create"] },
-      { title: "CreateProcedures", path: "/procedure/create", displayTitle: "CreateProcedures", permission: ["action.create"] },
-      { title: "AllProcedures", path: "/procedure", displayTitle: "AllProcedures", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["action.create"] },
+      { title: "CreateProcedures", path: "/procedure/create", displayTitle: "CreateProcedures", permission: ["procedure.create"] },
+      { title: "AllProcedures", path: "/procedure", displayTitle: "AllProcedures", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["procedure.index"] },
     ]
   },
   {
