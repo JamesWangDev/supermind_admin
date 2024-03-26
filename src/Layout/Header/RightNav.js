@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import Link from "next/link";
 import { RiFullscreenExitLine, RiFullscreenFill, RiGlobalLine, RiMoonLine, RiSearchLine } from "react-icons/ri";
-import { Col } from "reactstrap";
+import { Button, Col } from "reactstrap";
 import useOutsideDropdown from "../../Utils/Hooks/CustomHooks/useOutsideDropdown";
 import usePermissionCheck from "../../Utils/Hooks/usePermissionCheck";
 import Language from "./Language";
@@ -11,6 +11,9 @@ import I18NextContext from "@/Helper/I18NextContext";
 import { useTranslation } from "@/app/i18n/client";
 import QuickLinks from "./QuickLinks";
 import SettingContext from "@/Helper/SettingContext";
+import { createNewConnectedAccount } from "@/Utils/AxiosUtils/API";
+import request from "@/Utils/AxiosUtils";
+import Btn from "@/Elements/Buttons/Btn";
 
 const RightNav = ({ setMode, setOpenSearchBar }) => {
   const { i18Lang } = useContext(I18NextContext);
@@ -19,6 +22,7 @@ const RightNav = ({ setMode, setOpenSearchBar }) => {
   const { ref, isComponentVisible, setIsComponentVisible } = useOutsideDropdown();
   const { settingObj } = useContext(SettingContext);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggleFullScreen = () => {
 
@@ -48,11 +52,20 @@ const RightNav = ({ setMode, setOpenSearchBar }) => {
     }
   }
 
+  const createConnectedAccount = () => {
+    setIsLoading(true);
+    request({url: createNewConnectedAccount})
+      .then(response => {
+        setIsLoading(false);
+        window.open(response.data.url, '_blank');
+      })
+  }
+
   return (
     <Col className="nav-right pull-right right-header p-0">
       <div className="header-btns d-none d-lg-flex">
-        <QuickLinks  isComponentVisible={isComponentVisible} setIsComponentVisible={setIsComponentVisible}/>
-        {isOrderCreate && <Link href={"/order/create"} className="btn btn-animation">{t("Pos")}</Link>}
+        <QuickLinks isComponentVisible={isComponentVisible} setIsComponentVisible={setIsComponentVisible}/>
+        <Btn loading={isLoading} onClick={createConnectedAccount} className="btn btn-primary">{t("Connect Stripe")}</Btn>
       </div>
       <ul className="nav-menus" ref={ref}>
         <li>

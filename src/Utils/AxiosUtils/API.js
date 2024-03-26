@@ -176,3 +176,6 @@ export const ActionSuperpowerAPI = "/action-superpower";
 
 // superpower api
 export const UISuperpowerAPI = "/ui-superpower";
+
+// create connected account on Stripe
+export const createNewConnectedAccount = "/createNewConnectedAccount";
