@@ -45,6 +45,11 @@ export const KnowledgeSuperPowerTabTitleListData = [
   { title: "Add Knowledge", icon: <RiImageLine />, inputs: ["always_knowledges", "library_knowledges"] },
 ];
 
+export const CreateActionTabTitleListData = [
+  { title: "Add API", icon: <RiFileListLine />, inputs: []},
+  { title: "Add New Function", icon: <RiFileListLine />, inputs: []}
+];
+
 export const ActionSuperPowerTabTitleListData = [
   { title: "General", icon: <RiSettingsLine />, inputs: ["name", "description", "short_description", 'description', "store_id"] },
   { title: "Add Actions", icon: <RiImageLine />, inputs: ["actions"] }
