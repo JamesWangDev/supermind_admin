@@ -22,8 +22,8 @@ const TopDashSection = () => {
                     <Col xl={3} sm={6}>
                         <div className="card-tiles">
                             <div>
-                                <h6>{t("TotalRevenue")}</h6>
-                                <h3>{convertCurrency(data?.total_revenue || 0)}</h3>
+                                <h6>{t("Total Points")}</h6>
+                                <h3>{data?.total_points || 0}</h3>
                             </div>
                             <div className="icon-box">
                                 <RiWalletLine />

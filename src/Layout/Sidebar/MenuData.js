@@ -20,6 +20,20 @@ const MENUITEMS = [
     ],
   },
   {
+    title: "Stores",
+    displayTitle: "Stores",
+    icon: <RiContactsLine />,
+    type: "sub",
+    children: [
+      { title: "AddStore", path: "/store/create", displayTitle: "AddStore", permission: ["store.create"] },
+      { title: "AllStores", path: "/store", displayTitle: "AllStores", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["store.index"] },
+      { title: "Wallet", path: "/vendor_wallet", displayTitle: "Wallets", permission: ["vendor_wallet.index"] },
+      { title: "CommissionHistory", path: "/commission_history", displayTitle: "Commission History", permission: ["commission_history.index"] },
+      { title: "PaymentDetails", path: "/payment_account", displayTitle: "Payment Details", permission: ["payment_account.create"] },
+      { title: "Withdrawal", displayTitle: "Withdrawal", path: "/withdraw_request", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["withdraw_request.index"] },
+    ],
+  },
+  {
     title: "Superminds",
     displayTitle: "Superminds",
     icon: <RiStore3Line />,
@@ -104,20 +118,6 @@ const MENUITEMS = [
   //   path: "/gptmodel",
   //   type: "link",
   //   permission: ["gptmodel.index", "gptmodel.create"]
-  // },
-  // {
-  //   title: "Stores",
-  //   displayTitle: "Store",
-  //   icon: <RiStore2Line />,
-  //   type: "sub",
-  //   children: [
-  //     { title: "AddStore", path: "/store/create", displayTitle: "Add Store", permission: ["store.create"] },
-  //     { title: "AllStores", path: "/store", displayTitle: "All Stores", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["store.index"] },
-  //     { title: "Wallet", path: "/vendor_wallet", displayTitle: "Wallets", permission: ["vendor_wallet.index"] },
-  //     { title: "CommissionHistory", path: "/commission_history", displayTitle: "Commission History", permission: ["commission_history.index"] },
-  //     { title: "PaymentDetails", path: "/payment_account", displayTitle: "Payment Details", permission: ["payment_account.create"] },
-  //     { title: "Withdrawal", displayTitle: "Withdrawal", path: "/withdraw_request", badgeType: 'badge bg-warning text-dark ml-3', badgeValue: 0, permission: ["withdraw_request.index"] },
-  //   ],
   // },
   // {
   //   title: "Orders",
