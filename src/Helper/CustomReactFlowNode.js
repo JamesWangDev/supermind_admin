@@ -1,7 +1,9 @@
-import React, { memo } from 'react';
-import { Handle, Position } from 'reactflow';
+import React, { memo, useState } from 'react';
+import { Handle, Position, useReactFlow } from 'reactflow';
 
-export default memo(({ data }) => {
+export default memo(({ data, id }) => {
+    const [labelState, setLabelState] = useState(data.label ?? "")
+    const {setNodes} = useReactFlow()
     const targetPositions = [Position.Top, Position.Left, Position.Bottom, Position.Right]
     const sourcePositions = [Position.Bottom, Position.Right, Position.Top, Position.Left]
     return (
@@ -12,7 +14,17 @@ export default memo(({ data }) => {
             id={`${i}`}
         />)}
         <div>
-            {data.label}
+            {<input style={{border: "0px"}} size={labelState.length + 1} value={labelState} onChange={(e) => {
+                const val = e.target.value
+                setLabelState(val)
+                setNodes(prev => {
+                    const tempNodes = [...prev]
+                    const index = tempNodes.findIndex((tempNode) => tempNode.id === id)
+                    if(index < 0) return prev
+                    tempNodes[index].data.label = val
+                    return tempNodes
+                })
+            }} />}
         </div>
         {Array(data.sourceHandleCount).fill(0).map((_, i) => <Handle
             type="source"

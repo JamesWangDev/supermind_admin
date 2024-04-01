@@ -8,6 +8,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import { UncontrolledAccordion, AccordionBody, AccordionHeader, AccordionItem} from 'reactstrap'
 import FormBtn from "@/Elements/Buttons/FormBtn";
 import { Form, Formik } from "formik";
+import AccountContext from "@/Helper/AccountContext";
 
 const apiTypeOptions = [
     {
@@ -20,8 +21,9 @@ const apiTypeOptions = [
     },
 ];
 
-const CreateActions = () => {
+const CreateActionsApi = () => {
   const { i18Lang } = useContext(I18NextContext);
+  const {accountData} = useContext(AccountContext);
   const { t } = useTranslation(i18Lang, 'common');
   const [spec, setSpec] = useState("")
   const [specType, setSpecType] = useState("spec")
@@ -36,7 +38,7 @@ const CreateActions = () => {
           "Content-Type": "application/json",
         },
 
-        body: JSON.stringify({data: spec, specType})
+        body: JSON.stringify({data: spec, specType, email: accountData.email})
     })
     const respJson = await resp.json()
     if(respJson.success) return respJson
@@ -106,4 +108,4 @@ const CreateActions = () => {
   );
 };
 
-export default CreateActions;
+export default CreateActionsApi;
