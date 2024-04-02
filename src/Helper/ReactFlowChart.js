@@ -23,7 +23,7 @@ const edgeTypes = {
 const ReactFlowChart = ({procedure, description, name, width='75vw', height='100vh'}) => {
     const [webSocket, setWebSocket] = useState(null)
     const [refreshWebSocket, setRefreshWebSocket] = useState(0)
-    const [stateProceudre, setStateProceudre] = useState(procedure)
+    const [stateProcedure, setStateProcedure] = useState(procedure)
     const [chatMessage, setChatMessage] = useState("")
     const [prompt, setPrompt] = useState(`You are an action agent. You follow Procedures provided in turns like in Dungeons and Dragons. In each turn, you Issue 2 commands, the first will be as per the procedure, and the second will be a user message informing the user of your action.   You wil receive a response to commands and then follow the procedure logic to choose a new command to issue. Issue each command as a JSON package in the format Command: URL. DATA BLOCK: Key pairs as per procedure. The back end system will parse the text you output and send the DATA Block to the API targeted URL and then return the response in your next turn. DO NOT EXPLAIN ANYTHING OR SAY YOU CANNOT DO ANYTHING. Follow these instructions verbatim, **always** issues the command URL and DATA BLOCK. Do not issue any additional tokens.  For the user message you issues, always use the following URL "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4-f27a-48e9-a62f-a87722a0b5d4"  [Example Turn] Example Command: [{\n  "Command": "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4",\n  "DATA BLOCK": {\n    "start": 1,\n    "final_value": 20\n  }\n}] Example User Message [{\n  "Command": "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4-f27a-48e9-a62f-a87722a0b5d4",\n  "DATA BLOCK": {\n    "user message": "I issued a command",\n}\n}]|You always ensure objects are output in an array, for example    For each command in commands:        Output JSON Array:            [            {                "Command": "<URL>",                "DATA BLOCK": "<data block>"            },            {                "Command": "<URL>",                "DATA BLOCK": "<data block>"            }            ]
     //never ouput "response" key value pairs
@@ -71,7 +71,7 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
         })
         const respJson = await resp.json()
         if(respJson.success) {
-            setStateProceudre(respJson.data)
+            setStateProcedure(respJson.data)
         }
         throw respJson.message
     }, { refetchOnWindowFocus: false, select: (data) => data.data });
@@ -143,12 +143,12 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
         </div>
         <div>
             <h3>Procedure:</h3>
-            <textarea style={{width: "100%"}} rows="10" type="text" value={stateProceudre} onChange={(e) => setStateProceudre(e.target.value)} />
+            <textarea style={{width: "100%"}} rows="10" type="text" value={stateProcedure} onChange={(e) => setStateProcedure(e.target.value)} />
             <Btn
                 title="Update Procedure"
                 className="align-items-center btn-theme add-button"
                 loading={updateProcedureLoading}
-                onClick={() => updateProcedureMutate({procedure: stateProceudre, name})}
+                onClick={() => updateProcedureMutate({procedure: stateProcedure, name})}
             />
         </div>
         <div style={{marginBottom: "10px"}}>
@@ -166,7 +166,7 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
                             alert("Error occured. Please try again")
                             return
                         }
-                        webSocket.send(JSON.stringify({event: "chatWithProcedure", data: {procedure, message: chatMessage, prompt}}))
+                        webSocket.send(JSON.stringify({event: "chatWithProcedure", data: {procedure: stateProcedure, message: chatMessage, prompt}}))
                         setChatLoading(true)
                         setChatData([])
                         setChatLogs([])
