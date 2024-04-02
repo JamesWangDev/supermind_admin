@@ -31,7 +31,7 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
     //<directive>when procedure is complete issue "@!@" as your last token</end directive>
     `)
     const [chatLoading, setChatLoading] = useState(false)
-    const [chatData, setChatData] = useState(null)
+    const [chatData, setChatData] = useState([])
     const [chatLogs, setChatLogs] = useState([])
     const [nodes, setNodes, onNodesChange] = useNodesState([])
     const [edges, setEdges, onEdgesChange] = useEdgesState([])
@@ -119,7 +119,7 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
             try {
                 const jsonData = JSON.parse(event.data)
                 if(jsonData.event === "chatWithProcedureMessage") {
-                    setChatData(jsonData.data)
+                    setChatData(prev => [...prev, jsonData.data])
                     if(jsonData.isEnd) setChatLoading(false)
                 }
                 if(jsonData.event === "chatWithProcedureLog") {
@@ -168,7 +168,7 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
                         }
                         webSocket.send(JSON.stringify({event: "chatWithProcedure", data: {procedure, message: chatMessage, prompt}}))
                         setChatLoading(true)
-                        setChatData(null)
+                        setChatData([])
                         setChatLogs([])
                     }}
                 />
@@ -179,7 +179,7 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
             </div>}
            {chatData &&  <div>
                 <h3>Response: </h3>
-                <p>{chatData}</p>
+                <p>{chatData.map((data, i) => <p key={i}>{data}</p>)}</p>
             </div>}
         </div>
         <div style={{ width, height }}>
