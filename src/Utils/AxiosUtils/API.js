@@ -179,3 +179,6 @@ export const UISuperpowerAPI = "/ui-superpower";
 
 // create connected account on Stripe
 export const createNewConnectedAccount = "/createNewConnectedAccount";
+
+// create stripe transfer to trafser money to connected acount
+export const createStripeTransfer = "/createStripeTransfer";

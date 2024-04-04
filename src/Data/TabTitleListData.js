@@ -1,4 +1,4 @@
-import { RiAccountBoxLine, RiBankCardLine, RiBankLine, RiRecordCircleLine, RiCheckboxCircleLine, RiCloseCircleLine, RiCreativeCommonsNcLine, RiEarthLine, RiFileListLine, RiGoogleFill, RiImageLine, RiLineChartLine, RiMailOpenLine, RiMailUnreadLine, RiMoneyEuroBoxLine, RiPaypalLine, RiPercentLine, RiPhoneLockLine, RiPieChartLine, RiRadioButtonLine, RiRefundLine, RiSecurePaymentLine, RiSettingsLine, RiToolsLine, RiTruckLine, RiWallet3Fill, RiFacebookCircleLine, RiGoogleLine, RiAlertLine, RiFileList2Line, RiShoppingBasketLine, RiLayoutBottom2Line, RiLayoutTop2Line, RiContactsLine } from "react-icons/ri";
+import { RiAccountBoxLine, RiBankCardLine, RiBankLine, RiRecordCircleLine, RiCheckboxCircleLine, RiCloseCircleLine, RiCreativeCommonsNcLine, RiEarthLine, RiFileListLine, RiGoogleFill, RiImageLine, RiLineChartLine, RiMailOpenLine, RiMailUnreadLine, RiMoneyEuroBoxLine, RiPaypalLine, RiPercentLine, RiPhoneLockLine, RiPieChartLine, RiRadioButtonLine, RiRefundLine, RiSecurePaymentLine, RiSettingsLine, RiToolsLine, RiTruckLine, RiWallet3Fill, RiFacebookCircleLine, RiGoogleLine, RiAlertLine, RiFileList2Line, RiShoppingBasketLine, RiLayoutBottom2Line, RiLayoutTop2Line, RiContactsLine, RiMoneyDollarCircleLine } from "react-icons/ri";
 import { TbTruckDelivery } from 'react-icons/tb'
 import basicSeller from '../../public/assets/images/theme-option/seller/basic.png'
 import classicSeller from '../../public/assets/images/theme-option/seller/classic.png'
@@ -154,6 +154,7 @@ export const BlogTypeOption = [
 export const AccountTab = [
   { title: "ProfileSetting", icon: <RiAccountBoxLine /> },
   { title: "ChangePassword", icon: <RiPhoneLockLine /> },
+  { title: "Get paid", icon: <RiMoneyDollarCircleLine /> },
 ]
 
 export const PaymentDetailTab = [

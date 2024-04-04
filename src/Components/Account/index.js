@@ -7,6 +7,7 @@ import ProfilePasswordTab from './ProfilePasswordTab';
 import AccountContext from '../../Helper/AccountContext';
 import { RiAccountBoxLine } from 'react-icons/ri';
 import VendorProfile from './VendorProfile';
+import GetPaidTab from './GetPaidTab';
 
 const AccountForm = () => {
     const [activeTab, setActiveTab] = useState("1");
@@ -33,6 +34,9 @@ const AccountForm = () => {
                 <TabPane tabId={role === 'vendor' ? "3" : "2"}>
                     <ProfilePasswordTab />
                 </TabPane>
+                {role === 'vendor' && <TabPane tabId={role === 'vendor' ? "4" : "3"}>
+                    <GetPaidTab />
+                </TabPane>}
             </TabContent>
         </div>
     )
