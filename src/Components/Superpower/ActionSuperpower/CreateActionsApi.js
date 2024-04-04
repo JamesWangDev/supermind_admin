@@ -28,10 +28,11 @@ const CreateActionsApi = () => {
   const [spec, setSpec] = useState("")
   const [specType, setSpecType] = useState("spec")
   const [authKey, setAuthKey] = useState("");
+  const [description, setDescription] = useState("")
   const [refetchApiInfo, setRefetchApiInfo] = useState(0)
 
-  const { error, data: apiInfo, isLoading } = useQuery(["apiInfo", refetchApiInfo, specType], async () => {
-    if(!spec || !specType || ! authKey) throw "Please Fill All Fields"
+  const { error, data: apiInfo, isLoading } = useQuery(["apiInfo", refetchApiInfo, specType, description], async () => {
+    if(!spec || !specType || !authKey || !description) throw "Please Fill All Fields"
     const resp = await fetch("http://134.209.37.239:3010/getNodeData", {
         method: "POST",
         headers: {
@@ -52,7 +53,7 @@ const CreateActionsApi = () => {
           "Content-Type": "application/json",
         },
 
-        body: JSON.stringify({apiSpec: spec, specType, authKey})
+        body: JSON.stringify({apiSpec: spec, specType, authKey, description})
     })
     const respJson = await resp.json()
     if(respJson.success) {
@@ -85,7 +86,7 @@ const CreateActionsApi = () => {
         }
         return <Form onSubmit={handleSubmit}>
           <MultiSelectField errors={errors} values={values} setFieldValue={setSpecTypeVal} name="ApiSpecType" require="true" data={apiTypeOptions} />
-          <SimpleInputField nameList={[{ name: "AuthToken", require: "true", placeholder: t("AuthToken"), onChange: (e) => setAuthKey(e.target.value), value: authKey }, { name: "API_SPEC", require: "true", title: "API_SPEC", type: "textarea", rows: 10, placeholder: t("ENTER_API_SPEC"), onChange: (e) => {
+          <SimpleInputField nameList={[{ name: "AuthToken", require: "true", placeholder: t("AuthToken"), onChange: (e) => setAuthKey(e.target.value), value: authKey }, { name: "Description", require: "true", placeholder: t("Description"), onChange: (e) => setDescription(e.target.value), value: description }, { name: "API_SPEC", require: "true", title: "API_SPEC", type: "textarea", rows: 10, placeholder: t("ENTER_API_SPEC"), onChange: (e) => {
             setSpec(e.target.value)
             showApiInfo()
           }, value: spec}]} />
