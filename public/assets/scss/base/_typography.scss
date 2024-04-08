@@ -448,3 +448,51 @@ span {
 .theme-bg-color {
   background-color: var(--theme-color);
 }
+
+.magic-wand-btn > svg {
+  display: flex; 
+  border: 1px solid #00a300; 
+  border-radius: 100%; 
+  padding: 3px; 
+  width: 24px; 
+  height: 24px; 
+  color: #00a300; 
+  background-color: #eff4ff; 
+  position: absolute; 
+  right: 10px; 
+  bottom: 10px;
+  border-width: 1.8px;
+
+  &:hover {
+    color: white;
+    border-color: #00a300;
+    background-color: #00a300;
+  }
+
+  &:active {
+    color: #00a300;
+    border-color: #00a300;
+    background-color: white;
+  }
+}
+
+.magic-wand-spinner {
+  right: 10px; 
+  bottom: 10px;
+  position: absolute;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border-left-color: #00a300;
+  animation: spin 1s ease infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
