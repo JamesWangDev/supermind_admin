@@ -1,0 +1,144 @@
+/*! -----------------------------------------------------------------------------------
+    Template Name: Fastkart Admin
+    Template URI: http://admin.pixelstrap.com/Fastkart/theme
+    Description: This is Admin theme
+    Author: Pixelstrap
+    Author URI: https://themeforest.net/user/pixelstrap
+----------------------------------------------------------------------------------- !*/
+
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import '~react-toastify/dist/ReactToastify.min.css';
+
+@import 'slick-carousel/slick/slick.css';
+@import 'slick-carousel/slick/slick-theme.css';
+
+@import '~react-date-range/dist/styles.css'; // main style file
+@import '~react-date-range/dist/theme/default.css'; // theme css file
+
+@import './style.scss';
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  @include flex_common;
+  flex-direction: column;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #09d3ac;
+}
+
+.otpContainer {
+  margin: 5% auto;
+}
+
+.otpInput {
+  width: 3rem !important;
+  height: 3rem;
+  margin: 0 1rem;
+  font-size: 2rem;
+  text-align: center;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+/*  Add breakpoint for iPhone */
+@media only screen and (max-width: 375px) {
+  .otpInput {
+    width: 1.5rem !important;
+    height: 1.5rem;
+    font-size: 1rem;
+    padding: 8px;
+  }
+}
+
+.is-active {
+  color: teal;
+}
+
+.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.highlight-text {
+  background-color: #c3f7f0;
+}
+
+.datatable-wrapper {
+  position: relative;
+}
+
+.datatable-wrapper .table-loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  @include pseudowh;
+  @include flex_common;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 1;
+}
+
+
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.shrink-0 {
+  flex-shrink: 0;
+}
+
+.grow {
+  flex-grow: 1;
+}
+
+.h-screen {
+  height: 100vh;
+}
+
+.font-mono {
+  font-family: monospace;
+}
+
+.color-white {
+  color: white;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.contents {
+  display: grid;
+  place-items: center;
+  transition: filter 0.2s ease-out, background-color 0.2s ease-out;
+  font-size: 16px;
+}
+
+  /* width */
+::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

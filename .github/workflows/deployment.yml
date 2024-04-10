@@ -1,0 +1,31 @@
+name: Build & Deploy
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - name: Supermind Admin Deployment
+        uses: appleboy/ssh-action@v0.1.2
+        with:
+         host: ${{secrets.SSH_HOST}}
+         key: ${{secrets.SSH_KEY}}
+         username: ${{secrets.SSH_USERNAME}}
+
+         script: |
+           cd ../var/www/supermind/supermind-admin
+           git pull
+           echo 'pull successful'
+           git checkout master
+           npm install
+           echo 'Installing dependencies successful'
+           npm run build
+           echo 'Build successful'
+           systemctl daemon-reload
+           systemctl restart admin.service
+           echo 'Deployment successful'

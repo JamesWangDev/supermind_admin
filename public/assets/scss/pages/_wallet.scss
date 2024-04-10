@@ -1,0 +1,84 @@
+/**=====================
+    Wallet CSS start
+==========================**/
+.wallet-sec {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+
+    @media (max-width: 1511px) {
+        display: grid;
+        grid-template-columns: auto 1fr;
+    }
+
+    @media (max-width: 500px) {
+        grid-template-columns: 1fr;
+    }
+
+    input {
+        width: 40%;
+
+        @media (max-width: 1511px) {
+            width: 100%;
+        }
+    }
+
+    .wallet-amount {
+        width: 25%;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+
+        @media (max-width: 1511px) {
+            width: auto;
+        }
+
+        h5 {
+            margin-top: 5px;
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 600;
+        }
+    }
+
+    .wallet-icon {
+        width: 50px;
+        height: 50px;
+        @include flex_common;
+
+        i {
+            font-size: 40px;
+            color: var(--theme-color);
+        }
+
+        svg {
+            width: 40px;
+            height: 40px;
+            fill: var(--theme-color);
+        }
+    }
+
+    .btn-sec {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+}
+
+.wallet-search {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    .custom-select {
+        width: 75%;
+    }
+
+    .btn-animation {
+        width: calc(25% - 15px);
+    }
+}

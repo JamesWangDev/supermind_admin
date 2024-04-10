@@ -1,0 +1,50 @@
+/**=====================
+     Error-page CSS Start
+==========================**/
+.error-section {
+  @include flex_common;
+  height: 100vh;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+
+  &:after {
+    content: "";
+    position: absolute;
+    background-image: url("../../images/error-bg.png");
+    background-size: cover;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+    z-index: -1;
+  }
+
+  img {
+    width: 42%;
+
+    @media (max-width: 480px) {
+      width: 80%;
+    }
+  }
+
+  h2 {
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    display: block;
+    margin-top: 20px;
+  }
+
+  h3 {
+    width: 80%;
+    line-height: 1.6;
+    margin: 10px auto 0;
+    color: $light-text;
+    font-size: calc(14px + (18 - 14) * ((100vw - 320px) / (1920 - 320)));
+
+    @media (max-width: 480px) {
+      width: 100%;
+    }
+  }
+}
