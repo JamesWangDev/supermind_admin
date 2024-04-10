@@ -1,5 +1,5 @@
 import { Col, TabContent, TabPane } from 'reactstrap'
-import GeneralTab from '../GeneralTab'
+import GeneralTab from './GeneralTab'
 import AddActions from './AddActions'
 
 const AllSuperPowerTabs = ({ values, setFieldValue, errors, updateId, activeTab }) => {

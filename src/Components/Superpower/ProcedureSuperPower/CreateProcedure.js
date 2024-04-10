@@ -9,6 +9,7 @@ import { Form, Formik } from "formik";
 import { Spinner } from "reactstrap";
 import Btn from "@/Elements/Buttons/Btn";
 import ReactFlowChart from "@/Helper/ReactFlowChart";
+import { AITextboxData } from "@/Data/AITextboxData";
 
 const CreateProcedure = () => {
   const { i18Lang } = useContext(I18NextContext);
@@ -1348,7 +1349,7 @@ Example:
           return <Form onSubmit={handleSubmit}>
             <SimpleInputField nameList={[{ name: "Name", require: "true", placeholder: t("Name"), onChange: (e) => setProcedureName(e.target.value), value: procedureName }]} />
             <MultiSelectField errors={errors} values={values} setFieldValue={setActionVal} name="Actions" require="true" data={actionsInfo.map(({name}) => ({name, id:name}))} />
-            <SimpleInputField nameList={[{ name: "Procedure Requirement", require: "true", placeholder: t("Procedure Requirement"), onChange: (e) => setProcedureRequirement(e.target.value), value: procedureRequirement, type: "textarea", rows: 5, }, { name: "Procedure Creating Prompt", require: "true", placeholder: t("Procedure Creating Prompt"), onChange: (e) => setProcedurePrompt(e.target.value), value: procedurePrompt, type: "textarea", rows: 10, }]} />
+            <SimpleInputField nameList={[{ name: "Procedure Requirement", require: "true", placeholder: t("Procedure Requirement"), onChange: (e) => setProcedureRequirement(e.target.value), value: procedureRequirement, type: "textarea", rows: 5, promptText: AITextboxData.procedure_req }, { name: "Procedure Creating Prompt", require: "true", placeholder: t("Procedure Creating Prompt"), onChange: (e) => setProcedurePrompt(e.target.value), value: procedurePrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }]} />
             <FormBtn submitText="Create" loading={isLoading || createProcedureLoading || saveProcedureLoading} />
           </Form>
         }}

@@ -17,12 +17,16 @@ const ReactstrapFormikInput = ({ field: { ...fields }, form: { touched, errors }
   const { setFieldValue } = useFormikContext();
 
   const handleGetAIAssist = () => {
-    setIsAILoading(true);
     const inputText = textAreaEl.current.props.value;
+    if(!inputText) {
+      alert("Enter your text first...");
+      return;
+    }
+    setIsAILoading(true);
     const gptPrompt = [
       {
         role: 'user',
-        content: 'Make this input text better'
+        content: props?.promptText ? props?.promptText : 'Make this input text better'
       },
       {
         role: 'user',

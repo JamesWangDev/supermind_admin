@@ -9,6 +9,7 @@ import { UncontrolledAccordion, AccordionBody, AccordionHeader, AccordionItem} f
 import FormBtn from "@/Elements/Buttons/FormBtn";
 import { Form, Formik } from "formik";
 import AccountContext from "@/Helper/AccountContext";
+import { AITextboxData } from "@/Data/AITextboxData";
 
 const apiTypeOptions = [
     {
@@ -89,7 +90,7 @@ const CreateActionsApi = () => {
           <SimpleInputField nameList={[{ name: "AuthToken", require: "true", placeholder: t("AuthToken"), onChange: (e) => setAuthKey(e.target.value), value: authKey }, { name: "Description", require: "true", placeholder: t("Description"), onChange: (e) => setDescription(e.target.value), value: description }, { name: "API_SPEC", require: "true", title: "API_SPEC", type: "textarea", rows: 10, placeholder: t("ENTER_API_SPEC"), onChange: (e) => {
             setSpec(e.target.value)
             showApiInfo()
-          }, value: spec}]} />
+          }, value: spec, promptText: AITextboxData.api_spec}]} />
           {
               apiInfo?.map((info, i) => <UncontrolledAccordion key={i}>
                   <AccordionItem>

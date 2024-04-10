@@ -8,6 +8,7 @@ import CheckBoxField from "../InputFields/CheckBoxField";
 import Btn from "@/Elements/Buttons/Btn";
 import { OpenAIStream } from "@/Utils/OpenAIStream";
 import { ChatGPTAPI } from "@/Utils/AxiosUtils/API";
+import { AITextboxData } from "@/Data/AITextboxData";
 
 const resLengthOptions = [
   {
@@ -59,7 +60,7 @@ const PersonalityLimitsTab = ({ values, setFieldValue }) => {
 
   return (
     <>
-      <SimpleInputField nameList={[{ name: "personality_desc", require: "true", title: "Describe Personality of your SuperMind", type: "textarea", rows: 3, placeholder: t("Describe Personality of your SuperMind"), helpertext: "" }]} />
+      <SimpleInputField nameList={[{ name: "personality_desc", require: "true", title: "Describe Personality of your SuperMind", type: "textarea", rows: 3, placeholder: t("Describe Personality of your SuperMind"), helpertext: "", promptText: AITextboxData.personality }]} />
       <SearchableSelectInput
         nameList={[
           {
@@ -90,8 +91,8 @@ const PersonalityLimitsTab = ({ values, setFieldValue }) => {
       /> */}
       <CheckBoxField name="is_use_username" title="Use Users Name ?" />
       <SimpleInputField nameList={[
-        {name: "conversation_limits", type: "textarea", rows: 3, placeholder: t("Enter the Conversation Limits"), title: "Conversation Limits", helpertext: ""},
-        { name: "llm_prompt", require: "false", title: "Generated Prompt from your personality", type: "textarea", rows: 7, placeholder: t("Generated Prompt from your personality. But you can edit it as you need."), helpertext: "" }
+        {name: "conversation_limits", type: "textarea", rows: 3, placeholder: t("Enter the Conversation Limits"), title: "Conversation Limits", helpertext: "", promptText: AITextboxData.conversation_limit },
+        { name: "llm_prompt", require: "false", title: "Generated Prompt from your personality", type: "textarea", rows: 7, placeholder: t("Generated Prompt from your personality. But you can edit it as you need."), helpertext: "", promptText: AITextboxData.generated_prompt }
       ]} />
       {/* <SearchableSelectInput
         nameList={[

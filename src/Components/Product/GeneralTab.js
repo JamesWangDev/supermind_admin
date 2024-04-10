@@ -12,6 +12,7 @@ import { useTranslation } from "@/app/i18n/client";
 import MultiSelectField from "../InputFields/MultiSelectField";
 import ImageUploadFieldGPT from "../InputFields/ImageUploadFieldGPT";
 import { getHelperText } from "@/Utils/CustomFunctions/getHelperText";
+import { AITextboxData } from "@/Data/AITextboxData";
 
 const GeneralTab = ({ values, setFieldValue, errors, updateId }) => {
   const { i18Lang } = useContext(I18NextContext);
@@ -23,9 +24,9 @@ const GeneralTab = ({ values, setFieldValue, errors, updateId }) => {
 
   return (
     <>
-      <SimpleInputField nameList={[{ name: "name", require: "true", placeholder: t("EnterName") }, { name: "short_description", require: "true", title: "ShortDescription", type: "textarea", rows: 3, placeholder: t("EnterShortDescription"), helpertext: "*Maximum length should be 300 characters." }]} />
-      <DescriptionInput values={values} setFieldValue={setFieldValue} title={t('Description')} nameKey="description" errorMessage={"Descriptionisrequired"} />
-      <SimpleInputField nameList={[{ name: "greetings", require: "false", title: "Greetings", type: "textarea", rows: 3, placeholder: t("Enter greetings"), helpertext: "*Maximum length should be 300 characters." }]} />
+      <SimpleInputField nameList={[{ name: "name", require: "true", placeholder: t("EnterName") }, { name: "short_description", require: "true", title: "ShortDescription", type: "textarea", rows: 3, placeholder: t("EnterShortDescription"), helpertext: "*Maximum length should be 300 characters.", promptText: AITextboxData.supermind_short_desc }]} />
+      <DescriptionInput values={values} setFieldValue={setFieldValue} title={t('Description')} nameKey="description" errorMessage={"Descriptionisrequired"} promptText={AITextboxData.long_desc} />
+      <SimpleInputField nameList={[{ name: "greetings", require: "false", title: "Greetings", type: "textarea", rows: 3, placeholder: t("Enter greetings"), helpertext: "*Maximum length should be 300 characters.", promptText: AITextboxData.greetings }]} />
       <ImageUploadFieldGPT errors={errors} name="product_thumbnail_id" galleryName="product_galleries_id" id="product_thumbnail_id" title="Thumbnail" type="file" values={values} setFieldValue={setFieldValue} updateId={updateId} helpertext={getHelperText('600x600px')} />
       <CheckBoxField name="is_picture" title="picture" />
       <MultiSelectField errors={errors} values={values} setFieldValue={setFieldValue} name="categories" require="true" data={categoryData} />
