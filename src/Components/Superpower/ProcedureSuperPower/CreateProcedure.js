@@ -1282,7 +1282,7 @@ Example:
   `);
 
   const { error, data: actionsInfo, isLoading } = useQuery(["actions"], async () => {
-    const resp = await fetch("http://134.209.37.239:3010/getDescriptions?paginate=100&page=1&sort=asc", {
+    const resp = await fetch("http://134.209.37.239:3010/getDescriptions?paginate=10000&page=1&sort=asc", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
