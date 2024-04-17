@@ -225,7 +225,7 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
                 <h3>Logs: </h3>
                 {chatLogs.map((chatLog, i) => <p key={i}>{chatLog}</p>)}
             </div>}
-           {chatData &&  <div>
+           {chatData.length > 0 && <div>
                 <h3>Response: </h3>
                 <p>{chatData.map((data, i) => <p key={i}>{data}</p>)}</p>
             </div>}
