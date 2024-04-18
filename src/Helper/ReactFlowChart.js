@@ -139,7 +139,7 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
                 if(targetNodeCount[e["@_target"]]) targetNodeCount[e["@_target"]]++
                 else targetNodeCount[e["@_target"]] = 1
     
-                edges.push({id: i, type: "customEdge", source: e["@_source"], sourceHandle: `${sourceNodeCount[e["@_source"]] - 1}`, target: e["@_target"], targetHandle: `${targetNodeCount[e["@_target"]] - 1}`, label: e?.edgeLogic?.condition?.returnValue ?? ""})
+                edges.push({id: i, type: "customEdge", source: e["@_source"], sourceHandle: `${sourceNodeCount[e["@_source"]] - 1}`, target: e["@_target"], targetHandle: `${targetNodeCount[e["@_target"]] - 1}`, label: e?.edgeLogic?.condition?.returnValue || e?.edgeLogic?.condition?.returnValueLogic || ""})
             }
             if(Array.isArray(edgeData)){
                 for(let i = 0; i < edgeData?.length; i++){
@@ -151,7 +151,7 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
                 handleEdgeInclude(edgeData, 0)
             }
             const nodes = graphData?.node?.map((n, i) => {
-                return {id: n["@_id"], type: "customNode", position: {x: 100 * (i % 2 === 0 ? -1 : 1), y: i * 100}, data: {label: n["#text"], sourceHandleCount: sourceNodeCount[n["@_id"]] ?? 1, targetHandleCount: targetNodeCount[n["@_id"]] ?? 1}}
+                return {id: n["@_id"], type: "customNode", position: {x: 100 * (i % 2 === 0 ? -1 : 1), y: i * 100}, data: {label: n["#text"] || n["@_id"], sourceHandleCount: sourceNodeCount[n["@_id"]] ?? 1, targetHandleCount: targetNodeCount[n["@_id"]] ?? 1}}
             })
             setNodes(nodes ?? [])
             setEdges(edges ?? [])
