@@ -6,7 +6,7 @@ const nextConfig = {
   env: {
     // For Local Server
     // API_PROD_URL: "http://localhost:8000/api/",
-    API_PROD_URL: "https://supermind.bot/api/",
+    API_PROD_URL: "https://api.supermind.bot/api/",
     // API_PROD_URL: "https://laravel.pixelstrap.net/fastkart/api/",
     OPENAI_API_KEY: "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",
     ANYSCALE_API_KEY: "esecret_4kqwivwxj38wwycqyuglg8ah9q"
@@ -21,7 +21,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "supermind.bot",
+        hostname: "api.supermind.bot",
         // hostname: "localhost",
       },
       {
