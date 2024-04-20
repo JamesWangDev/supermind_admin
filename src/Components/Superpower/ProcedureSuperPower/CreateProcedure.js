@@ -1355,7 +1355,7 @@ Example:
         }}
       </Formik>
       {procedureData?.data && <>
-        <ReactFlowChart procedure={procedureData?.data?.procedure} description={procedureData?.data?.description} name={procedureName} />
+        <ReactFlowChart procedure={procedureData?.data?.procedure} description={procedureData?.data?.description} name={procedureName} width="95vw" />
         <div className="ms-auto justify-content-end dflex-wgap mt-sm-4 my-2 save-back-button">
           <Btn onClick={() => {saveProcedureMutate({name: procedureName, procedure: procedureData.data.procedure, description: procedureData.data.description})}} className="btn-primary btn-lg" type="submit" title="Save" loading={isLoading || createProcedureLoading || saveProcedureLoading} />
         </div>

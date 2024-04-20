@@ -72,7 +72,7 @@ const CreateActionsApi = () => {
           "Content-Type": "application/json",
         },
 
-        body: JSON.stringify({apiSpec: spec, specType, authType, userId: accountData.id, email: accountData.email, authKey, description, functionName})
+        body: JSON.stringify({apiSpec: spec, specType, authType, email: accountData.email, authKey, description, functionName})
     })
     const respJson = await resp.json()
     if(respJson.success) {
@@ -88,24 +88,7 @@ const CreateActionsApi = () => {
 
   const createNode = async () => {
     if(apiInfo){
-      const checkAuthorization = async (onSuccess, onFail) => {
-        const resp = await fetch(`https://auth.supermind.bot/integration/${authType}/${accountData.id}`)
-        if(resp.status < 200 || resp.status >= 300) {
-          onFail()
-        } else {
-          onSuccess()
-        }
-      }
-      if(authType !== "authToken") {
-        checkAuthorization(mutate, () => {
-          window.open(`https://auth.supermind.bot/integration/${authType}/authentication/init`)
-          if(confirm("Please authorize the access")) {
-            checkAuthorization(mutate, () => alert("Authorization Failed. Please try again"))
-          }
-        })
-      } else {
-        mutate()
-      }
+      mutate()
     } else {
       alert("Check spec and try again")
     }

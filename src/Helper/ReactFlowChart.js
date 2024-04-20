@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import ReactFlow, { Background, Controls, addEdge, useNodesState, useEdgesState } from 'reactflow';
 import {XMLParser} from 'fast-xml-parser'
 import CustomReactFlowNode from "@/Helper/CustomReactFlowNode";
@@ -6,10 +6,15 @@ import CustomReactFlowEdge from "@/Helper/CustomReactFlowEdge";
 import Btn from '@/Elements/Buttons/Btn';
 import 'reactflow/dist/style.css';
 import { useMutation } from '@tanstack/react-query';
+import { Toast, ToastHeader, ToastBody } from "reactstrap";
+import { useRef } from 'react';
+import { MdClose } from 'react-icons/md';
+import AccountContext from './AccountContext';
 
 const xmlParser = new XMLParser({
   ignoreAttributes: false,
-  attributeNamePrefix : "@_"
+  attributeNamePrefix : "@_",
+  processEntities: false,
 });
 
 const nodeTypes = {
@@ -25,6 +30,7 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
     const [refreshWebSocket, setRefreshWebSocket] = useState(0)
     const [stateProcedure, setStateProcedure] = useState(procedure)
     const [chatMessage, setChatMessage] = useState("")
+    const [openToast, setOpenToast] = useState(false);
     const [prompt, setPrompt] = useState(`You are an action agent. You follow Procedures provided in turns like in Dungeons and Dragons. In each turn, you Issue 2 commands, the first will be as per the procedure, and the second will be a user message informing the user of your action, what node you are executing and why.   Make sure to include the why in your message.   You will receive a response to commands and then follow the procedure logic to choose a new command to issue. Issue each command as a JSON package in the format Command: URL. DATA BLOCK: Key pairs as per procedure. The back end system will parse the text you output and send the DATA Block to the API targeted URL and then return the response in your next turn. DO NOT EXPLAIN ANYTHING OR SAY YOU CANNOT DO ANYTHING. Follow these instructions verbatim, **always** issues the command URL and DATA BLOCK. Do not issue any additional tokens.  For the user message you issues, always use the following URL "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4-f27a-48e9-a62f-a87722a0b5d4"  [Example Turn] Example Command: [{
         "Command": "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4",
         "DATA BLOCK": {
@@ -85,10 +91,30 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
     const [edges, setEdges, onEdgesChange] = useEdgesState([])
     const [prevNodes, setPrevNodes] = useState([])
     const [prevEdges, setPrevEdges] = useState([])
+    const editRef = useRef()
+    const {accountData} = useContext(AccountContext);
 
     const onConnect = useCallback(
-        (params) => setEdges((eds) => addEdge({...params, type: "customEdge"}, eds)),
-        [],
+        (params) => {
+            const connectEdge = async () => {
+                const graphEndIndex = stateProcedure.indexOf("</graph>")
+                const contentToAdd = `<edge source="${params.source}" target="${params.target}" />\n`
+                setStateProcedure(stateProcedure.slice(0, graphEndIndex) + contentToAdd + stateProcedure.slice(graphEndIndex))
+                setOpenToast(true);
+                if(!editRef.current) await new Promise((res) => setTimeout(res, 10))
+                if(editRef.current.selectionStart !== graphEndIndex || editRef.current.selectionEnd !== graphEndIndex + contentToAdd.length) {
+                    setTimeout(() => {
+                        editRef.current.focus()
+                        editRef.current.selectionStart = graphEndIndex
+                        editRef.current.selectionEnd = graphEndIndex + contentToAdd.length
+                    }, 10);
+                }
+                return addEdge({...params, type: "customEdge", label: ""}, edges)
+            }
+            connectEdge().then((e) => setEdges(e))
+            
+        },
+        [edges],
     );
 
     const {mutate: updateProcedureWithJsonMutate, isLoading: updateProcedureWithJsonLoading} = useMutation(async ({prevNodes, prevEdges, edges, nodes, procedure, name}) => {
@@ -125,8 +151,8 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
     }, { refetchOnWindowFocus: false, select: (data) => data.data });
 
     useEffect(() => {
-        if(procedure){
-            const parsedData = xmlParser.parse(procedure)
+        if(stateProcedure){
+            const parsedData = xmlParser.parse(stateProcedure)
             const graphData = parsedData.graph || parsedData.procedure?.graph || parsedData.commandBlock?.graph || parsedData.commandBlock?.command?.graph
             const edgeData = graphData?.edge?.edge || graphData?.edge
             const sourceNodeCount = {}
@@ -153,12 +179,16 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
             const nodes = graphData?.node?.map((n, i) => {
                 return {id: n["@_id"], type: "customNode", position: {x: 100 * (i % 2 === 0 ? -1 : 1), y: i * 100}, data: {label: n["#text"] || n["@_id"], sourceHandleCount: sourceNodeCount[n["@_id"]] ?? 1, targetHandleCount: targetNodeCount[n["@_id"]] ?? 1}}
             })
-            setNodes(nodes ?? [])
-            setEdges(edges ?? [])
+            setNodes([])
+            setEdges([])
+            setTimeout(() => {
+                setNodes(nodes ?? [])
+                setEdges(edges ?? [])
+            }, 0);
             setPrevNodes(nodes ?? [])
             setPrevEdges(edges ?? [])
         }
-    }, [procedure])
+    }, [stateProcedure])
 
     useEffect(() => {
         const webSocket = new WebSocket("ws://134.209.37.239:3010")
@@ -182,7 +212,81 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
             }
         };
     }, [refreshWebSocket])
-    
+
+    const handleNodeChange = async (val) => {
+        console.log(val)
+        if(val.length === 1 && (val[0].type === "select" || val[0].type === "position")){
+            setOpenToast(true);
+            if(!editRef.current) await new Promise((res) => setTimeout(res, 10))
+            const nodeId = val[0].id
+            const node = nodes.find((node) => node.id === nodeId)
+            console.log("ssasd")
+            if(node) {
+                console.log("saassdd")
+                const nodeName = node.data.label
+                const nodeIndexDoubleQuotes = editRef.current.value.indexOf(`<node id="${nodeId}"`)
+                const nodeIndexSingleQuotes = editRef.current.value.indexOf(`<node id='${nodeId}'`)
+                const nodeIndex = nodeIndexDoubleQuotes >= 0 ? nodeIndexDoubleQuotes : nodeIndexSingleQuotes
+                const editIndex = editRef.current.value.slice(nodeIndex).indexOf(nodeName)
+                console.log(editRef.current.selectionStart , nodeIndex + editIndex, editRef.current.selectionEnd , nodeIndex + editIndex + nodeName.length)
+                if(editRef.current.selectionStart !== nodeIndex + editIndex || editRef.current.selectionEnd !== nodeIndex + editIndex + nodeName.length) {
+                    editRef.current.focus()
+                    console.log("ssd")
+                    editRef.current.selectionStart = nodeIndex + editIndex
+                    editRef.current.selectionEnd = nodeIndex + editIndex + nodeName.length
+                }
+            }
+        }
+        onNodesChange(val)
+    }
+
+    const handleEdgeChange = async (val) => {
+        console.log(val)
+        if(val.length > 1) val = val.filter((v) => v.selected)
+        if(val.length === 1 && (val[0].type === "select" || val[0].type === "position")){
+            setOpenToast(true);
+            if(!editRef.current) await new Promise((res) => setTimeout(res, 10))
+            const edgeId = val[0].id
+            const edge = edges.find((edge) => edge.id === edgeId)
+            if(edge) {
+                const edgeName = edge.label
+                const edgeSource = edge.source
+                const edgeTarget = edge.target
+                const edgeIndexDoubleQuotes = editRef.current.value.indexOf(`<edge source="${edgeSource}" target="${edgeTarget}"`)
+                const edgeIndexSingleQuotes = editRef.current.value.indexOf(`<edge source='${edgeSource}' target='${edgeTarget}'`)
+                const edgeIndex = edgeIndexDoubleQuotes >= 0 ? edgeIndexDoubleQuotes : edgeIndexSingleQuotes
+                const editIndex = editRef.current.value.slice(edgeIndex).indexOf(edgeName)
+                if(editRef.current.selectionStart !== edgeIndex + editIndex || editRef.current.selectionEnd !== edgeIndex + editIndex + edgeName.length) {
+                    editRef.current.focus()
+                    editRef.current.selectionStart = edgeIndex + editIndex
+                    editRef.current.selectionEnd = edgeIndex + editIndex + edgeName.length
+                }
+            }
+        } else if(val.length === 1 && val[0].type === "remove"){
+            setOpenToast(true);
+            if(!editRef.current) await new Promise((res) => setTimeout(res, 10))
+            const edgeId = val[0].id
+            const edge = edges.find((edge) => edge.id === edgeId)
+            if(edge) {
+                const edgeSource = edge.source
+                const edgeTarget = edge.target
+                const edgeStartIndexDoubleQuotes = editRef.current.value.indexOf(`<edge source="${edgeSource}" target="${edgeTarget}"`)
+                const edgeStartIndexSingleQuotes = editRef.current.value.indexOf(`<edge source='${edgeSource}' target='${edgeTarget}'`)
+                const edgeStartIndex = edgeStartIndexDoubleQuotes >= 0 ? edgeStartIndexDoubleQuotes : edgeStartIndexSingleQuotes
+                const edgeEnd = `</edge>`
+                const edgeEndIndex = editRef.current.value.slice(edgeStartIndex).indexOf(edgeEnd)
+                setStateProcedure(stateProcedure.slice(0, edgeStartIndex) + stateProcedure.slice(edgeStartIndex + edgeEndIndex + edgeEnd.length))
+                setTimeout(() => {
+                    editRef.current.focus()
+                    editRef.current.selectionStart = edgeStartIndex
+                    editRef.current.selectionEnd = edgeStartIndex
+                }, 10);
+            }
+        }
+        onEdgesChange(val)
+    }
+
+    const toggleToast = () => setOpenToast((prev) => !prev);
 
     return <>
         <div>
@@ -214,7 +318,7 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
                             alert("Error occured. Please try again")
                             return
                         }
-                        webSocket.send(JSON.stringify({event: "chatWithProcedure", data: {procedure: `${description}\n${stateProcedure}`, message: chatMessage, prompt}}))
+                        webSocket.send(JSON.stringify({event: "chatWithProcedure", data: {procedure: `${description}\n${stateProcedure}`, message: chatMessage, prompt, userId: accountData.id}}))
                         setChatLoading(true)
                         setChatData([])
                         setChatLogs([])
@@ -230,11 +334,19 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
                 <p>{chatData.map((data, i) => <p key={i}>{data}</p>)}</p>
             </div>}
         </div>
-        <div style={{ width, height }}>
-            <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} edgeTypes={edgeTypes} onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} onConnect={onConnect} fitView >
+        <div style={{ width, height, display: "flex", justifyContent: "space-between", gap: 10 }}>
+            <ReactFlow style={{}} nodes={nodes} edges={edges} nodeTypes={nodeTypes} edgeTypes={edgeTypes} onNodesChange={handleNodeChange} onEdgesChange={handleEdgeChange} onConnect={onConnect} fitView >
                 <Controls />
                 <Background variant="dots" gap={12} size={1} />
             </ReactFlow>
+            <Toast style={{width: "500px"}} isOpen={openToast}>
+                <ToastHeader close={<div style={{cursor:"pointer"}} onClick={toggleToast}>
+                    {MdClose()}
+                </div>} toggle={toggleToast}>Edit</ToastHeader>
+                <ToastBody>
+                    <textarea ref={editRef} rows="20" style={{"width": "100%"}} type="text" value={stateProcedure} onChange={(e) => setStateProcedure(e.target.value)} />
+                </ToastBody>
+            </Toast>
         </div>
         <div style={{display:"flex", gap: 5, marginBottom: "20px", marginTop: "20px"}}>
             <Btn
