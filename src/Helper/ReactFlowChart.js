@@ -25,7 +25,7 @@ const edgeTypes = {
     customEdge: CustomReactFlowEdge,
 }
 
-const ReactFlowChart = ({procedure, description, name, width='75vw', height='100vh'}) => {
+const ReactFlowChart = ({procedure, description, procedureId, width='75vw', height='100vh'}) => {
     const [webSocket, setWebSocket] = useState(null)
     const [refreshWebSocket, setRefreshWebSocket] = useState(0)
     const [stateProcedure, setStateProcedure] = useState(procedure)
@@ -91,6 +91,7 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
     const [edges, setEdges, onEdgesChange] = useEdgesState([])
     const [prevNodes, setPrevNodes] = useState([])
     const [prevEdges, setPrevEdges] = useState([])
+    const [selectedEdges, setSelectedEdges] = useState([])
     const editRef = useRef()
     const {accountData} = useContext(AccountContext);
 
@@ -100,8 +101,8 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
                 const graphEndIndex = stateProcedure.indexOf("</graph>")
                 const contentToAdd = `<edge source="${params.source}" target="${params.target}" />\n`
                 setStateProcedure(stateProcedure.slice(0, graphEndIndex) + contentToAdd + stateProcedure.slice(graphEndIndex))
-                setOpenToast(true);
-                if(!editRef.current) await new Promise((res) => setTimeout(res, 10))
+                if(!openToast) setOpenToast(true);
+                if(!editRef.current) await new Promise((res) => setTimeout(res, 200))
                 if(editRef.current.selectionStart !== graphEndIndex || editRef.current.selectionEnd !== graphEndIndex + contentToAdd.length) {
                     setTimeout(() => {
                         editRef.current.focus()
@@ -117,14 +118,14 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
         [edges],
     );
 
-    const {mutate: updateProcedureWithJsonMutate, isLoading: updateProcedureWithJsonLoading} = useMutation(async ({prevNodes, prevEdges, edges, nodes, procedure, name}) => {
+    const {mutate: updateProcedureWithJsonMutate, isLoading: updateProcedureWithJsonLoading} = useMutation(async ({prevNodes, prevEdges, edges, nodes, procedure, procedureId}) => {
         const resp = await fetch("http://134.209.37.239:3010/updateProcedureWithJson", {
             method: "PATCH",
             headers: {
             "Content-Type": "application/json",
             },
 
-            body: JSON.stringify({procedure, name, prevJSON: {nodes: prevNodes, edges: prevEdges}, newJSON: {nodes: nodes, edges: edges}})
+            body: JSON.stringify({procedure, id: procedureId, prevJSON: {nodes: prevNodes, edges: prevEdges}, newJSON: {nodes: nodes, edges: edges}})
         })
         const respJson = await resp.json()
         if(respJson.success) {
@@ -134,14 +135,13 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
         throw respJson.message
     }, { refetchOnWindowFocus: false, select: (data) => data.data });
 
-    const {mutate: updateProcedureMutate, isLoading: updateProcedureLoading} = useMutation(async ({procedure, name}) => {
+    const {mutate: updateProcedureMutate, isLoading: updateProcedureLoading} = useMutation(async ({procedure, procedureId}) => {
         const resp = await fetch("http://134.209.37.239:3010/updateProcedure", {
             method: "PATCH",
             headers: {
-            "Content-Type": "application/json",
+                "Content-Type": "application/json",
             },
-
-            body: JSON.stringify({procedure, name})
+            body: JSON.stringify({procedure, id: procedureId})
         })
         const respJson = await resp.json()
         if(respJson.success) {
@@ -214,27 +214,21 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
     }, [refreshWebSocket])
 
     const handleNodeChange = async (val) => {
-        console.log(val)
         if(val.length === 1 && (val[0].type === "select" || val[0].type === "position")){
-            setOpenToast(true);
-            if(!editRef.current) await new Promise((res) => setTimeout(res, 10))
             const nodeId = val[0].id
+
+            if(!openToast) setOpenToast(true);
+            if(!editRef.current) await new Promise((res) => setTimeout(res, 200))
             const node = nodes.find((node) => node.id === nodeId)
-            console.log("ssasd")
             if(node) {
-                console.log("saassdd")
                 const nodeName = node.data.label
                 const nodeIndexDoubleQuotes = editRef.current.value.indexOf(`<node id="${nodeId}"`)
                 const nodeIndexSingleQuotes = editRef.current.value.indexOf(`<node id='${nodeId}'`)
                 const nodeIndex = nodeIndexDoubleQuotes >= 0 ? nodeIndexDoubleQuotes : nodeIndexSingleQuotes
                 const editIndex = editRef.current.value.slice(nodeIndex).indexOf(nodeName)
-                console.log(editRef.current.selectionStart , nodeIndex + editIndex, editRef.current.selectionEnd , nodeIndex + editIndex + nodeName.length)
-                if(editRef.current.selectionStart !== nodeIndex + editIndex || editRef.current.selectionEnd !== nodeIndex + editIndex + nodeName.length) {
-                    editRef.current.focus()
-                    console.log("ssd")
-                    editRef.current.selectionStart = nodeIndex + editIndex
-                    editRef.current.selectionEnd = nodeIndex + editIndex + nodeName.length
-                }
+                editRef.current.focus()
+                editRef.current.selectionStart = nodeIndex + editIndex
+                editRef.current.selectionEnd = nodeIndex + editIndex + nodeName.length
             }
         }
         onNodesChange(val)
@@ -242,30 +236,33 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
 
     const handleEdgeChange = async (val) => {
         console.log(val)
-        if(val.length > 1) val = val.filter((v) => v.selected)
-        if(val.length === 1 && (val[0].type === "select" || val[0].type === "position")){
-            setOpenToast(true);
-            if(!editRef.current) await new Promise((res) => setTimeout(res, 10))
-            const edgeId = val[0].id
+        let filteredVal = val
+        if(filteredVal.length > 1) filteredVal = filteredVal.filter((v) => v.selected || (selectedEdges.length > 0 && selectedEdges[0].id !== v[0].id))
+        if(filteredVal.length === 1 && (filteredVal[0].type === "select" || filteredVal[0].type === "position")){
+            setSelectedEdges(filteredVal[0])
+            const edgeId = filteredVal[0].id
+            if(!openToast) setOpenToast(true);
+            if(!editRef.current) await new Promise((res) => setTimeout(res, 200))
             const edge = edges.find((edge) => edge.id === edgeId)
             if(edge) {
                 const edgeName = edge.label
                 const edgeSource = edge.source
                 const edgeTarget = edge.target
-                const edgeIndexDoubleQuotes = editRef.current.value.indexOf(`<edge source="${edgeSource}" target="${edgeTarget}"`)
-                const edgeIndexSingleQuotes = editRef.current.value.indexOf(`<edge source='${edgeSource}' target='${edgeTarget}'`)
+                const edgeDoubleQuotes = `<edge source="${edgeSource}" target="${edgeTarget}"`
+                const edgeSingleQuotes = `<edge source='${edgeSource}' target='${edgeTarget}'`
+                const edgeIndexDoubleQuotes = editRef.current.value.indexOf(edgeDoubleQuotes)
+                const edgeIndexSingleQuotes = editRef.current.value.indexOf(edgeSingleQuotes)
                 const edgeIndex = edgeIndexDoubleQuotes >= 0 ? edgeIndexDoubleQuotes : edgeIndexSingleQuotes
                 const editIndex = editRef.current.value.slice(edgeIndex).indexOf(edgeName)
-                if(editRef.current.selectionStart !== edgeIndex + editIndex || editRef.current.selectionEnd !== edgeIndex + editIndex + edgeName.length) {
-                    editRef.current.focus()
-                    editRef.current.selectionStart = edgeIndex + editIndex
-                    editRef.current.selectionEnd = edgeIndex + editIndex + edgeName.length
-                }
+                editRef.current.focus()
+                editRef.current.selectionStart = edgeIndex + editIndex
+                editRef.current.selectionEnd = edgeIndex + editIndex + edgeName.length
+                if(editRef.current.selectionEnd === editRef.current.selectionStart) editRef.current.selectionEnd += edgeDoubleQuotes.length
             }
-        } else if(val.length === 1 && val[0].type === "remove"){
-            setOpenToast(true);
-            if(!editRef.current) await new Promise((res) => setTimeout(res, 10))
-            const edgeId = val[0].id
+        } else if(filteredVal.length === 1 && filteredVal[0].type === "remove"){
+            if(!openToast) setOpenToast(true);
+            if(!editRef.current) await new Promise((res) => setTimeout(res, 200))
+            const edgeId = filteredVal[0].id
             const edge = edges.find((edge) => edge.id === edgeId)
             if(edge) {
                 const edgeSource = edge.source
@@ -300,7 +297,7 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
                 title="Update Procedure"
                 className="align-items-center btn-theme add-button"
                 loading={updateProcedureLoading}
-                onClick={() => updateProcedureMutate({procedure: stateProcedure, name})}
+                onClick={() => updateProcedureMutate({procedure: stateProcedure, procedureId})}
             />
         </div>
         <div style={{marginBottom: "10px"}}>
@@ -363,7 +360,7 @@ const ReactFlowChart = ({procedure, description, name, width='75vw', height='100
                 title="Save Changes"
                 className="align-items-center"
                 loading={updateProcedureWithJsonLoading}
-                onClick={() => updateProcedureWithJsonMutate({nodes, edges, prevEdges, prevNodes, procedure, name})}
+                onClick={() => updateProcedureMutate({procedure, procedureId})}
             />
         </div>
     </> 

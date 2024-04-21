@@ -52,7 +52,7 @@ const AllProceduresTable = ({ data, ...props }) => {
       <Modal fullscreen isOpen={openModel} toggle={toggleModal}>
         <ModalHeader toggle={toggleModal}>{procedureDetail?.name}</ModalHeader>
         <ModalBody>
-            <ReactFlowChart procedure={procedureDetail?.procedure} description={procedureDetail?.description} name={procedureDetail?.name} width="95vw" height="90vh" />
+            <ReactFlowChart procedure={procedureDetail?.procedure} description={procedureDetail?.description} procedureId={procedureDetail?.id} width="95vw" height="90vh" />
         </ModalBody>
       </Modal>
     </>
