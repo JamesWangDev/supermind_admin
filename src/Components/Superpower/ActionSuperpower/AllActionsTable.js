@@ -79,7 +79,6 @@ const AllActionsTable = ({ data, ...props }) => {
     if(respJson.success) {
       setHeaderObjState(prev => {
         prev.data = prev.data.filter((d) => d.workflow_id !== workflowId)
-        console.log(prev.data)
         return prev
       })
       setOpenModel(false) 
