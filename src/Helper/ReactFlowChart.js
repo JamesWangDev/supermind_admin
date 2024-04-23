@@ -5,11 +5,12 @@ import CustomReactFlowNode from "@/Helper/CustomReactFlowNode";
 import CustomReactFlowEdge from "@/Helper/CustomReactFlowEdge";
 import Btn from '@/Elements/Buttons/Btn';
 import 'reactflow/dist/style.css';
-import { useMutation } from '@tanstack/react-query';
-import { Toast, ToastHeader, ToastBody } from "reactstrap";
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Toast, ToastHeader, ToastBody, Modal, ModalHeader, ModalBody } from "reactstrap";
 import { useRef } from 'react';
 import { MdClose } from 'react-icons/md';
 import AccountContext from './AccountContext';
+import Loader from '@/Components/CommonComponent/Loader';
 
 const xmlParser = new XMLParser({
   ignoreAttributes: false,
@@ -31,6 +32,7 @@ const ReactFlowChart = ({procedure, description, procedureId, width='75vw', heig
     const [stateProcedure, setStateProcedure] = useState(procedure)
     const [chatMessage, setChatMessage] = useState("")
     const [openToast, setOpenToast] = useState(false);
+    const [openModel, setOpenModel] = useState(false);
     const [prompt, setPrompt] = useState(`You are an action agent. You follow Procedures provided in turns like in Dungeons and Dragons. In each turn, you Issue 2 commands, the first will be as per the procedure, and the second will be a user message informing the user of your action, what node you are executing and why.   Make sure to include the why in your message.   You will receive a response to commands and then follow the procedure logic to choose a new command to issue. Issue each command as a JSON package in the format Command: URL. DATA BLOCK: Key pairs as per procedure. The back end system will parse the text you output and send the DATA Block to the API targeted URL and then return the response in your next turn. DO NOT EXPLAIN ANYTHING OR SAY YOU CANNOT DO ANYTHING. Follow these instructions verbatim, **always** issues the command URL and DATA BLOCK. Do not issue any additional tokens.  For the user message you issues, always use the following URL "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4-f27a-48e9-a62f-a87722a0b5d4"  [Example Turn] Example Command: [{
         "Command": "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4",
         "DATA BLOCK": {
@@ -89,9 +91,6 @@ const ReactFlowChart = ({procedure, description, procedureId, width='75vw', heig
     const [chatLogs, setChatLogs] = useState([])
     const [nodes, setNodes, onNodesChange] = useNodesState([])
     const [edges, setEdges, onEdgesChange] = useEdgesState([])
-    const [prevNodes, setPrevNodes] = useState([])
-    const [prevEdges, setPrevEdges] = useState([])
-    const [selectedEdges, setSelectedEdges] = useState([])
     const editRef = useRef()
     const {accountData} = useContext(AccountContext);
 
@@ -118,23 +117,6 @@ const ReactFlowChart = ({procedure, description, procedureId, width='75vw', heig
         [edges],
     );
 
-    const {mutate: updateProcedureWithJsonMutate, isLoading: updateProcedureWithJsonLoading} = useMutation(async ({prevNodes, prevEdges, edges, nodes, procedure, procedureId}) => {
-        const resp = await fetch("http://134.209.37.239:3010/updateProcedureWithJson", {
-            method: "PATCH",
-            headers: {
-            "Content-Type": "application/json",
-            },
-
-            body: JSON.stringify({procedure, id: procedureId, prevJSON: {nodes: prevNodes, edges: prevEdges}, newJSON: {nodes: nodes, edges: edges}})
-        })
-        const respJson = await resp.json()
-        if(respJson.success) {
-            alert("Procedure updated")
-            return respJson
-        }
-        throw respJson.message
-    }, { refetchOnWindowFocus: false, select: (data) => data.data });
-
     const {mutate: updateProcedureMutate, isLoading: updateProcedureLoading} = useMutation(async ({procedure, procedureId}) => {
         const resp = await fetch("http://134.209.37.239:3010/updateProcedure", {
             method: "PATCH",
@@ -147,6 +129,18 @@ const ReactFlowChart = ({procedure, description, procedureId, width='75vw', heig
         if(respJson.success) {
             setStateProcedure(respJson.data)
         }
+        throw respJson.message
+    }, { refetchOnWindowFocus: false, select: (data) => data.data });
+
+    const { data: actionsInfo, isLoading: actionsLoading } = useQuery(["actions"], async () => {
+        const resp = await fetch("http://134.209.37.239:3010/getDescriptions?paginate=10000&page=1&sort=asc", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+        })
+        const respJson = await resp.json()
+        if(respJson.success) return respJson
         throw respJson.message
     }, { refetchOnWindowFocus: false, select: (data) => data.data });
 
@@ -185,8 +179,6 @@ const ReactFlowChart = ({procedure, description, procedureId, width='75vw', heig
                 setNodes(nodes ?? [])
                 setEdges(edges ?? [])
             }, 0);
-            setPrevNodes(nodes ?? [])
-            setPrevEdges(edges ?? [])
         }
     }, [stateProcedure])
 
@@ -222,8 +214,8 @@ const ReactFlowChart = ({procedure, description, procedureId, width='75vw', heig
             const node = nodes.find((node) => node.id === nodeId)
             if(node) {
                 const nodeName = node.data.label
-                const nodeIndexDoubleQuotes = editRef.current.value.indexOf(`<node id="${nodeId}"`)
-                const nodeIndexSingleQuotes = editRef.current.value.indexOf(`<node id='${nodeId}'`)
+                const nodeIndexDoubleQuotes = editRef.current.value.indexOf(`<turn id="${nodeId}"`)
+                const nodeIndexSingleQuotes = editRef.current.value.indexOf(`<turn id='${nodeId}'`)
                 const nodeIndex = nodeIndexDoubleQuotes >= 0 ? nodeIndexDoubleQuotes : nodeIndexSingleQuotes
                 const editIndex = editRef.current.value.slice(nodeIndex).indexOf(nodeName)
                 editRef.current.focus()
@@ -235,11 +227,9 @@ const ReactFlowChart = ({procedure, description, procedureId, width='75vw', heig
     }
 
     const handleEdgeChange = async (val) => {
-        console.log(val)
         let filteredVal = val
-        if(filteredVal.length > 1) filteredVal = filteredVal.filter((v) => v.selected || (selectedEdges.length > 0 && selectedEdges[0].id !== v[0].id))
+        if(filteredVal.length > 1) filteredVal = filteredVal.filter((v) => v.selected )
         if(filteredVal.length === 1 && (filteredVal[0].type === "select" || filteredVal[0].type === "position")){
-            setSelectedEdges(filteredVal[0])
             const edgeId = filteredVal[0].id
             if(!openToast) setOpenToast(true);
             if(!editRef.current) await new Promise((res) => setTimeout(res, 200))
@@ -257,7 +247,7 @@ const ReactFlowChart = ({procedure, description, procedureId, width='75vw', heig
                 editRef.current.focus()
                 editRef.current.selectionStart = edgeIndex + editIndex
                 editRef.current.selectionEnd = edgeIndex + editIndex + edgeName.length
-                if(editRef.current.selectionEnd === editRef.current.selectionStart) editRef.current.selectionEnd += edgeDoubleQuotes.length
+                if(editRef.current.selectionEnd === editRef.current.selectionStart) editRef.current.selectionEnd += edgeDoubleQuotes.length + 3
             }
         } else if(filteredVal.length === 1 && filteredVal[0].type === "remove"){
             if(!openToast) setOpenToast(true);
@@ -267,11 +257,16 @@ const ReactFlowChart = ({procedure, description, procedureId, width='75vw', heig
             if(edge) {
                 const edgeSource = edge.source
                 const edgeTarget = edge.target
-                const edgeStartIndexDoubleQuotes = editRef.current.value.indexOf(`<edge source="${edgeSource}" target="${edgeTarget}"`)
-                const edgeStartIndexSingleQuotes = editRef.current.value.indexOf(`<edge source='${edgeSource}' target='${edgeTarget}'`)
+                const edgeDoubleQuotes = `<edge source="${edgeSource}" target="${edgeTarget}"`
+                const edgeSingleQuotes = `<edge source='${edgeSource}' target='${edgeTarget}'`
+                const edgeStartIndexDoubleQuotes = editRef.current.value.indexOf(edgeDoubleQuotes)
+                const edgeStartIndexSingleQuotes = editRef.current.value.indexOf(edgeSingleQuotes)
                 const edgeStartIndex = edgeStartIndexDoubleQuotes >= 0 ? edgeStartIndexDoubleQuotes : edgeStartIndexSingleQuotes
-                const edgeEnd = `</edge>`
-                const edgeEndIndex = editRef.current.value.slice(edgeStartIndex).indexOf(edgeEnd)
+                const isSelfClosingDoubleQuotesEdge = editRef.current.value.indexOf(`${edgeDoubleQuotes} />`) >= 0
+                const isSelfClosingSingleQuotesEdge = editRef.current.value.indexOf(`${edgeSingleQuotes} />`) >= 0
+                const isSelfClosingEdge = isSelfClosingDoubleQuotesEdge || isSelfClosingSingleQuotesEdge
+                const edgeEnd = isSelfClosingEdge ? ` />` : `</edge>`
+                const edgeEndIndex = isSelfClosingEdge ? edgeDoubleQuotes.length : editRef.current.value.slice(edgeStartIndex).indexOf(edgeEnd)
                 setStateProcedure(stateProcedure.slice(0, edgeStartIndex) + stateProcedure.slice(edgeStartIndex + edgeEndIndex + edgeEnd.length))
                 setTimeout(() => {
                     editRef.current.focus()
@@ -279,11 +274,47 @@ const ReactFlowChart = ({procedure, description, procedureId, width='75vw', heig
                     editRef.current.selectionEnd = edgeStartIndex
                 }, 10);
             }
+        } else if (val[0].type === "reset") {
+            const filteredVal = val.filter(({item}) => item.selected)
+            for (const {item} of filteredVal) {
+                if(!openToast) setOpenToast(true);
+                if(!editRef.current) await new Promise((res) => setTimeout(res, 200))
+                const edgeName = item.label
+                const edgeSource = item.source
+                const edgeTarget = item.target
+                const edgeDoubleQuotes = `<edge source="${edgeSource}" target="${edgeTarget}"`
+                const edgeSingleQuotes = `<edge source='${edgeSource}' target='${edgeTarget}'`
+                const edgeIndexDoubleQuotes = editRef.current.value.indexOf(edgeDoubleQuotes)
+                const edgeIndexSingleQuotes = editRef.current.value.indexOf(edgeSingleQuotes)
+                const edgeIndex = edgeIndexDoubleQuotes >= 0 ? edgeIndexDoubleQuotes : edgeIndexSingleQuotes
+                const isSelfClosingDoubleQuotesEdge = editRef.current.value.indexOf(`${edgeDoubleQuotes} />`) >= 0
+                const isSelfClosingSingleQuotesEdge = editRef.current.value.indexOf(`${edgeSingleQuotes} />`) >= 0
+                const isSelfClosingEdge = isSelfClosingDoubleQuotesEdge || isSelfClosingSingleQuotesEdge
+                const edgeEnd = isSelfClosingEdge ? ` />` : `</edge>`
+                const edgeEndIndex = isSelfClosingEdge ? edgeEnd.length : editRef.current.value.slice(edgeIndex + edgeDoubleQuotes.length).indexOf(edgeEnd) + edgeEnd.length
+                const sourceNode = nodes.find((node) => node.id === edgeSource)
+                const textToAdd = `>
+        <edgeLogic>
+            <condition>
+            <source>${sourceNode?.data.label}</source>
+            <returnValue>${edgeName}</returnValue>
+            </condition>
+        </edgeLogic>
+    </edge>`
+                setStateProcedure(editRef.current.value.slice(0, edgeIndex + edgeDoubleQuotes.length) + textToAdd + editRef.current.value.slice(edgeIndex + edgeDoubleQuotes.length + edgeEndIndex))
+                setTimeout(() => {
+                    editRef.current.focus()
+                    editRef.current.selectionStart = edgeIndex
+                    editRef.current.selectionEnd = edgeIndex + edgeDoubleQuotes.length + textToAdd.length
+                }, 10);
+            }
         }
         onEdgesChange(val)
     }
 
     const toggleToast = () => setOpenToast((prev) => !prev);
+
+    const toggleModal = () => setOpenModel((prev) => !prev);
 
     return <>
         <div>
@@ -349,20 +380,67 @@ const ReactFlowChart = ({procedure, description, procedureId, width='75vw', heig
             <Btn
                 title="Add New Node"
                 className="align-items-center btn-theme add-button"
-                onClick={() => {
-                    setNodes(prev => {
-                        const i = prev.length
-                        return [...prev, {id: Math.random().toString(16).slice(2), type: "customNode", position: {x: 50 * i * (i % 2 === 0 ? -1 : 1), y: i * 100}, data: {label: "New Node", sourceHandleCount: 1, targetHandleCount: 1}}]
-                    });
-                }}
+                onClick={toggleModal}
             />
             <Btn
                 title="Save Changes"
                 className="align-items-center"
-                loading={updateProcedureWithJsonLoading}
+                loading={updateProcedureLoading}
                 onClick={() => updateProcedureMutate({procedure, procedureId})}
             />
         </div>
+        <Modal fullscreen isOpen={openModel} toggle={toggleModal}>
+            <ModalHeader toggle={toggleModal}>Choose Action</ModalHeader>
+            <ModalBody>
+                {
+                    actionsLoading ? <Loader/> :
+                    actionsInfo?.map((action) => <Btn
+                        style={{marginBottom: 10}}
+                        title={action.name}
+                        className="align-items-center btn-theme add-button"
+                        onClick={async () => {
+                            if(!openToast) setOpenToast(true);
+                            if(!editRef.current) await new Promise((res) => setTimeout(res, 200))
+                            const lastNode = nodes[nodes.length - 1]
+                            const lastNodeDoubleQuotes = `<node id="${lastNode.id}">${lastNode.data.label}</node>`
+                            const lastNodeSingleQuotes = `<node id='${lastNode.id}'>${lastNode.data.label}</node>`
+                            const lastNodeDoubleQuotesIndex = editRef.current.value.indexOf(lastNodeDoubleQuotes)
+                            const lastNodeSingleQuotesIndex = editRef.current.value.indexOf(lastNodeSingleQuotes)
+                            const lastNodeQuotesIndex = (lastNodeDoubleQuotesIndex >= 0 ? lastNodeDoubleQuotesIndex : lastNodeSingleQuotesIndex) + lastNodeDoubleQuotes.length
+                            const newNodeId = String.fromCharCode(lastNode.id.charCodeAt(0) + 1)
+                            const nodeToAdd = `
+    <node id="${newNodeId}">${action.name}</node>`
+
+                            const lastTurnDoubleQuotes = `<turn id="${lastNode.id}">`
+                            const lastTurnSingleQuotes = `<turn id='${lastNode.id}'>`
+                            const lastTurnDoubleQuotesIndex = editRef.current.value.indexOf(lastTurnDoubleQuotes)
+                            const lastTurnSingleQuotesIndex = editRef.current.value.indexOf(lastTurnSingleQuotes)
+                            const lastTurnQuotesIndex = (lastTurnDoubleQuotesIndex >= 0 ? lastTurnDoubleQuotesIndex : lastTurnSingleQuotesIndex) + lastTurnDoubleQuotes.length
+                            const turnEnd = `</turn>`
+                            const turnEndIndex = (editRef.current.value.slice(lastTurnQuotesIndex).indexOf(turnEnd)) + turnEnd.length
+                            const turnToAdd = `
+    <turn id="${newNodeId}">
+        <name>${action.name}</name>
+        <taskStatusUpdate>Executing ${action.name}</taskStatusUpdate>
+        <userMessage>Executing ${action.name}</userMessage>
+    </turn>`
+                            setStateProcedure(prev => {
+                                let tempProcedure = prev
+                                tempProcedure = tempProcedure.slice(0, lastTurnQuotesIndex + turnEndIndex) + turnToAdd + tempProcedure.slice(lastTurnQuotesIndex + turnEndIndex)
+                                tempProcedure = tempProcedure.slice(0, lastNodeQuotesIndex) + nodeToAdd + tempProcedure.slice(lastNodeQuotesIndex)
+                                return tempProcedure
+                            })
+                            toggleModal()
+                            setTimeout(() => {
+                                editRef.current.focus()
+                                editRef.current.selectionStart = lastTurnQuotesIndex + turnEndIndex + nodeToAdd.length
+                                editRef.current.selectionEnd = lastTurnQuotesIndex + turnEndIndex + nodeToAdd.length + turnToAdd.length
+                            }, 400);
+                        }}
+                    />)
+                }
+            </ModalBody>
+      </Modal>
     </> 
 }
 
