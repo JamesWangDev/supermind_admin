@@ -34,6 +34,14 @@ const MENUITEMS = [
     ],
   },
   {
+    title: "Supermind Backend",
+    displayTitle: "Supermind Backend",
+    icon: <RiStore3Line />,
+    path: "/supermind_backend",
+    permission: ["backend.index"],
+    type: "link"
+  },
+  {
     title: "Superminds",
     displayTitle: "Superminds",
     icon: <RiStore3Line />,
