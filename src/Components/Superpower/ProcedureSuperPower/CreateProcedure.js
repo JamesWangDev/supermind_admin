@@ -1282,7 +1282,7 @@ Example:
   `);
 
   const { error, data: actionsInfo, isLoading } = useQuery(["actions"], async () => {
-    const resp = await fetch("http://134.209.37.239:3010/getDescriptions?paginate=100&page=1&sort=asc", {
+    const resp = await fetch("http://134.209.37.239:3010/getDescriptions?paginate=10000&page=1&sort=asc", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -1355,7 +1355,7 @@ Example:
         }}
       </Formik>
       {procedureData?.data && <>
-        <ReactFlowChart procedure={procedureData?.data?.procedure} description={procedureData?.data?.description} name={procedureName} />
+        <ReactFlowChart procedure={procedureData?.data?.procedure} description={procedureData?.data?.description} procedureId={procedureData?.data?.id} width="95vw" />
         <div className="ms-auto justify-content-end dflex-wgap mt-sm-4 my-2 save-back-button">
           <Btn onClick={() => {saveProcedureMutate({name: procedureName, procedure: procedureData.data.procedure, description: procedureData.data.description})}} className="btn-primary btn-lg" type="submit" title="Save" loading={isLoading || createProcedureLoading || saveProcedureLoading} />
         </div>
