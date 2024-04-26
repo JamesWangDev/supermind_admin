@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import SimpleInputField from "../../InputFields/SimpleInputField";
 import I18NextContext from "@/Helper/I18NextContext";
@@ -7,17 +7,17 @@ import MultiSelectField from "../../InputFields/MultiSelectField";
 import FormBtn from "@/Elements/Buttons/FormBtn";
 import { Form, Formik } from "formik";
 import { Spinner } from "reactstrap";
-import Btn from "@/Elements/Buttons/Btn";
-import ReactFlowChart from "@/Helper/ReactFlowChart";
 import { AITextboxData } from "@/Data/AITextboxData";
+import Btn from "@/Elements/Buttons/Btn";
 
-const CreateProcedure = () => {
+const CreateTurn = ({procedure, addTurn}) => {
   const { i18Lang } = useContext(I18NextContext);
   const { t } = useTranslation(i18Lang, 'common');
-  const [procedureName, setProcedureName] = useState("")
-  const [actions, setActions] = useState([])
-  const [procedureRequirement, setProcedureRequirement] = useState("");
-  const [procedurePrompt, setProcedurePrompt] = useState(`This manual provides instructions on how to create procedure documents in the specified XML format. By following these guidelines, you can create consistent and well-structured procedure documents that can be easily understood and executed by ChatGPT or other AI systems.
+  const [turnName, setTurnName] = useState("")
+  const [action, setAction] = useState("")
+  const [userTurnPrompt, setUserTurnPrompt] = useState("");
+  const [turnDataState, setTurnDataState] = useState("")
+  const [turnPrompt, setTurnPrompt] = useState(`This manual provides instructions on how to create procedure documents in the specified XML format. By following these guidelines, you can create consistent and well-structured procedure documents that can be easily understood and executed by ChatGPT or other AI systems.
   Document Structure
   The procedure document should consist of three main sections: <Command Block> <graph> and <turns>.
   
@@ -1280,19 +1280,6 @@ Example:
   
   DIRECTIVE: OUTPUT ONLY THE PROCEDURE AND NO EXPLANATORY TEXT OR TOKEN> 
   `);
-  const [vectorQueryPrompt, setVectorQueryPrompt] = useState(`Your goal is to create a short and concise description of a procedure that will be embedded as a vector and queried against an input to solve a user problem, do not outline steps, only return a description of its overall function.
-          
-          
-  You should outputted description should include a title and description in a json object as follows:
-  
-  
-  For each procedure in procedures:
-  Output JSON:
-  {
-    "apiDescription": "<the query>",
-  }
-  Return "apiDescription"
-  //only return the apiDescription, no additional text or tokens}`)
 
   const { error, data: actionsInfo, isLoading } = useQuery(["actions"], async () => {
     const resp = await fetch("http://134.209.37.239:3010/getDescriptions?paginate=10000&page=1&sort=asc", {
@@ -1306,75 +1293,64 @@ Example:
     throw respJson.message
   }, { refetchOnWindowFocus: false, select: (data) => data.data });
   
-  const {mutate: createProcedureMutate, isLoading: createProcedureLoading, data: procedureData} = useMutation(async ({actions, procedureRequirement, procedurePrompt, name, vectorQueryPrompt}) => {
-    const resp = await fetch("http://134.209.37.239:3010/createProcedure", {
+  const {mutate: createTurnMutate, isLoading: createTurnLoading, data: turnData} = useMutation(async ({action, userTurnPrompt, turnPrompt, name}) => {
+    const resp = await fetch("http://134.209.37.239:3010/createTurn", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
 
-        body: JSON.stringify({name, actions, requirement: procedureRequirement, prompt: procedurePrompt, vectorQueryPrompt})
+        body: JSON.stringify({name, action, userTurnPrompt, creationPrompt: turnPrompt, procedure})
     })
     const respJson = await resp.json()
     if(respJson.success) {
-        alert("Procedure created")
-        return respJson
-    }
-    throw respJson.message
-  },{ refetchOnWindowFocus: false, select: (data) => data.data });
-  
-  const {mutate: saveProcedureMutate, isLoading: saveProcedureLoading} = useMutation(async ({description, procedure, name, vectorQuery}) => {
-    const resp = await fetch("http://134.209.37.239:3010/saveProcedure", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        body: JSON.stringify({name, description, procedure, vectorQuery})
-    })
-    const respJson = await resp.json()
-    if(respJson.success) {
-        alert("Procedure saved")
+        alert("Turn created")
         return respJson
     }
     throw respJson.message
   },{ refetchOnWindowFocus: false, select: (data) => data.data });
 
-  const createProcedure = () => {
-    if(!actions?.length || !procedureRequirement){
+  const createTurn = () => {
+    if(!action?.length || !userTurnPrompt){
         alert("Please Fill all fields.")
     } else {
-        createProcedureMutate({name: procedureName, actions, procedureRequirement, procedurePrompt, vectorQueryPrompt})
+        createTurnMutate({name: turnName, action, userTurnPrompt, turnPrompt})
     }
   }
+
+  useEffect(() => {
+    setTurnDataState(turnData)
+  }, [turnData])
 
   if(isLoading) return <Spinner/>
   return (
     <>
       <Formik
-        initialValues={{"Name": "", "Actions": [], "Procedure Requirement": ""}}
-        onSubmit={createProcedure}>
+        initialValues={{"Name": "", "Action": "", "User Turn Prompt": "", "Turn Creating Prompt": ""}}
+        onSubmit={createTurn}>
         {({ values, setFieldValue, errors, handleSubmit }) => {
           const setActionVal = (label, value) => {
               setFieldValue(label, value);
-              setActions(value)
+              setAction(value)
           }
           return <Form onSubmit={handleSubmit}>
-            <SimpleInputField nameList={[{ name: "Name", require: "true", placeholder: t("Name"), onChange: (e) => setProcedureName(e.target.value), value: procedureName }]} />
-            <MultiSelectField errors={errors} values={values} setFieldValue={setActionVal} name="Actions" require="true" data={actionsInfo.map(({name}) => ({name, id:name}))} />
-            <SimpleInputField nameList={[{ name: "Procedure Requirement", require: "true", placeholder: t("Procedure Requirement"), onChange: (e) => setProcedureRequirement(e.target.value), value: procedureRequirement, type: "textarea", rows: 5, promptText: AITextboxData.procedure_req }, { name: "Procedure Creating Prompt", require: "true", placeholder: t("Procedure Creating Prompt"), onChange: (e) => setProcedurePrompt(e.target.value), value: procedurePrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }, , { name: "Vector Query Creating Prompt", require: "true", placeholder: t("Vector Query Creating Prompt"), onChange: (e) => setVectorQueryPrompt(e.target.value), value: vectorQueryPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }]} />
-            <FormBtn submitText="Create" loading={isLoading || createProcedureLoading || saveProcedureLoading} />
+            <SimpleInputField nameList={[{ name: "Name", require: "true", placeholder: t("Name"), onChange: (e) => setTurnName(e.target.value), value: turnName }]} />
+            <MultiSelectField errors={errors} values={values} setFieldValue={setActionVal} name="Action" require="true" data={actionsInfo.map(({name}) => ({name, id:name}))} />
+            <SimpleInputField nameList={[{ name: "User Turn Prompt", require: "true", placeholder: t("User Turn Prompt"), onChange: (e) => setUserTurnPrompt(e.target.value), value: userTurnPrompt, type: "textarea", rows: 5, promptText: AITextboxData.procedure_req }, { name: "Turn Creating Prompt", require: "true", placeholder: t("Turn Creating Prompt"), onChange: (e) => setTurnPrompt(e.target.value), value: turnPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }]} />
+            <FormBtn submitText="Create" loading={isLoading || createTurnLoading} />
           </Form>
         }}
       </Formik>
-      {procedureData?.data && <>
-        <ReactFlowChart procedure={procedureData?.data?.procedure} description={procedureData?.data?.description} vectorQuery={procedureData?.data?.vectorQuery} procedureId={procedureData?.data?.id} width="75vw" />
-        <div className="ms-auto justify-content-end dflex-wgap mt-sm-4 my-2 save-back-button">
-          <Btn onClick={() => {saveProcedureMutate({name: procedureName, procedure: procedureData.data.procedure, description: procedureData.data.description, vectorQuery: procedureData.data.vectorQuery})}} className="btn-primary btn-lg" type="submit" title="Save" loading={isLoading || createProcedureLoading || saveProcedureLoading} />
-        </div>
-      </>}
+      {
+        turnDataState?.data && <>
+            <textarea style={{width:"100%", height: "100%"}} value={turnDataState?.data.turn} />
+            <Btn onClick={() => {
+              addTurn(turnName, turnDataState?.data.turn)
+            }} className="btn-primary btn-lg" type="submit" title="Add Turn" />
+        </>
+      }
     </>
   );
 };
 
-export default CreateProcedure;
+export default CreateTurn;

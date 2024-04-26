@@ -11,6 +11,7 @@ import { useRef } from 'react';
 import { MdClose } from 'react-icons/md';
 import AccountContext from './AccountContext';
 import Loader from '@/Components/CommonComponent/Loader';
+import CreateTurn from '@/Components/Superpower/ProcedureSuperPower/CreateTurn';
 
 const xmlParser = new XMLParser({
   ignoreAttributes: false,
@@ -26,7 +27,7 @@ const edgeTypes = {
     customEdge: CustomReactFlowEdge,
 }
 
-const ReactFlowChart = ({procedure, description, procedureId, width='75vw', height='100vh'}) => {
+const ReactFlowChart = ({procedure, description, vectorQuery, procedureId, width='75vw', height='100vh'}) => {
     const [webSocket, setWebSocket] = useState(null)
     const [refreshWebSocket, setRefreshWebSocket] = useState(0)
     const [stateProcedure, setStateProcedure] = useState(procedure)
@@ -129,18 +130,6 @@ const ReactFlowChart = ({procedure, description, procedureId, width='75vw', heig
         if(respJson.success) {
             setStateProcedure(respJson.data)
         }
-        throw respJson.message
-    }, { refetchOnWindowFocus: false, select: (data) => data.data });
-
-    const { data: actionsInfo, isLoading: actionsLoading } = useQuery(["actions"], async () => {
-        const resp = await fetch("http://134.209.37.239:3010/getDescriptions?paginate=10000&page=1&sort=asc", {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-        })
-        const respJson = await resp.json()
-        if(respJson.success) return respJson
         throw respJson.message
     }, { refetchOnWindowFocus: false, select: (data) => data.data });
 
@@ -316,10 +305,53 @@ const ReactFlowChart = ({procedure, description, procedureId, width='75vw', heig
 
     const toggleModal = () => setOpenModel((prev) => !prev);
 
+    const addTurn = async (name, turnToAdd) => {
+        if(!openToast) setOpenToast(true);
+        if(!editRef.current) await new Promise((res) => setTimeout(res, 200))
+        const lastNode = nodes[nodes.length - 1]
+        const lastNodeDoubleQuotes = `<node id="${lastNode.id}">${lastNode.data.label}</node>`
+        const lastNodeSingleQuotes = `<node id='${lastNode.id}'>${lastNode.data.label}</node>`
+        const lastNodeDoubleQuotesIndex = editRef.current.value.indexOf(lastNodeDoubleQuotes)
+        const lastNodeSingleQuotesIndex = editRef.current.value.indexOf(lastNodeSingleQuotes)
+        const lastNodeQuotesIndex = (lastNodeDoubleQuotesIndex >= 0 ? lastNodeDoubleQuotesIndex : lastNodeSingleQuotesIndex) + lastNodeDoubleQuotes.length
+        const newId = String.fromCharCode(lastNode.id.charCodeAt(0) + 1)
+        const nodeToAdd = `
+<node id="${newId}">${name}</node>`
+
+        const lastTurnDoubleQuotes = `<turn id="${lastNode.id}">`
+        const lastTurnSingleQuotes = `<turn id='${lastNode.id}'>`
+        const lastTurnDoubleQuotesIndex = editRef.current.value.indexOf(lastTurnDoubleQuotes)
+        const lastTurnSingleQuotesIndex = editRef.current.value.indexOf(lastTurnSingleQuotes)
+        const lastTurnQuotesIndex = (lastTurnDoubleQuotesIndex >= 0 ? lastTurnDoubleQuotesIndex : lastTurnSingleQuotesIndex) + lastTurnDoubleQuotes.length
+        const turnEnd = `</turn>`
+        const turnEndIndex = (editRef.current.value.slice(lastTurnQuotesIndex).indexOf(turnEnd)) + turnEnd.length
+        const newDoubleQuotesTurn = "<turn id="
+        const newSingleQuotesTurn = "<turn id="
+        const newTurnStartIndex = turnToAdd.indexOf(newDoubleQuotesTurn) || turnToAdd.indexOf(newSingleQuotesTurn)
+        const newTurnEndIndex = turnToAdd.indexOf(turnEnd) + turnEnd.length
+        turnToAdd = turnToAdd.slice(newTurnStartIndex, newTurnStartIndex + newDoubleQuotesTurn.length + 1) + newId + turnToAdd.slice(newTurnStartIndex + newDoubleQuotesTurn.length + 2, newTurnEndIndex)
+        setStateProcedure(prev => {
+            let tempProcedure = prev
+            tempProcedure = tempProcedure.slice(0, lastTurnQuotesIndex + turnEndIndex) + `\n${turnToAdd}` + tempProcedure.slice(lastTurnQuotesIndex + turnEndIndex)
+            tempProcedure = tempProcedure.slice(0, lastNodeQuotesIndex) + nodeToAdd + tempProcedure.slice(lastNodeQuotesIndex)
+            return tempProcedure
+        })
+        toggleModal()
+        setTimeout(() => {
+            editRef.current.focus()
+            editRef.current.selectionStart = lastTurnQuotesIndex + turnEndIndex + nodeToAdd.length
+            editRef.current.selectionEnd = lastTurnQuotesIndex + turnEndIndex + nodeToAdd.length + turnToAdd.length
+        }, 400);
+    }
+
     return <>
         <div>
             <h3>Description:</h3>
             <p>{description}</p>
+        </div>
+        <div>
+            <h3>Vector Query:</h3>
+            <p>{vectorQuery}</p>
         </div>
         <div>
             <h3>Procedure:</h3>
@@ -378,7 +410,7 @@ const ReactFlowChart = ({procedure, description, procedureId, width='75vw', heig
         </div>
         <div style={{display:"flex", gap: 5, marginBottom: "20px", marginTop: "20px"}}>
             <Btn
-                title="Add New Node"
+                title="Add New Turn"
                 className="align-items-center btn-theme add-button"
                 onClick={toggleModal}
             />
@@ -390,55 +422,9 @@ const ReactFlowChart = ({procedure, description, procedureId, width='75vw', heig
             />
         </div>
         <Modal fullscreen isOpen={openModel} toggle={toggleModal}>
-            <ModalHeader toggle={toggleModal}>Choose Action</ModalHeader>
+            <ModalHeader toggle={toggleModal}>Create New Turn</ModalHeader>
             <ModalBody>
-                {
-                    actionsLoading ? <Loader/> :
-                    actionsInfo?.map((action) => <Btn
-                        style={{marginBottom: 10}}
-                        title={action.name}
-                        className="align-items-center btn-theme add-button"
-                        onClick={async () => {
-                            if(!openToast) setOpenToast(true);
-                            if(!editRef.current) await new Promise((res) => setTimeout(res, 200))
-                            const lastNode = nodes[nodes.length - 1]
-                            const lastNodeDoubleQuotes = `<node id="${lastNode.id}">${lastNode.data.label}</node>`
-                            const lastNodeSingleQuotes = `<node id='${lastNode.id}'>${lastNode.data.label}</node>`
-                            const lastNodeDoubleQuotesIndex = editRef.current.value.indexOf(lastNodeDoubleQuotes)
-                            const lastNodeSingleQuotesIndex = editRef.current.value.indexOf(lastNodeSingleQuotes)
-                            const lastNodeQuotesIndex = (lastNodeDoubleQuotesIndex >= 0 ? lastNodeDoubleQuotesIndex : lastNodeSingleQuotesIndex) + lastNodeDoubleQuotes.length
-                            const newNodeId = String.fromCharCode(lastNode.id.charCodeAt(0) + 1)
-                            const nodeToAdd = `
-    <node id="${newNodeId}">${action.name}</node>`
-
-                            const lastTurnDoubleQuotes = `<turn id="${lastNode.id}">`
-                            const lastTurnSingleQuotes = `<turn id='${lastNode.id}'>`
-                            const lastTurnDoubleQuotesIndex = editRef.current.value.indexOf(lastTurnDoubleQuotes)
-                            const lastTurnSingleQuotesIndex = editRef.current.value.indexOf(lastTurnSingleQuotes)
-                            const lastTurnQuotesIndex = (lastTurnDoubleQuotesIndex >= 0 ? lastTurnDoubleQuotesIndex : lastTurnSingleQuotesIndex) + lastTurnDoubleQuotes.length
-                            const turnEnd = `</turn>`
-                            const turnEndIndex = (editRef.current.value.slice(lastTurnQuotesIndex).indexOf(turnEnd)) + turnEnd.length
-                            const turnToAdd = `
-    <turn id="${newNodeId}">
-        <name>${action.name}</name>
-        <taskStatusUpdate>Executing ${action.name}</taskStatusUpdate>
-        <userMessage>Executing ${action.name}</userMessage>
-    </turn>`
-                            setStateProcedure(prev => {
-                                let tempProcedure = prev
-                                tempProcedure = tempProcedure.slice(0, lastTurnQuotesIndex + turnEndIndex) + turnToAdd + tempProcedure.slice(lastTurnQuotesIndex + turnEndIndex)
-                                tempProcedure = tempProcedure.slice(0, lastNodeQuotesIndex) + nodeToAdd + tempProcedure.slice(lastNodeQuotesIndex)
-                                return tempProcedure
-                            })
-                            toggleModal()
-                            setTimeout(() => {
-                                editRef.current.focus()
-                                editRef.current.selectionStart = lastTurnQuotesIndex + turnEndIndex + nodeToAdd.length
-                                editRef.current.selectionEnd = lastTurnQuotesIndex + turnEndIndex + nodeToAdd.length + turnToAdd.length
-                            }, 400);
-                        }}
-                    />)
-                }
+                <CreateTurn procedure={stateProcedure} addTurn={addTurn} />
             </ModalBody>
       </Modal>
     </> 
