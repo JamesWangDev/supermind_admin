@@ -1,5 +1,6 @@
 import React, { memo, useState } from 'react';
 import { Handle, Position, useReactFlow } from 'reactflow';
+import { CloseButton } from 'reactstrap';
 
 export default memo(({ data, id }) => {
     const [labelState, setLabelState] = useState(data.label ?? "")
@@ -14,7 +15,7 @@ export default memo(({ data, id }) => {
             id={`${i}`}
         />)}
         <div>
-            {<input style={{border: "0px"}} size={labelState.length + 1} value={labelState} onChange={(e) => {
+            <input style={{border: "0px"}} size={labelState.length + 1} value={labelState} onChange={(e) => {
                 const val = e.target.value
                 setLabelState(val)
                 setNodes(prev => {
@@ -24,7 +25,8 @@ export default memo(({ data, id }) => {
                     tempNodes[index].data.label = val
                     return tempNodes
                 })
-            }} />}
+            }} />
+            <CloseButton style={{position: "absolute", top: -10, left: -10}} onClick={() => data.deleteNode(id)} />
         </div>
         {Array(data.sourceHandleCount).fill(0).map((_, i) => <Handle
             type="source"

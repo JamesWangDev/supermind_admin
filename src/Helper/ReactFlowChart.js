@@ -5,12 +5,11 @@ import CustomReactFlowNode from "@/Helper/CustomReactFlowNode";
 import CustomReactFlowEdge from "@/Helper/CustomReactFlowEdge";
 import Btn from '@/Elements/Buttons/Btn';
 import 'reactflow/dist/style.css';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { Toast, ToastHeader, ToastBody, Modal, ModalHeader, ModalBody } from "reactstrap";
 import { useRef } from 'react';
 import { MdClose } from 'react-icons/md';
 import AccountContext from './AccountContext';
-import Loader from '@/Components/CommonComponent/Loader';
 import CreateTurn from '@/Components/Superpower/ProcedureSuperPower/CreateTurn';
 
 const xmlParser = new XMLParser({
@@ -160,7 +159,7 @@ const ReactFlowChart = ({procedure, description, vectorQuery, procedureId, width
                 handleEdgeInclude(edgeData, 0)
             }
             const nodes = graphData?.node?.map((n, i) => {
-                return {id: n["@_id"], type: "customNode", position: {x: 100 * (i % 2 === 0 ? -1 : 1), y: i * 100}, data: {label: n["#text"] || n["@_id"], sourceHandleCount: sourceNodeCount[n["@_id"]] ?? 1, targetHandleCount: targetNodeCount[n["@_id"]] ?? 1}}
+                return {id: n["@_id"], type: "customNode", position: {x: 100 * (i % 2 === 0 ? -1 : 1), y: i * 100}, data: {label: n["#text"] || n["@_id"], sourceHandleCount: sourceNodeCount[n["@_id"]] ?? 1, targetHandleCount: targetNodeCount[n["@_id"]] ?? 1, deleteNode}}
             })
             setNodes([])
             setEdges([])
@@ -342,6 +341,54 @@ const ReactFlowChart = ({procedure, description, vectorQuery, procedureId, width
             editRef.current.selectionStart = lastTurnQuotesIndex + turnEndIndex + nodeToAdd.length
             editRef.current.selectionEnd = lastTurnQuotesIndex + turnEndIndex + nodeToAdd.length + turnToAdd.length
         }, 400);
+    }
+
+    const deleteNode = async (nodeId) => {
+        if(!openToast) setOpenToast(true);
+        if(!editRef.current) await new Promise((res) => setTimeout(res, 200))
+        setStateProcedure(prevStateProcedure => {
+            let tempProcedure = prevStateProcedure
+            setNodes(prevNodes => {
+                const nodeToDelete = prevNodes.find((node) => node.id === nodeId)
+                setEdges(prevEdges => {
+                    const edgesToDelete = prevEdges.filter((edge) => edge.source === nodeId || edge.target === nodeId)
+                    const nodeToDeleteDoubleQuotes = `<node id="${nodeToDelete.id}">${nodeToDelete.data.label}</node>`
+                    const nodeToDeleteSingleQuotes = `<node id='${nodeToDelete.id}'>${nodeToDelete.data.label}</node>`
+                    const nodeToDeleteDoubleQuotesIndex = tempProcedure.indexOf(nodeToDeleteDoubleQuotes)
+                    const nodeToDeleteSingleQuotesIndex = tempProcedure.indexOf(nodeToDeleteSingleQuotes)
+                    const nodeToDeleteQuotesIndex = (nodeToDeleteDoubleQuotesIndex >= 0 ? nodeToDeleteDoubleQuotesIndex : nodeToDeleteSingleQuotesIndex)
+        
+                    const turnToDeleteDoubleQuotes = `<turn id="${nodeToDelete.id}">`
+                    const turnToDeleteSingleQuotes = `<turn id='${nodeToDelete.id}'>`
+                    const turnToDeleteDoubleQuotesIndex = tempProcedure.indexOf(turnToDeleteDoubleQuotes)
+                    const turnToDeleteSingleQuotesIndex = tempProcedure.indexOf(turnToDeleteSingleQuotes)
+                    const turnToDeleteQuotesIndex = (turnToDeleteDoubleQuotesIndex >= 0 ? turnToDeleteDoubleQuotesIndex : turnToDeleteSingleQuotesIndex)
+                    const turnEnd = `</turn>`
+                    const turnEndIndex = (tempProcedure.slice(turnToDeleteQuotesIndex + turnToDeleteDoubleQuotes.length).indexOf(turnEnd)) + turnEnd.length
+                    
+                    tempProcedure = tempProcedure.slice(0, turnToDeleteQuotesIndex) + tempProcedure.slice(turnToDeleteQuotesIndex + turnToDeleteDoubleQuotes.length + turnEndIndex)
+                    edgesToDelete.forEach((edge) => {
+                        const edgeSource = edge.source
+                        const edgeTarget = edge.target
+                        const edgeDoubleQuotes = `<edge source="${edgeSource}" target="${edgeTarget}"`
+                        const edgeSingleQuotes = `<edge source='${edgeSource}' target='${edgeTarget}'`
+                        const edgeStartIndexDoubleQuotes = tempProcedure.indexOf(edgeDoubleQuotes)
+                        const edgeStartIndexSingleQuotes = tempProcedure.indexOf(edgeSingleQuotes)
+                        const edgeStartIndex = edgeStartIndexDoubleQuotes >= 0 ? edgeStartIndexDoubleQuotes : edgeStartIndexSingleQuotes
+                        const isSelfClosingDoubleQuotesEdge = tempProcedure.indexOf(`${edgeDoubleQuotes} />`) >= 0
+                        const isSelfClosingSingleQuotesEdge = tempProcedure.indexOf(`${edgeSingleQuotes} />`) >= 0
+                        const isSelfClosingEdge = isSelfClosingDoubleQuotesEdge || isSelfClosingSingleQuotesEdge
+                        const edgeEnd = isSelfClosingEdge ? ` />` : `</edge>`
+                        const edgeEndIndex = isSelfClosingEdge ? edgeDoubleQuotes.length : editRef.current.value.slice(edgeStartIndex).indexOf(edgeEnd)
+                        tempProcedure = tempProcedure.slice(0, edgeStartIndex) + tempProcedure.slice(edgeStartIndex + edgeEndIndex + edgeEnd.length)
+                    })
+                    tempProcedure = tempProcedure.slice(0, nodeToDeleteQuotesIndex) + tempProcedure.slice(nodeToDeleteQuotesIndex + nodeToDeleteDoubleQuotes.length)
+                    return prevEdges
+                })
+                return prevNodes
+            })
+            return tempProcedure
+        })
     }
 
     return <>

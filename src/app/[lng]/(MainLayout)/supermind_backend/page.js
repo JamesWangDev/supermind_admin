@@ -126,7 +126,31 @@ const SupermindBackend = () => {
   IF INFORMATION IS MISSING TRY YOUR BEST TO ANSWER ANYWAY
   
    ///alway output in an array of JSON!!!!`);
+  const [vectorQueryPrompt, setVectorQueryPrompt] = useState(`Your goal is to create a short and concise description of a procedure that will be embedded as a vector and queried against an input to solve a user problem, do not outline steps, only return a description of its overall function.
 
+
+  You should outputted description should include a title and description in a json object as follows:
+
+
+  For each procedure in procedures:
+  Output JSON:
+  {
+  "apiDescription": "<the query>",
+  }
+  Return "apiDescription"
+  //only return the apiDescription, no additional text or tokens
+  `)
+  const [procedureSelectorPrompt, setProcedureSelectorPrompt] = useState(`//step 1. Analyse each input api description by object
+  //step 2. Analyse the input task
+  //step 3. Select the best api to complete the task
+  For each api description in api descriptions:
+  Output JSON:
+  {
+  "spec_id": "<the id of the selected api>",
+  "metadata.name": "<the name of the selected api>"
+  }
+  Return "selectedApi"
+  //if there is no matching procedure, return "spec_id": "90cae5e3-8bb4-4ce5-badf-ed9e42343b8f", "metadata.name": "no matching procedure`)
    const {accountData} = useContext(AccountContext);
 
    const { data, isLoading } = useQuery([product], () => request({
@@ -167,7 +191,7 @@ const SupermindBackend = () => {
                 alert("Error occured. Please try again")
                 return
             }
-            webSocket.send(JSON.stringify({event: "taskSplitter", data: {message, taskSplitterPrompt, chatPrompt, supermindId: supermind, userId: accountData.id}}))
+            webSocket.send(JSON.stringify({event: "taskSplitter", data: {message, taskSplitterPrompt, chatPrompt, vectorQueryPrompt, procedureSelectorPrompt, supermindId: supermind, userId: accountData.id}}))
             setChatLoading(true)
             setChatData([])
             setChatLogs([])
@@ -180,7 +204,7 @@ const SupermindBackend = () => {
           return <Form onSubmit={handleSubmit}>
             <SimpleInputField nameList={[{ name: "User Message", require: "true", placeholder: t("User Message"), onChange: (e) => setMessage(e.target.value), value: message }]} />
             <MultiSelectField errors={errors} values={values} setFieldValue={setSupermindVal} name="Superminds" require="true" data={data} />
-            <SimpleInputField nameList={[{ name: "Task Splitter Prompt", require: "true", placeholder: t("Task Splitter Prompt"), onChange: (e) => setTaskSplitterPrompt(e.target.value), value: taskSplitterPrompt, type: "textarea", rows: 5, promptText: AITextboxData.procedure_req }, { name: "Chat Prompt", require: "true", placeholder: t("Chat Prompt"), onChange: (e) => setChatPrompt(e.target.value), value: chatPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }]} />
+            <SimpleInputField nameList={[{ name: "Task Splitter Prompt", require: "true", placeholder: t("Task Splitter Prompt"), onChange: (e) => setTaskSplitterPrompt(e.target.value), value: taskSplitterPrompt, type: "textarea", rows: 5, promptText: AITextboxData.procedure_req }, { name: "Chat Prompt", require: "true", placeholder: t("Chat Prompt"), onChange: (e) => setChatPrompt(e.target.value), value: chatPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }, { name: "Vector Query Prompt", require: "true", placeholder: t("Vector Query Prompt"), onChange: (e) => setVectorQueryPrompt(e.target.value), value: vectorQueryPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }, { name: "Procedure Selector Prompt", require: "true", placeholder: t("Procedure Selector Prompt"), onChange: (e) => setProcedureSelectorPrompt(e.target.value), value: procedureSelectorPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }]} />
             <FormBtn submitText="Create" loading={isLoading || chatLoading} />
           </Form>
         }}
