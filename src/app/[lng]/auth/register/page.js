@@ -25,8 +25,8 @@ const VendorRegister = () => {
                     <Col xl={7}>
                         <div className="log-in-box">
                             <div className="log-in-title">
-                                <h3>{"Welcome To Fastkart"}</h3>
-                                <h4>{"Setup Your Store Information"}</h4>
+                                <h3>{"Welcome To Supermind"}</h3>
+                                <h4>{"Setup Your Information as Supermind Developer"}</h4>
                             </div>
                             <div className="input-box">
                                 <Formik
@@ -42,8 +42,8 @@ const VendorRegister = () => {
                                     {({ values, errors }) => (
                                         <Form className="row g-4">
                                             <UserPersonalInfo />
-                                            <UserAddress values={values} />
-                                            <UserContact />
+                                            {/* <UserAddress values={values} /> */}
+                                            {/* <UserContact /> */}
                                             <Col xs={12}>
                                                 <Btn title="Submit" className="btn btn-animation w-100 justify-content-center" type="submit" color="false" loading={Number(isLoading)} />
                                                 <div className="sign-up-box">

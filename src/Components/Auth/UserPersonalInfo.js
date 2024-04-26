@@ -17,12 +17,12 @@ const UserPersonalInfo = () => {
       <Col sm="6">
         <Field name="password_confirmation" type="password" component={ReactstrapInput} className="form-control" id="password_confirmation" placeholder="Confirm Password" label="ConfirmPassword" />
       </Col>
-      <Col sm="6">
+      {/* <Col sm="6">
         <Field name="store_name" type="text" component={ReactstrapInput} className="form-control" id="store_name" placeholder="Store Name" label="StoreName" />
       </Col>
       <Col sm="6">
         <Field name="description" type="textarea" component={ReactstrapInput} className="form-control" id="description" placeholder="Store Description" label="StoreDescription" />
-      </Col>
+      </Col> */}
     </>
   );
 };
