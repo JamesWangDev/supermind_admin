@@ -78,7 +78,7 @@ const AllProceduresTable = ({ data, ...props }) => {
       <Modal fullscreen isOpen={openModel} toggle={toggleModal}>
         <ModalHeader toggle={toggleModal}>{procedureDetail?.name}</ModalHeader>
         <ModalBody>
-            <ReactFlowChart procedure={procedureDetail?.procedure} description={procedureDetail?.description} vectorQuery={procedureDetail?.vector_query} procedureId={procedureDetail?.id} width="95vw" height="90vh" />
+            <ReactFlowChart name={procedureDetail?.name} procedure={procedureDetail?.procedure} description={procedureDetail?.description} vectorQuery={procedureDetail?.vector_query} procedureId={procedureDetail?.id} width="95vw" height="90vh" />
             <Btn
               title="Delete Procedure"
               className="align-items-center"

@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import SimpleInputField from "../../InputFields/SimpleInputField";
 import I18NextContext from "@/Helper/I18NextContext";
@@ -1318,12 +1318,12 @@ Example:
     const respJson = await resp.json()
     if(respJson.success) {
         alert("Procedure created")
-        return respJson
+        return respJson.data
     }
     throw respJson.message
-  },{ refetchOnWindowFocus: false, select: (data) => data.data });
+  }, { refetchOnWindowFocus: false });
   
-  const {mutate: saveProcedureMutate, isLoading: saveProcedureLoading} = useMutation(async ({description, procedure, name, vectorQuery}) => {
+  const {mutate: saveProcedureMutate, isLoading: saveProcedureLoading, data: procedureId} = useMutation(async ({description, procedure, name, vectorQuery}) => {
     const resp = await fetch("http://134.209.37.239:3010/saveProcedure", {
         method: "POST",
         headers: {
@@ -1335,10 +1335,10 @@ Example:
     const respJson = await resp.json()
     if(respJson.success) {
         alert("Procedure saved")
-        return respJson
+        return respJson.data
     }
     throw respJson.message
-  },{ refetchOnWindowFocus: false, select: (data) => data.data });
+  }, { refetchOnWindowFocus: false });
 
   const createProcedure = () => {
     if(!actions?.length || !procedureRequirement){
@@ -1367,10 +1367,10 @@ Example:
           </Form>
         }}
       </Formik>
-      {procedureData?.data && <>
-        <ReactFlowChart procedure={procedureData?.data?.procedure} description={procedureData?.data?.description} vectorQuery={procedureData?.data?.vectorQuery} procedureId={procedureData?.data?.id} width="75vw" />
+      {procedureData && <>
+        <ReactFlowChart name={procedureData.name} procedure={procedureData.procedure} description={procedureData.description} vectorQuery={procedureData.vectorQuery} procedureId={procedureId} width="75vw" />
         <div className="ms-auto justify-content-end dflex-wgap mt-sm-4 my-2 save-back-button">
-          <Btn onClick={() => {saveProcedureMutate({name: procedureName, procedure: procedureData.data.procedure, description: procedureData.data.description, vectorQuery: procedureData.data.vectorQuery})}} className="btn-primary btn-lg" type="submit" title="Save" loading={isLoading || createProcedureLoading || saveProcedureLoading} />
+          <Btn onClick={() => {saveProcedureMutate({name: procedureName, procedure: procedureData.procedure, description: procedureData.description, vectorQuery: procedureData.vectorQuery})}} className="btn-primary btn-lg" type="submit" title="Save" loading={isLoading || createProcedureLoading || saveProcedureLoading} />
         </div>
       </>}
     </>

@@ -26,7 +26,7 @@ const edgeTypes = {
     customEdge: CustomReactFlowEdge,
 }
 
-const ReactFlowChart = ({procedure, description, vectorQuery, procedureId, width='75vw', height='100vh'}) => {
+const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId, width='75vw', height='100vh'}) => {
     const [webSocket, setWebSocket] = useState(null)
     const [refreshWebSocket, setRefreshWebSocket] = useState(0)
     const [stateProcedure, setStateProcedure] = useState(procedure)
@@ -117,20 +117,20 @@ const ReactFlowChart = ({procedure, description, vectorQuery, procedureId, width
         [edges],
     );
 
-    const {mutate: updateProcedureMutate, isLoading: updateProcedureLoading} = useMutation(async ({procedure, procedureId}) => {
-        const resp = await fetch("http://134.209.37.239:3010/updateProcedure", {
-            method: "PATCH",
+    const {mutate: updateProcedureMutate, isLoading: updateProcedureLoading} = useMutation(async ({procedure}) => {
+        const resp = await fetch("http://134.209.37.239:3010/saveProcedure", {
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({procedure, id: procedureId})
+            body: JSON.stringify({procedure, procedureId, name, description, vectorQuery})
         })
         const respJson = await resp.json()
         if(respJson.success) {
             setStateProcedure(respJson.data)
         }
         throw respJson.message
-    }, { refetchOnWindowFocus: false, select: (data) => data.data });
+    }, { refetchOnWindowFocus: false });
 
     useEffect(() => {
         if(stateProcedure){
@@ -407,7 +407,7 @@ const ReactFlowChart = ({procedure, description, vectorQuery, procedureId, width
                 title="Update Procedure"
                 className="align-items-center btn-theme add-button"
                 loading={updateProcedureLoading}
-                onClick={() => updateProcedureMutate({procedure: stateProcedure, procedureId})}
+                onClick={() => updateProcedureMutate({procedure: stateProcedure})}
             />
         </div>
         <div style={{marginBottom: "10px"}}>
@@ -465,7 +465,7 @@ const ReactFlowChart = ({procedure, description, vectorQuery, procedureId, width
                 title="Save Changes"
                 className="align-items-center"
                 loading={updateProcedureLoading}
-                onClick={() => updateProcedureMutate({procedure, procedureId})}
+                onClick={() => updateProcedureMutate({procedure})}
             />
         </div>
         <Modal fullscreen isOpen={openModel} toggle={toggleModal}>
