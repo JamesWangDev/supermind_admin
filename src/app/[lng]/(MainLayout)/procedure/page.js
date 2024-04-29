@@ -8,7 +8,7 @@ const AllProcedures = () => {
   return (
     <Col sm="12">
       <AllProceduresTable
-        url={"https://134.209.37.239/nodeapi/getProcedures"}
+        url={"ws://134.209.37.239:3010/getProcedures"}
         moduleName="Actions"
         isCheck={isCheck}
         setIsCheck={setIsCheck}
