@@ -42,17 +42,18 @@ const SupermindBackend = () => {
   [
   {
   "taskName": "Weather Check",
-  "taskPrompt": "API: Retrieve current weather information for a specified location",
+  "taskPrompt": "API: Retrieve current weather information for Paris",
   "taskPresent": true,
   "trainingDataOnly": false
   },
   {
   "taskName": "Set Reminder",
-  "taskPrompt": "Schedule a reminder for a specific time and purpose",
+  "taskPrompt": "Schedule a reminder for a 3pm meeting",
   "taskPresent": true,
   "trainingDataOnly": true
   }
-  ]`);
+  ]
+  `);
   const [chatPrompt, setChatPrompt] = useState(`You are an action agent. You follow Procedures provided in turns like in Dungeons and Dragons. In each turn, you Issue 2 commands, the first will be as per the procedure, and the second will be a user message informing the user of your action, what node you are executing and why.   Make sure to include the why in your message.   You will receive a response to commands and then follow the procedure logic to choose a new command to issue. Issue each command as a JSON package in the format Command: URL. DATA BLOCK: Key pairs as per procedure. The back end system will parse the text you output and send the DATA Block to the API targeted URL and then return the response in your next turn. DO NOT EXPLAIN ANYTHING OR SAY YOU CANNOT DO ANYTHING. Follow these instructions verbatim, **always** issues the command URL and DATA BLOCK. Do not issue any additional tokens.  For the user message you issues, always use the following URL "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4-f27a-48e9-a62f-a87722a0b5d4"  [Example Turn] Example Command: [{
     "Command": "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4",
     "DATA BLOCK": {
@@ -138,7 +139,7 @@ const SupermindBackend = () => {
   }, router), { refetchOnWindowFocus: false, refetchOnMount: false, cacheTime: 0, select: (data) => data.data.data });
 
   useEffect(() => {
-    const webSocket = new WebSocket("ws://134.209.37.239:3010")
+    const webSocket = new WebSocket("ws://134.209.37.239/nodeapi")
     setWebSocket(webSocket);
     webSocket.onmessage = (event) => {
         try {

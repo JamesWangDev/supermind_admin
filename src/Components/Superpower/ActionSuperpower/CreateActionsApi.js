@@ -52,7 +52,7 @@ const CreateActionsApi = () => {
 
   const { error, data: apiInfo, isLoading } = useQuery(["apiInfo", refetchApiInfo, specType, description], async () => {
     if(!spec || !specType || (authType === "authToken" && !authKey) || !description || (specType === "serpapi" && !functionName)) throw "Please Fill All Fields"
-    const resp = await fetch("ws://134.209.37.239:3010/getNodeData", {
+    const resp = await fetch("http://134.209.37.239/nodeapi/getNodeData", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -66,7 +66,7 @@ const CreateActionsApi = () => {
   }, { refetchOnWindowFocus: false, select: (data) => data.data });
   
   const {mutate, error: mutationError, isLoading: mutationLoading} = useMutation(async () => {
-    const resp = await fetch("ws://134.209.37.239:3010/createNode", {
+    const resp = await fetch("http://134.209.37.239/nodeapi/createNode", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

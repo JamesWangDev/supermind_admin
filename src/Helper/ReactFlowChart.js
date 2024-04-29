@@ -118,7 +118,7 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
     );
 
     const {mutate: updateProcedureMutate, isLoading: updateProcedureLoading} = useMutation(async ({procedure}) => {
-        const resp = await fetch("ws://134.209.37.239:3010/saveProcedure", {
+        const resp = await fetch("http://134.209.37.239/nodeapi/saveProcedure", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -171,7 +171,7 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
     }, [stateProcedure])
 
     useEffect(() => {
-        const webSocket = new WebSocket("ws://134.209.37.239:3010")
+        const webSocket = new WebSocket("http://134.209.37.239/nodeapi")
         setWebSocket(webSocket);
         webSocket.onmessage = (event) => {
             try {
