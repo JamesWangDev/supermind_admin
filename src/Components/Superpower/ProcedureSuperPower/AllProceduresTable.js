@@ -49,7 +49,7 @@ const AllProceduresTable = ({ data, ...props }) => {
   const toggleModal = () => setOpenModel((prev) => !prev);
 
   const {mutate: deleteProcedureMutate, isLoading: deleteProcedureLoading} = useMutation(async ({procedureId}) => {
-    const resp = await fetch(`http://134.209.37.239:3010/deleteProcedure?procedureId=${procedureId}`, {
+    const resp = await fetch(`https://134.209.37.239/nodeapi/deleteProcedure?procedureId=${procedureId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

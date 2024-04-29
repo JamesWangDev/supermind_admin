@@ -138,7 +138,7 @@ const SupermindBackend = () => {
   }, router), { refetchOnWindowFocus: false, refetchOnMount: false, cacheTime: 0, select: (data) => data.data.data });
 
   useEffect(() => {
-    const webSocket = new WebSocket("ws://134.209.37.239:3010")
+    const webSocket = new WebSocket("wss://134.209.37.239/nodeapi")
     setWebSocket(webSocket);
     webSocket.onmessage = (event) => {
         try {

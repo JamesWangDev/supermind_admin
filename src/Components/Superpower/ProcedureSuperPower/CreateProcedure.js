@@ -1295,7 +1295,7 @@ Example:
   //only return the apiDescription, no additional text or tokens}`)
 
   const { error, data: actionsInfo, isLoading } = useQuery(["actions"], async () => {
-    const resp = await fetch("http://134.209.37.239:3010/getDescriptions?paginate=10000&page=1&sort=asc", {
+    const resp = await fetch("https://134.209.37.239/nodeapi/getDescriptions?paginate=10000&page=1&sort=asc", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -1307,7 +1307,7 @@ Example:
   }, { refetchOnWindowFocus: false, select: (data) => data.data });
   
   const {mutate: createProcedureMutate, isLoading: createProcedureLoading, data: procedureData} = useMutation(async ({actions, procedureRequirement, procedurePrompt, name, vectorQueryPrompt}) => {
-    const resp = await fetch("http://134.209.37.239:3010/createProcedure", {
+    const resp = await fetch("https://134.209.37.239/nodeapi/createProcedure", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1324,7 +1324,7 @@ Example:
   }, { refetchOnWindowFocus: false });
   
   const {mutate: saveProcedureMutate, isLoading: saveProcedureLoading, data: procedureId} = useMutation(async ({description, procedure, name, vectorQuery}) => {
-    const resp = await fetch("http://134.209.37.239:3010/saveProcedure", {
+    const resp = await fetch("https://134.209.37.239/nodeapi/saveProcedure", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

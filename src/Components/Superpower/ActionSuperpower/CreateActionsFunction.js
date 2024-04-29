@@ -16,7 +16,7 @@ const CreateActionsFunction = () => {
   const [authKey, setAuthKey] = useState("");
 
   const {mutate, error: mutationError, isLoading: mutationLoading} = useMutation(async ({authKey, description, func}) => {
-    const resp = await fetch("http://134.209.37.239:3010/createNodeFromFunction", {
+    const resp = await fetch("https://134.209.37.239/nodeapi/createNodeFromFunction", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
