@@ -26,53 +26,33 @@ const SupermindBackend = () => {
   const [chatLoading, setChatLoading] = useState(false)
   const [chatData, setChatData] = useState([])
   const [chatLogs, setChatLogs] = useState([])
-  const [taskSplitterPrompt, setTaskSplitterPrompt] = useState(`DIRECTIVE:
-  //Analyse the input and split into task groups or items, output an array of objects for each task group or item as follows:
-  If prompt contains > 1 task group THEN
-  Split Prompt into Tasks.
-  For each task in tasks:
-  Output JSON:
+  const [taskSplitterPrompt, setTaskSplitterPrompt] = useState(`Given a user input, your task is to analyze and identify different tasks contained within the message. For each identified task, classify it based on its nature—whether it involves information retrieval, computation, API interaction, or other activities. Output strictly a JSON array where each element is a JSON object representing a distinct task. Each JSON object should have the following properties:
+  1. 'taskName' - a brief title that describes the task.
+  2. 'taskPrompt' - a pseudocode representation that explains how to accomplish the task, prefixed with 'API' if external tools or APIs are needed.
+  3. 'taskPresent' - a boolean flag to indicate whether the task is actionable and present.
+  4. 'trainingDataOnly' - a boolean flag to indicate if the task can be completed using only the internal knowledge of the LLM, set to true if no external tools or APIs are required, otherwise false.
+  
+  
+  Ensure that no other text or tokens are included in the output besides the JSON package. Each task that requires external data or interaction should be clearly marked to differentiate from those that can be handled internally."
+  
+  
+  Example output based on user input "Check the weather in Paris and set a reminder for a meeting at 3 PM":
+  
+  
   [
   {
-  "taskName": "<Name of the Task>",
-  "taskPrompt": "<New Task Prompt in pseudocode>",
-  "taskPresent": true
+  "taskName": "Weather Check",
+  "taskPrompt": "API: Retrieve current weather information for a specified location",
+  "taskPresent": true,
+  "trainingDataOnly": false
   },
   {
-  "taskName": "<Name of the Task>",
-  "taskPrompt": "<New Task Prompt in pseudocode>",
-  "taskPresent": true
+  "taskName": "Set Reminder",
+  "taskPrompt": "Schedule a reminder for a specific time and purpose",
+  "taskPresent": true,
+  "trainingDataOnly": true
   }
-  ]
-  Else
-  If User prompt contains 0 tasks THEN
-  Output JSON:
-  [
-  {
-  "taskName": "no task",
-  "taskPrompt": "no prompt",
-  "taskPresent": false
-  }
-  ]
-  Else
-  Task Split Procedure
-  Output JSON:
-  [
-  {
-  "taskName": "<Name of the Task>",
-  "taskPrompt": "<New Task Prompt in pseudocode>",
-  "taskPresent": true
-  },
-  {
-  "taskName": "<Name of the Task>",
-  "taskPrompt": "<New Task Prompt in pseudocode>",
-  "taskPresent": true
-  }
-  ]
-  //Loop over each task outputting one object for each task group or item
-  //Do not use the term "search for" when a user wants info, just say in the pseudocode "respond with info about:"
-  //All tasks can be completed with an api or tool request, if the task is suited to an api prefix with "API"
-  //group task objects of the same type, for example, checking and creating a task is one task object. Getting information is a separate task object. Doing something else is a separate task object.`);
+  ]`);
   const [chatPrompt, setChatPrompt] = useState(`You are an action agent. You follow Procedures provided in turns like in Dungeons and Dragons. In each turn, you Issue 2 commands, the first will be as per the procedure, and the second will be a user message informing the user of your action, what node you are executing and why.   Make sure to include the why in your message.   You will receive a response to commands and then follow the procedure logic to choose a new command to issue. Issue each command as a JSON package in the format Command: URL. DATA BLOCK: Key pairs as per procedure. The back end system will parse the text you output and send the DATA Block to the API targeted URL and then return the response in your next turn. DO NOT EXPLAIN ANYTHING OR SAY YOU CANNOT DO ANYTHING. Follow these instructions verbatim, **always** issues the command URL and DATA BLOCK. Do not issue any additional tokens.  For the user message you issues, always use the following URL "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4-f27a-48e9-a62f-a87722a0b5d4"  [Example Turn] Example Command: [{
     "Command": "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4",
     "DATA BLOCK": {
