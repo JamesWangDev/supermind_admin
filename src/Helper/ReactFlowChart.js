@@ -226,16 +226,26 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
                 const edgeName = edge.label
                 const edgeSource = edge.source
                 const edgeTarget = edge.target
-                const edgeDoubleQuotes = `<edge source="${edgeSource}" target="${edgeTarget}"`
-                const edgeSingleQuotes = `<edge source='${edgeSource}' target='${edgeTarget}'`
-                const edgeIndexDoubleQuotes = editRef.current.value.indexOf(edgeDoubleQuotes)
-                const edgeIndexSingleQuotes = editRef.current.value.indexOf(edgeSingleQuotes)
-                const edgeIndex = edgeIndexDoubleQuotes >= 0 ? edgeIndexDoubleQuotes : edgeIndexSingleQuotes
-                const editIndex = editRef.current.value.slice(edgeIndex).indexOf(edgeName)
+                const edgeStartDoubleQuotes = `<edge source="${edgeSource}" target="${edgeTarget}"`
+                const edgeStartSingleQuotes = `<edge source='${edgeSource}' target='${edgeTarget}'`
+                const edgeStartIndexDoubleQuotes = editRef.current.value.indexOf(edgeStartDoubleQuotes)
+                const edgeStartIndexSingleQuotes = editRef.current.value.indexOf(edgeStartSingleQuotes)
+                const edgeStartIndex = edgeStartIndexDoubleQuotes >= 0 ? edgeStartIndexDoubleQuotes : edgeStartIndexSingleQuotes
+                const isSelfClosingDoubleQuotesEdge = editRef.current.value.indexOf(`${edgeStartDoubleQuotes} />`) >= 0
+                const isSelfClosingSingleQuotesEdge = editRef.current.value.indexOf(`${edgeStartSingleQuotes} />`) >= 0
+                const isSelfClosingEdge = isSelfClosingDoubleQuotesEdge || isSelfClosingSingleQuotesEdge
+                const edgeEnd = isSelfClosingEdge ? ` />` : `</edge>`
+                const edgeEndIndex = isSelfClosingEdge ? edgeStartDoubleQuotes.length : editRef.current.value.slice(edgeStartIndex).indexOf(edgeEnd)
+                const editIndex = editRef.current.value.slice(edgeStartIndex).indexOf(edgeName)
                 editRef.current.focus()
-                editRef.current.selectionStart = edgeIndex + editIndex
-                editRef.current.selectionEnd = edgeIndex + editIndex + edgeName.length
-                if(editRef.current.selectionEnd === editRef.current.selectionStart) editRef.current.selectionEnd += edgeDoubleQuotes.length + 3
+                if(edgeName && edgeName.length){
+                    editRef.current.selectionStart = edgeStartIndex + editIndex
+                    editRef.current.selectionEnd = edgeStartIndex + editIndex + edgeName.length
+                    if(editRef.current.selectionEnd === editRef.current.selectionStart) editRef.current.selectionEnd += edgeStartDoubleQuotes.length + 3
+                } else {
+                    editRef.current.selectionStart = edgeStartIndex
+                    editRef.current.selectionEnd = edgeStartIndex + edgeEndIndex + edgeEnd.length
+                }
             }
         } else if(filteredVal.length === 1 && filteredVal[0].type === "remove"){
             if(!openToast) setOpenToast(true);
