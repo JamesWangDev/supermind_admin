@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useContext } from "react";
 import { RiArrowRightSLine } from "react-icons/ri";
 
-const CategoryOptions = ({ data, showList, setShowList, setFieldValue, setPath, name, values, getValuesKey }) => {
+const CategoryOptions = ({ data, showList, setShowList, setFieldValue, setPath, name, values, getValuesKey, onPressOption }) => {
 
   const { i18Lang } = useContext(I18NextContext);
   const { t } = useTranslation(i18Lang, 'common');
@@ -26,7 +26,7 @@ const CategoryOptions = ({ data, showList, setShowList, setFieldValue, setPath, 
         <li key={i}>
           {item.image && <Image src={item.image} className="img-fluid category-image" alt={item.name} height={80} width={80}
           />}
-          {item.name}
+          <div onClick={() => onPressOption(item.name)}>{item.name}</div>
           <a className={`select-btn ${Array.isArray(values[name]) ? values[name]?.includes(item[getValuesKey]) ? "selected" : ""
             : item[getValuesKey] == values[name] ? "selected" : ""}`}
             onClick={() => handleSelect(item)}>

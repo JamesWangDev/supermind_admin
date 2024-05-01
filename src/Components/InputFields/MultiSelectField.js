@@ -4,7 +4,7 @@ import useOutsideDropdown from "../../Utils/Hooks/CustomHooks/useOutsideDropdown
 import MultiDropdownBox from "./MultiDropdownBox";
 import MultiSelectInput from "./MultiSelectInput";
 
-const MultiSelectField = ({ setFieldValue, values, name, getValuesKey = "id", data, errors, helpertext }) => {
+const MultiSelectField = ({ setFieldValue, values, name, getValuesKey = "id", data, errors, helpertext, onPressOption }) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const { ref, isComponentVisible, setIsComponentVisible } = useOutsideDropdown();
 
@@ -27,7 +27,7 @@ const MultiSelectField = ({ setFieldValue, values, name, getValuesKey = "id", da
       <MultiSelectInput values={values} name={name} data={data} selectedItems={selectedItems} setIsComponentVisible={setIsComponentVisible} setFieldValue={setFieldValue} setSelectedItems={setSelectedItems} errors={errors} getValuesKey={getValuesKey} />
       {helpertext && <p className="help-text">{helpertext}</p>}
 
-      <MultiDropdownBox data={data?.[0]?.subcategories ? data : data} values={values} setIsComponentVisible={setIsComponentVisible} setFieldValue={setFieldValue} name={name} getValuesKey={getValuesKey} isComponentVisible={isComponentVisible} />
+      <MultiDropdownBox onPressOption={onPressOption} data={data?.[0]?.subcategories ? data : data} values={values} setIsComponentVisible={setIsComponentVisible} setFieldValue={setFieldValue} name={name} getValuesKey={getValuesKey} isComponentVisible={isComponentVisible} />
     </div>
   );
 };

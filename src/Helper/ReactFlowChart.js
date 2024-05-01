@@ -292,8 +292,9 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
                 setStateProcedure(editRef.current.value.slice(0, edgeIndex + edgeDoubleQuotes.length) + textToAdd + editRef.current.value.slice(edgeIndex + edgeDoubleQuotes.length + edgeEndIndex))
                 setTimeout(() => {
                     editRef.current.focus()
-                    editRef.current.selectionStart = edgeIndex
-                    editRef.current.selectionEnd = edgeIndex + edgeDoubleQuotes.length + textToAdd.length
+                    const selectionLength = edgeIndex + edgeDoubleQuotes.length + textToAdd.indexOf("</returnValue>")
+                    editRef.current.selectionStart = selectionLength
+                    editRef.current.selectionEnd = selectionLength
                 }, 10);
             }
         }
