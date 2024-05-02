@@ -5,12 +5,11 @@ import CustomReactFlowNode from "@/Helper/CustomReactFlowNode";
 import CustomReactFlowEdge from "@/Helper/CustomReactFlowEdge";
 import Btn from '@/Elements/Buttons/Btn';
 import 'reactflow/dist/style.css';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { Toast, ToastHeader, ToastBody, Modal, ModalHeader, ModalBody } from "reactstrap";
 import { useRef } from 'react';
 import { MdClose } from 'react-icons/md';
 import AccountContext from './AccountContext';
-import Loader from '@/Components/CommonComponent/Loader';
 import CreateTurn from '@/Components/Superpower/ProcedureSuperPower/CreateTurn';
 
 const xmlParser = new XMLParser({
@@ -27,7 +26,7 @@ const edgeTypes = {
     customEdge: CustomReactFlowEdge,
 }
 
-const ReactFlowChart = ({procedure, description, vectorQuery, procedureId, width='75vw', height='100vh'}) => {
+const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId, width='75vw', height='100vh'}) => {
     const [webSocket, setWebSocket] = useState(null)
     const [refreshWebSocket, setRefreshWebSocket] = useState(0)
     const [stateProcedure, setStateProcedure] = useState(procedure)
@@ -118,20 +117,20 @@ const ReactFlowChart = ({procedure, description, vectorQuery, procedureId, width
         [edges],
     );
 
-    const {mutate: updateProcedureMutate, isLoading: updateProcedureLoading} = useMutation(async ({procedure, procedureId}) => {
-        const resp = await fetch("http://134.209.37.239:3010/updateProcedure", {
-            method: "PATCH",
+    const {mutate: updateProcedureMutate, isLoading: updateProcedureLoading} = useMutation(async ({procedure}) => {
+        const resp = await fetch("http://134.209.37.239/nodeapi/saveProcedure", {
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({procedure, id: procedureId})
+            body: JSON.stringify({procedure, procedureId, name, description, vectorQuery})
         })
         const respJson = await resp.json()
         if(respJson.success) {
             setStateProcedure(respJson.data)
         }
         throw respJson.message
-    }, { refetchOnWindowFocus: false, select: (data) => data.data });
+    }, { refetchOnWindowFocus: false });
 
     useEffect(() => {
         if(stateProcedure){
@@ -160,7 +159,7 @@ const ReactFlowChart = ({procedure, description, vectorQuery, procedureId, width
                 handleEdgeInclude(edgeData, 0)
             }
             const nodes = graphData?.node?.map((n, i) => {
-                return {id: n["@_id"], type: "customNode", position: {x: 100 * (i % 2 === 0 ? -1 : 1), y: i * 100}, data: {label: n["#text"] || n["@_id"], sourceHandleCount: sourceNodeCount[n["@_id"]] ?? 1, targetHandleCount: targetNodeCount[n["@_id"]] ?? 1}}
+                return {id: n["@_id"], type: "customNode", position: {x: 100 * (i % 2 === 0 ? -1 : 1), y: i * 100}, data: {label: n["#text"] || n["@_id"], sourceHandleCount: sourceNodeCount[n["@_id"]] ?? 1, targetHandleCount: targetNodeCount[n["@_id"]] ?? 1, deleteNode}}
             })
             setNodes([])
             setEdges([])
@@ -172,7 +171,7 @@ const ReactFlowChart = ({procedure, description, vectorQuery, procedureId, width
     }, [stateProcedure])
 
     useEffect(() => {
-        const webSocket = new WebSocket("ws://134.209.37.239:3010")
+        const webSocket = new WebSocket("http://134.209.37.239/nodeapi")
         setWebSocket(webSocket);
         webSocket.onmessage = (event) => {
             try {
@@ -227,16 +226,26 @@ const ReactFlowChart = ({procedure, description, vectorQuery, procedureId, width
                 const edgeName = edge.label
                 const edgeSource = edge.source
                 const edgeTarget = edge.target
-                const edgeDoubleQuotes = `<edge source="${edgeSource}" target="${edgeTarget}"`
-                const edgeSingleQuotes = `<edge source='${edgeSource}' target='${edgeTarget}'`
-                const edgeIndexDoubleQuotes = editRef.current.value.indexOf(edgeDoubleQuotes)
-                const edgeIndexSingleQuotes = editRef.current.value.indexOf(edgeSingleQuotes)
-                const edgeIndex = edgeIndexDoubleQuotes >= 0 ? edgeIndexDoubleQuotes : edgeIndexSingleQuotes
-                const editIndex = editRef.current.value.slice(edgeIndex).indexOf(edgeName)
+                const edgeStartDoubleQuotes = `<edge source="${edgeSource}" target="${edgeTarget}"`
+                const edgeStartSingleQuotes = `<edge source='${edgeSource}' target='${edgeTarget}'`
+                const edgeStartIndexDoubleQuotes = editRef.current.value.indexOf(edgeStartDoubleQuotes)
+                const edgeStartIndexSingleQuotes = editRef.current.value.indexOf(edgeStartSingleQuotes)
+                const edgeStartIndex = edgeStartIndexDoubleQuotes >= 0 ? edgeStartIndexDoubleQuotes : edgeStartIndexSingleQuotes
+                const isSelfClosingDoubleQuotesEdge = editRef.current.value.indexOf(`${edgeStartDoubleQuotes} />`) >= 0
+                const isSelfClosingSingleQuotesEdge = editRef.current.value.indexOf(`${edgeStartSingleQuotes} />`) >= 0
+                const isSelfClosingEdge = isSelfClosingDoubleQuotesEdge || isSelfClosingSingleQuotesEdge
+                const edgeEnd = isSelfClosingEdge ? ` />` : `</edge>`
+                const edgeEndIndex = isSelfClosingEdge ? edgeStartDoubleQuotes.length : editRef.current.value.slice(edgeStartIndex).indexOf(edgeEnd)
+                const editIndex = editRef.current.value.slice(edgeStartIndex).indexOf(edgeName)
                 editRef.current.focus()
-                editRef.current.selectionStart = edgeIndex + editIndex
-                editRef.current.selectionEnd = edgeIndex + editIndex + edgeName.length
-                if(editRef.current.selectionEnd === editRef.current.selectionStart) editRef.current.selectionEnd += edgeDoubleQuotes.length + 3
+                if(edgeName && edgeName.length){
+                    editRef.current.selectionStart = edgeStartIndex + editIndex
+                    editRef.current.selectionEnd = edgeStartIndex + editIndex + edgeName.length
+                    if(editRef.current.selectionEnd === editRef.current.selectionStart) editRef.current.selectionEnd += edgeStartDoubleQuotes.length + 3
+                } else {
+                    editRef.current.selectionStart = edgeStartIndex
+                    editRef.current.selectionEnd = edgeStartIndex + edgeEndIndex + edgeEnd.length
+                }
             }
         } else if(filteredVal.length === 1 && filteredVal[0].type === "remove"){
             if(!openToast) setOpenToast(true);
@@ -293,8 +302,9 @@ const ReactFlowChart = ({procedure, description, vectorQuery, procedureId, width
                 setStateProcedure(editRef.current.value.slice(0, edgeIndex + edgeDoubleQuotes.length) + textToAdd + editRef.current.value.slice(edgeIndex + edgeDoubleQuotes.length + edgeEndIndex))
                 setTimeout(() => {
                     editRef.current.focus()
-                    editRef.current.selectionStart = edgeIndex
-                    editRef.current.selectionEnd = edgeIndex + edgeDoubleQuotes.length + textToAdd.length
+                    const selectionLength = edgeIndex + edgeDoubleQuotes.length + textToAdd.indexOf("</returnValue>")
+                    editRef.current.selectionStart = selectionLength
+                    editRef.current.selectionEnd = selectionLength
                 }, 10);
             }
         }
@@ -344,6 +354,54 @@ const ReactFlowChart = ({procedure, description, vectorQuery, procedureId, width
         }, 400);
     }
 
+    const deleteNode = async (nodeId) => {
+        if(!openToast) setOpenToast(true);
+        if(!editRef.current) await new Promise((res) => setTimeout(res, 200))
+        setStateProcedure(prevStateProcedure => {
+            let tempProcedure = prevStateProcedure
+            setNodes(prevNodes => {
+                const nodeToDelete = prevNodes.find((node) => node.id === nodeId)
+                setEdges(prevEdges => {
+                    const edgesToDelete = prevEdges.filter((edge) => edge.source === nodeId || edge.target === nodeId)
+                    const nodeToDeleteDoubleQuotes = `<node id="${nodeToDelete.id}">${nodeToDelete.data.label}</node>`
+                    const nodeToDeleteSingleQuotes = `<node id='${nodeToDelete.id}'>${nodeToDelete.data.label}</node>`
+                    const nodeToDeleteDoubleQuotesIndex = tempProcedure.indexOf(nodeToDeleteDoubleQuotes)
+                    const nodeToDeleteSingleQuotesIndex = tempProcedure.indexOf(nodeToDeleteSingleQuotes)
+                    const nodeToDeleteQuotesIndex = (nodeToDeleteDoubleQuotesIndex >= 0 ? nodeToDeleteDoubleQuotesIndex : nodeToDeleteSingleQuotesIndex)
+        
+                    const turnToDeleteDoubleQuotes = `<turn id="${nodeToDelete.id}">`
+                    const turnToDeleteSingleQuotes = `<turn id='${nodeToDelete.id}'>`
+                    const turnToDeleteDoubleQuotesIndex = tempProcedure.indexOf(turnToDeleteDoubleQuotes)
+                    const turnToDeleteSingleQuotesIndex = tempProcedure.indexOf(turnToDeleteSingleQuotes)
+                    const turnToDeleteQuotesIndex = (turnToDeleteDoubleQuotesIndex >= 0 ? turnToDeleteDoubleQuotesIndex : turnToDeleteSingleQuotesIndex)
+                    const turnEnd = `</turn>`
+                    const turnEndIndex = (tempProcedure.slice(turnToDeleteQuotesIndex + turnToDeleteDoubleQuotes.length).indexOf(turnEnd)) + turnEnd.length
+                    
+                    tempProcedure = tempProcedure.slice(0, turnToDeleteQuotesIndex) + tempProcedure.slice(turnToDeleteQuotesIndex + turnToDeleteDoubleQuotes.length + turnEndIndex)
+                    edgesToDelete.forEach((edge) => {
+                        const edgeSource = edge.source
+                        const edgeTarget = edge.target
+                        const edgeDoubleQuotes = `<edge source="${edgeSource}" target="${edgeTarget}"`
+                        const edgeSingleQuotes = `<edge source='${edgeSource}' target='${edgeTarget}'`
+                        const edgeStartIndexDoubleQuotes = tempProcedure.indexOf(edgeDoubleQuotes)
+                        const edgeStartIndexSingleQuotes = tempProcedure.indexOf(edgeSingleQuotes)
+                        const edgeStartIndex = edgeStartIndexDoubleQuotes >= 0 ? edgeStartIndexDoubleQuotes : edgeStartIndexSingleQuotes
+                        const isSelfClosingDoubleQuotesEdge = tempProcedure.indexOf(`${edgeDoubleQuotes} />`) >= 0
+                        const isSelfClosingSingleQuotesEdge = tempProcedure.indexOf(`${edgeSingleQuotes} />`) >= 0
+                        const isSelfClosingEdge = isSelfClosingDoubleQuotesEdge || isSelfClosingSingleQuotesEdge
+                        const edgeEnd = isSelfClosingEdge ? ` />` : `</edge>`
+                        const edgeEndIndex = isSelfClosingEdge ? edgeDoubleQuotes.length : editRef.current.value.slice(edgeStartIndex).indexOf(edgeEnd)
+                        tempProcedure = tempProcedure.slice(0, edgeStartIndex) + tempProcedure.slice(edgeStartIndex + edgeEndIndex + edgeEnd.length)
+                    })
+                    tempProcedure = tempProcedure.slice(0, nodeToDeleteQuotesIndex) + tempProcedure.slice(nodeToDeleteQuotesIndex + nodeToDeleteDoubleQuotes.length)
+                    return prevEdges
+                })
+                return prevNodes
+            })
+            return tempProcedure
+        })
+    }
+
     return <>
         <div>
             <h3>Description:</h3>
@@ -360,7 +418,7 @@ const ReactFlowChart = ({procedure, description, vectorQuery, procedureId, width
                 title="Update Procedure"
                 className="align-items-center btn-theme add-button"
                 loading={updateProcedureLoading}
-                onClick={() => updateProcedureMutate({procedure: stateProcedure, procedureId})}
+                onClick={() => updateProcedureMutate({procedure: stateProcedure})}
             />
         </div>
         <div style={{marginBottom: "10px"}}>
@@ -418,7 +476,7 @@ const ReactFlowChart = ({procedure, description, vectorQuery, procedureId, width
                 title="Save Changes"
                 className="align-items-center"
                 loading={updateProcedureLoading}
-                onClick={() => updateProcedureMutate({procedure, procedureId})}
+                onClick={() => updateProcedureMutate({procedure})}
             />
         </div>
         <Modal fullscreen isOpen={openModel} toggle={toggleModal}>

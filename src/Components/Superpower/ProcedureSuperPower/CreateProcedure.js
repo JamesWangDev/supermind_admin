@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import SimpleInputField from "../../InputFields/SimpleInputField";
 import I18NextContext from "@/Helper/I18NextContext";
@@ -6,10 +6,14 @@ import { useTranslation } from "@/app/i18n/client";
 import MultiSelectField from "../../InputFields/MultiSelectField";
 import FormBtn from "@/Elements/Buttons/FormBtn";
 import { Form, Formik } from "formik";
-import { Spinner } from "reactstrap";
+import { Spinner, Modal, ModalHeader, ModalBody } from "reactstrap";
 import Btn from "@/Elements/Buttons/Btn";
 import ReactFlowChart from "@/Helper/ReactFlowChart";
 import { AITextboxData } from "@/Data/AITextboxData";
+import dynamic from "next/dynamic";
+const Markdown = dynamic(() => import("react-markdown"), {
+  loading: () => <p>Loading...</p>,
+});
 
 const CreateProcedure = () => {
   const { i18Lang } = useContext(I18NextContext);
@@ -1294,8 +1298,9 @@ Example:
   Return "apiDescription"
   //only return the apiDescription, no additional text or tokens}`)
 
+  const [showModal, setShowModal] = useState(null)
   const { error, data: actionsInfo, isLoading } = useQuery(["actions"], async () => {
-    const resp = await fetch("http://134.209.37.239:3010/getDescriptions?paginate=10000&page=1&sort=asc", {
+    const resp = await fetch("http://134.209.37.239/nodeapi/getDescriptions?paginate=10000&page=1&sort=asc", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -1307,7 +1312,7 @@ Example:
   }, { refetchOnWindowFocus: false, select: (data) => data.data });
   
   const {mutate: createProcedureMutate, isLoading: createProcedureLoading, data: procedureData} = useMutation(async ({actions, procedureRequirement, procedurePrompt, name, vectorQueryPrompt}) => {
-    const resp = await fetch("http://134.209.37.239:3010/createProcedure", {
+    const resp = await fetch("http://134.209.37.239/nodeapi/createProcedure", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1318,13 +1323,13 @@ Example:
     const respJson = await resp.json()
     if(respJson.success) {
         alert("Procedure created")
-        return respJson
+        return respJson.data
     }
     throw respJson.message
-  },{ refetchOnWindowFocus: false, select: (data) => data.data });
+  }, { refetchOnWindowFocus: false });
   
-  const {mutate: saveProcedureMutate, isLoading: saveProcedureLoading} = useMutation(async ({description, procedure, name, vectorQuery}) => {
-    const resp = await fetch("http://134.209.37.239:3010/saveProcedure", {
+  const {mutate: saveProcedureMutate, isLoading: saveProcedureLoading, data: procedureId} = useMutation(async ({description, procedure, name, vectorQuery}) => {
+    const resp = await fetch("http://134.209.37.239/nodeapi/saveProcedure", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1335,10 +1340,10 @@ Example:
     const respJson = await resp.json()
     if(respJson.success) {
         alert("Procedure saved")
-        return respJson
+        return respJson.data
     }
     throw respJson.message
-  },{ refetchOnWindowFocus: false, select: (data) => data.data });
+  }, { refetchOnWindowFocus: false });
 
   const createProcedure = () => {
     if(!actions?.length || !procedureRequirement){
@@ -1361,18 +1366,31 @@ Example:
           }
           return <Form onSubmit={handleSubmit}>
             <SimpleInputField nameList={[{ name: "Name", require: "true", placeholder: t("Name"), onChange: (e) => setProcedureName(e.target.value), value: procedureName }]} />
-            <MultiSelectField errors={errors} values={values} setFieldValue={setActionVal} name="Actions" require="true" data={actionsInfo.map(({name}) => ({name, id:name}))} />
+            <MultiSelectField errors={errors} values={values} setFieldValue={setActionVal} name="Actions" require="true" data={actionsInfo.map(({name}) => ({name, id:name}))} onPressOption={(name) => {
+              const actionInfo = actionsInfo.find((actionInfo) => actionInfo.name === name)
+              if(actionInfo) {
+                setShowModal(actionInfo)
+              }
+            }} />
             <SimpleInputField nameList={[{ name: "Procedure Requirement", require: "true", placeholder: t("Procedure Requirement"), onChange: (e) => setProcedureRequirement(e.target.value), value: procedureRequirement, type: "textarea", rows: 5, promptText: AITextboxData.procedure_req }, { name: "Procedure Creating Prompt", require: "true", placeholder: t("Procedure Creating Prompt"), onChange: (e) => setProcedurePrompt(e.target.value), value: procedurePrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }, , { name: "Vector Query Creating Prompt", require: "true", placeholder: t("Vector Query Creating Prompt"), onChange: (e) => setVectorQueryPrompt(e.target.value), value: vectorQueryPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }]} />
             <FormBtn submitText="Create" loading={isLoading || createProcedureLoading || saveProcedureLoading} />
           </Form>
         }}
       </Formik>
-      {procedureData?.data && <>
-        <ReactFlowChart procedure={procedureData?.data?.procedure} description={procedureData?.data?.description} vectorQuery={procedureData?.data?.vectorQuery} procedureId={procedureData?.data?.id} width="75vw" />
+      {procedureData && <>
+        <ReactFlowChart name={procedureData.name} procedure={procedureData.procedure} description={procedureData.description} vectorQuery={procedureData.vectorQuery} procedureId={procedureId} width="75vw" />
         <div className="ms-auto justify-content-end dflex-wgap mt-sm-4 my-2 save-back-button">
-          <Btn onClick={() => {saveProcedureMutate({name: procedureName, procedure: procedureData.data.procedure, description: procedureData.data.description, vectorQuery: procedureData.data.vectorQuery})}} className="btn-primary btn-lg" type="submit" title="Save" loading={isLoading || createProcedureLoading || saveProcedureLoading} />
+          <Btn onClick={() => {saveProcedureMutate({name: procedureName, procedure: procedureData.procedure, description: procedureData.description, vectorQuery: procedureData.vectorQuery})}} className="btn-primary btn-lg" type="submit" title="Save" loading={isLoading || createProcedureLoading || saveProcedureLoading} />
         </div>
       </>}
+      <Modal fullscreen isOpen={!!showModal?.name} toggle={() => setShowModal(null)}>
+            <ModalHeader toggle={() => setShowModal(null)}>{showModal?.name}</ModalHeader>
+            <ModalBody>
+                <Markdown>
+                  {showModal?.description}
+                </Markdown>
+            </ModalBody>
+      </Modal>
     </>
   );
 };
