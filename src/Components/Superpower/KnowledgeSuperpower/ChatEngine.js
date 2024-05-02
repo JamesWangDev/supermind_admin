@@ -122,7 +122,7 @@ const ChatEngine = ({ partitions, currentPartition }) => {
             </div>}
             {componentState === 'context' &&
             <div>
-                {referenceDocuments.length > 0 &&
+                {referenceDocuments?.length > 0 &&
                     <div>
                         <div style={{ marginBottom: '24px' }}>{`Showing context for query "${queryResults[queryResults.length - 2]}"`}</div>
                         {referenceDocuments.map((doc, index) => (
