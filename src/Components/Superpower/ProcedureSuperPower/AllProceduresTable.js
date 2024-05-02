@@ -49,7 +49,7 @@ const AllProceduresTable = ({ data, ...props }) => {
   const toggleModal = () => setOpenModel((prev) => !prev);
 
   const {mutate: deleteProcedureMutate, isLoading: deleteProcedureLoading} = useMutation(async ({procedureId}) => {
-    const resp = await fetch(`http://134.209.37.239:3010/deleteProcedure?procedureId=${procedureId}`, {
+    const resp = await fetch(`http://134.209.37.239/nodeapi/deleteProcedure?procedureId=${procedureId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -78,7 +78,7 @@ const AllProceduresTable = ({ data, ...props }) => {
       <Modal fullscreen isOpen={openModel} toggle={toggleModal}>
         <ModalHeader toggle={toggleModal}>{procedureDetail?.name}</ModalHeader>
         <ModalBody>
-            <ReactFlowChart procedure={procedureDetail?.procedure} description={procedureDetail?.description} procedureId={procedureDetail?.id} width="95vw" height="90vh" />
+            <ReactFlowChart name={procedureDetail?.name} procedure={procedureDetail?.procedure} description={procedureDetail?.description} vectorQuery={procedureDetail?.vector_query} procedureId={procedureDetail?.id} width="95vw" height="90vh" />
             <Btn
               title="Delete Procedure"
               className="align-items-center"

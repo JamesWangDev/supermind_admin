@@ -125,9 +125,9 @@ const ChatEngine = ({ partitions, currentPartition }) => {
                 {referenceDocuments.length > 0 &&
                     <div>
                         <div style={{ marginBottom: '24px' }}>{`Showing context for query "${queryResults[queryResults.length - 2]}"`}</div>
-                        {referenceDocuments.map(doc => (
-                            <div key={doc.id} style={{ border: '1px solid gray' }}>
-                                <div style={{ margin: '24px 0px 6px 0px' }}>{`The following data was returned from document titled ${doc.metadata.document_name}, with a cosine similarity score of ${doc.score}`}</div>
+                        {referenceDocuments.map((doc, index) => (
+                            <div key={`doc${index}}`} style={{ border: '1px solid gray' }}>
+                                <div style={{ margin: '24px 0px 6px 0px' }}>{`The following data was returned from document titled ${doc.source}, with a cosine similarity score of ${doc?.score}`}</div>
                                 <div>{`"${doc.text}"`}</div>
                             </div>
                         ))}

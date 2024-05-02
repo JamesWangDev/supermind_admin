@@ -4,14 +4,14 @@ export const RegistrationValidationSchema = { name: nameSchema,
     email: emailSchema,
     password: passwordSchema,
     password_confirmation: passwordConfirmationSchema,
-    store_name: nameSchema,
-    description: descriptionSchema,
-    city: nameSchema,
-    address: descriptionSchema,
-    pincode: nameSchema,
-    phone: phoneSchema,
-    country_id: nameSchema,
-    state_id: nameSchema
+   //  store_name: nameSchema,
+   //  description: descriptionSchema,
+   //  city: nameSchema,
+   //  address: descriptionSchema,
+   //  pincode: nameSchema,
+   //  phone: phoneSchema,
+   //  country_id: nameSchema,
+   //  state_id: nameSchema
  }
 
  export const RegistrationInitialValues = {

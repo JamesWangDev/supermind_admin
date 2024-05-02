@@ -4,7 +4,7 @@ import CategoryOptions from "./CategoryOptions";
 import I18NextContext from "@/Helper/I18NextContext";
 import { useTranslation } from "@/app/i18n/client";
 
-const MultiDropdownBox = ({ setIsComponentVisible, data, setFieldValue, values, name, getValuesKey, isComponentVisible }) => {
+const MultiDropdownBox = ({ setIsComponentVisible, data, setFieldValue, values, name, getValuesKey, isComponentVisible, onPressOption }) => {
   const { i18Lang } = useContext(I18NextContext);
   const { t } = useTranslation(i18Lang, 'common');
   const [path, setPath] = useState([]);
@@ -48,7 +48,7 @@ const MultiDropdownBox = ({ setIsComponentVisible, data, setFieldValue, values, 
         </a>
       </nav>
       <div className="category-lisitng">
-        <ul>{data && <CategoryOptions data={data} level={0} showList={showList} setShowList={setShowList} setFieldValue={setFieldValue} path={path} setPath={setPath} setIsComponentVisible={setIsComponentVisible} name={name} values={values} getValuesKey={getValuesKey} />}</ul>
+        <ul>{data && <CategoryOptions onPressOption={onPressOption} data={data} level={0} showList={showList} setShowList={setShowList} setFieldValue={setFieldValue} path={path} setPath={setPath} setIsComponentVisible={setIsComponentVisible} name={name} values={values} getValuesKey={getValuesKey} />}</ul>
       </div>
     </div>
   );
