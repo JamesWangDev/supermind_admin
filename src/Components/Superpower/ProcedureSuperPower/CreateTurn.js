@@ -3,18 +3,19 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import SimpleInputField from "../../InputFields/SimpleInputField";
 import I18NextContext from "@/Helper/I18NextContext";
 import { useTranslation } from "@/app/i18n/client";
-import MultiSelectField from "../../InputFields/MultiSelectField";
 import FormBtn from "@/Elements/Buttons/FormBtn";
 import { Form, Formik } from "formik";
 import { Spinner } from "reactstrap";
 import { AITextboxData } from "@/Data/AITextboxData";
 import Btn from "@/Elements/Buttons/Btn";
+import TreeLine from "@/Components/category/TreeLine";
+import { ACTION_CATEGORIES } from "@/Utils/ActionCategories";
 
 const CreateTurn = ({procedure, addTurn}) => {
   const { i18Lang } = useContext(I18NextContext);
   const { t } = useTranslation(i18Lang, 'common');
   const [turnName, setTurnName] = useState("")
-  const [action, setAction] = useState("")
+  const [actions, setActions] = useState([])
   const [userTurnPrompt, setUserTurnPrompt] = useState("");
   const [turnDataState, setTurnDataState] = useState("")
   const [turnPrompt, setTurnPrompt] = useState(`This manual provides instructions on how to create procedure documents in the specified XML format. By following these guidelines, you can create consistent and well-structured procedure documents that can be easily understood and executed by ChatGPT or other AI systems.
@@ -1280,7 +1281,7 @@ Example:
   
   DIRECTIVE: OUTPUT ONLY THE PROCEDURE AND NO EXPLANATORY TEXT OR TOKEN> 
   `);
-
+  const [hideActionsTree, setHideActionsTree] = useState(true);
   const { error, data: actionsInfo, isLoading } = useQuery(["actions"], async () => {
     const resp = await fetch("http://134.209.37.239/nodeapi/getDescriptions?paginate=10000&page=1&sort=asc", {
         method: "GET",
@@ -1291,7 +1292,7 @@ Example:
     const respJson = await resp.json()
     if(respJson.success) return respJson
     throw respJson.message
-  }, { refetchOnWindowFocus: false, select: (data) => data.data });
+  }, { refetchOnWindowFocus: false, select: (data) => data });
   
   const {mutate: createTurnMutate, isLoading: createTurnLoading, data: turnData} = useMutation(async ({action, userTurnPrompt, turnPrompt, name}) => {
     const resp = await fetch("http://134.209.37.239/nodeapi/createTurn", {
@@ -1311,10 +1312,11 @@ Example:
   },{ refetchOnWindowFocus: false, select: (data) => data.data });
 
   const createTurn = () => {
-    if(!action?.length || !userTurnPrompt){
+    const filteredValAction = actions.filter((a) => !ACTION_CATEGORIES.includes(a)).at(-1)
+    if(!filteredValAction || !userTurnPrompt){
         alert("Please Fill all fields.")
     } else {
-        createTurnMutate({name: turnName, action, userTurnPrompt, turnPrompt})
+        createTurnMutate({name: turnName, action: filteredValAction, userTurnPrompt, turnPrompt})
     }
   }
 
@@ -1326,16 +1328,22 @@ Example:
   return (
     <>
       <Formik
-        initialValues={{"Name": "", "Action": "", "User Turn Prompt": "", "Turn Creating Prompt": ""}}
+        initialValues={{"Name": turnName, "Action": actions, "User Turn Prompt": turnPrompt, "Turn Creating Prompt": userTurnPrompt}}
         onSubmit={createTurn}>
         {({ values, setFieldValue, errors, handleSubmit }) => {
-          const setActionVal = (label, value) => {
-              setFieldValue(label, value);
-              setAction(value)
-          }
           return <Form onSubmit={handleSubmit}>
             <SimpleInputField nameList={[{ name: "Name", require: "true", placeholder: t("Name"), onChange: (e) => setTurnName(e.target.value), value: turnName }]} />
-            <MultiSelectField errors={errors} values={values} setFieldValue={setActionVal} name="Action" require="true" data={actionsInfo.map(({name}) => ({name, id:name}))} />
+            <div className="theme-tree-box" style={{display: "flex", justifyContent: "center", marginBottom: 10, padding: 0}}>
+              <ul className="tree-main-ul" style={{padding: 0}}>
+                <li>
+                  <div onClick={() => setHideActionsTree(prev => !prev)}>
+                    <i className="tree-icon folder-icon cursor" role="presentation"></i>
+                    {t("Select Actions")}
+                  </div>
+                  {actionsInfo?.categorizedData && !hideActionsTree && <TreeLine activeColored level={0} active={actions} setActive={setActions} data={Object.entries(actionsInfo.categorizedData).map(([key, value]) => ({name: key, id: key, subcategories: value.map(({name, id}) => ({id, name, subcategories: []}))}))} />}
+                </li>
+              </ul>
+            </div>
             <SimpleInputField nameList={[{ name: "User Turn Prompt", require: "true", placeholder: t("User Turn Prompt"), onChange: (e) => setUserTurnPrompt(e.target.value), value: userTurnPrompt, type: "textarea", rows: 5, promptText: AITextboxData.procedure_req }, { name: "Turn Creating Prompt", require: "true", placeholder: t("Turn Creating Prompt"), onChange: (e) => setTurnPrompt(e.target.value), value: turnPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }]} />
             <FormBtn submitText="Create" loading={isLoading || createTurnLoading} />
           </Form>

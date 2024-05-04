@@ -3,7 +3,6 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import SimpleInputField from "../../InputFields/SimpleInputField";
 import I18NextContext from "@/Helper/I18NextContext";
 import { useTranslation } from "@/app/i18n/client";
-import MultiSelectField from "../../InputFields/MultiSelectField";
 import FormBtn from "@/Elements/Buttons/FormBtn";
 import { Form, Formik } from "formik";
 import { Spinner, Modal, ModalHeader, ModalBody } from "reactstrap";
@@ -11,6 +10,8 @@ import Btn from "@/Elements/Buttons/Btn";
 import ReactFlowChart from "@/Helper/ReactFlowChart";
 import { AITextboxData } from "@/Data/AITextboxData";
 import dynamic from "next/dynamic";
+import TreeLine from "@/Components/category/TreeLine";
+import { ACTION_CATEGORIES } from "@/Utils/ActionCategories";
 const Markdown = dynamic(() => import("react-markdown"), {
   loading: () => <p>Loading...</p>,
 });
@@ -1299,6 +1300,7 @@ Example:
   //only return the apiDescription, no additional text or tokens}`)
 
   const [showModal, setShowModal] = useState(null)
+  const [hideActionsTree, setHideActionsTree] = useState(true);
   const { error, data: actionsInfo, isLoading } = useQuery(["actions"], async () => {
     const resp = await fetch("http://134.209.37.239/nodeapi/getDescriptions?paginate=10000&page=1&sort=asc", {
         method: "GET",
@@ -1309,7 +1311,7 @@ Example:
     const respJson = await resp.json()
     if(respJson.success) return respJson
     throw respJson.message
-  }, { refetchOnWindowFocus: false, select: (data) => data.data });
+  }, { refetchOnWindowFocus: false, select: (data) => data });
   
   const {mutate: createProcedureMutate, isLoading: createProcedureLoading, data: procedureData} = useMutation(async ({actions, procedureRequirement, procedurePrompt, name, vectorQueryPrompt}) => {
     const resp = await fetch("http://134.209.37.239/nodeapi/createProcedure", {
@@ -1346,10 +1348,11 @@ Example:
   }, { refetchOnWindowFocus: false });
 
   const createProcedure = () => {
-    if(!actions?.length || !procedureRequirement){
+    const filteredValActions = actions.filter((action) => !ACTION_CATEGORIES.includes(action))
+    if(!filteredValActions.length || !procedureRequirement){
         alert("Please Fill all fields.")
     } else {
-        createProcedureMutate({name: procedureName, actions, procedureRequirement, procedurePrompt, vectorQueryPrompt})
+        createProcedureMutate({name: procedureName, actions: filteredValActions, procedureRequirement, procedurePrompt, vectorQueryPrompt})
     }
   }
 
@@ -1360,18 +1363,19 @@ Example:
         initialValues={{"Name": "", "Actions": [], "Procedure Requirement": ""}}
         onSubmit={createProcedure}>
         {({ values, setFieldValue, errors, handleSubmit }) => {
-          const setActionVal = (label, value) => {
-              setFieldValue(label, value);
-              setActions(value)
-          }
           return <Form onSubmit={handleSubmit}>
             <SimpleInputField nameList={[{ name: "Name", require: "true", placeholder: t("Name"), onChange: (e) => setProcedureName(e.target.value), value: procedureName }]} />
-            <MultiSelectField errors={errors} values={values} setFieldValue={setActionVal} name="Actions" require="true" data={actionsInfo.map(({name}) => ({name, id:name}))} onPressOption={(name) => {
-              const actionInfo = actionsInfo.find((actionInfo) => actionInfo.name === name)
-              if(actionInfo) {
-                setShowModal(actionInfo)
-              }
-            }} />
+            <div className="theme-tree-box" style={{display: "flex", justifyContent: "center", marginBottom: 10, padding: 0}}>
+              <ul className="tree-main-ul" style={{padding: 0}}>
+                <li>
+                  <div onClick={() => setHideActionsTree(prev => !prev)}>
+                    <i className="tree-icon folder-icon cursor" role="presentation"></i>
+                    {t("Select Actions")}
+                  </div>
+                  {actionsInfo?.categorizedData && !hideActionsTree && <TreeLine activeColored level={0} active={actions} setActive={setActions} data={Object.entries(actionsInfo.categorizedData).map(([key, value]) => ({name: key, id: key, subcategories: value.map(({name, id}) => ({id, name, subcategories: []}))}))} />}
+                </li>
+              </ul>
+            </div>
             <SimpleInputField nameList={[{ name: "Procedure Requirement", require: "true", placeholder: t("Procedure Requirement"), onChange: (e) => setProcedureRequirement(e.target.value), value: procedureRequirement, type: "textarea", rows: 5, promptText: AITextboxData.procedure_req }, { name: "Procedure Creating Prompt", require: "true", placeholder: t("Procedure Creating Prompt"), onChange: (e) => setProcedurePrompt(e.target.value), value: procedurePrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }, , { name: "Vector Query Creating Prompt", require: "true", placeholder: t("Vector Query Creating Prompt"), onChange: (e) => setVectorQueryPrompt(e.target.value), value: vectorQueryPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }]} />
             <FormBtn submitText="Create" loading={isLoading || createProcedureLoading || saveProcedureLoading} />
           </Form>
