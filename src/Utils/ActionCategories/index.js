@@ -16,4 +16,7 @@ export const ACTION_CATEGORIES = [
     "SMS",
     "Health and Fitness",
     "Payments",
+    "Google",
+    "Asana",
+    "Serp API",
 ]

@@ -1,15 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import SimpleInputField from "../../InputFields/SimpleInputField";
 import I18NextContext from "@/Helper/I18NextContext";
 import { useTranslation } from "@/app/i18n/client";
 import FormBtn from "@/Elements/Buttons/FormBtn";
 import { Form, Formik } from "formik";
-import { Spinner } from "reactstrap";
 import { AITextboxData } from "@/Data/AITextboxData";
 import Btn from "@/Elements/Buttons/Btn";
-import TreeLine from "@/Components/category/TreeLine";
 import { ACTION_CATEGORIES } from "@/Utils/ActionCategories";
+import ActionCategoryComp from "@/Helper/ActionCategoryComp";
 
 const CreateTurn = ({procedure, addTurn}) => {
   const { i18Lang } = useContext(I18NextContext);
@@ -1281,19 +1280,7 @@ Example:
   
   DIRECTIVE: OUTPUT ONLY THE PROCEDURE AND NO EXPLANATORY TEXT OR TOKEN> 
   `);
-  const [hideActionsTree, setHideActionsTree] = useState(true);
-  const { error, data: actionsInfo, isLoading } = useQuery(["actions"], async () => {
-    const resp = await fetch("http://134.209.37.239/nodeapi/getDescriptions?paginate=10000&page=1&sort=asc", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-    })
-    const respJson = await resp.json()
-    if(respJson.success) return respJson
-    throw respJson.message
-  }, { refetchOnWindowFocus: false, select: (data) => data });
-  
+
   const {mutate: createTurnMutate, isLoading: createTurnLoading, data: turnData} = useMutation(async ({action, userTurnPrompt, turnPrompt, name}) => {
     const resp = await fetch("http://134.209.37.239/nodeapi/createTurn", {
         method: "POST",
@@ -1324,7 +1311,6 @@ Example:
     setTurnDataState(turnData)
   }, [turnData])
 
-  if(isLoading) return <Spinner/>
   return (
     <>
       <Formik
@@ -1333,19 +1319,9 @@ Example:
         {({ values, setFieldValue, errors, handleSubmit }) => {
           return <Form onSubmit={handleSubmit}>
             <SimpleInputField nameList={[{ name: "Name", require: "true", placeholder: t("Name"), onChange: (e) => setTurnName(e.target.value), value: turnName }]} />
-            <div className="theme-tree-box" style={{display: "flex", justifyContent: "center", marginBottom: 10, padding: 0}}>
-              <ul className="tree-main-ul" style={{padding: 0}}>
-                <li>
-                  <div onClick={() => setHideActionsTree(prev => !prev)}>
-                    <i className="tree-icon folder-icon cursor" role="presentation"></i>
-                    {t("Select Actions")}
-                  </div>
-                  {actionsInfo?.categorizedData && !hideActionsTree && <TreeLine activeColored level={0} active={actions} setActive={setActions} data={Object.entries(actionsInfo.categorizedData).map(([key, value]) => ({name: key, id: key, subcategories: value.map(({name, id}) => ({id, name, subcategories: []}))}))} />}
-                </li>
-              </ul>
-            </div>
+            <ActionCategoryComp name="Select Actions" getSelectedActions={(actions) => setActions(actions)} />
             <SimpleInputField nameList={[{ name: "User Turn Prompt", require: "true", placeholder: t("User Turn Prompt"), onChange: (e) => setUserTurnPrompt(e.target.value), value: userTurnPrompt, type: "textarea", rows: 5, promptText: AITextboxData.procedure_req }, { name: "Turn Creating Prompt", require: "true", placeholder: t("Turn Creating Prompt"), onChange: (e) => setTurnPrompt(e.target.value), value: turnPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }]} />
-            <FormBtn submitText="Create" loading={isLoading || createTurnLoading} />
+            <FormBtn submitText="Create" loading={createTurnLoading} />
           </Form>
         }}
       </Formik>

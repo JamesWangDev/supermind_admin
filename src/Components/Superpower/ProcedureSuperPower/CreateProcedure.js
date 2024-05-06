@@ -1,17 +1,17 @@
 import React, { useContext, useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import SimpleInputField from "../../InputFields/SimpleInputField";
 import I18NextContext from "@/Helper/I18NextContext";
 import { useTranslation } from "@/app/i18n/client";
 import FormBtn from "@/Elements/Buttons/FormBtn";
 import { Form, Formik } from "formik";
-import { Spinner, Modal, ModalHeader, ModalBody } from "reactstrap";
+import { Modal, ModalHeader, ModalBody } from "reactstrap";
 import Btn from "@/Elements/Buttons/Btn";
 import ReactFlowChart from "@/Helper/ReactFlowChart";
 import { AITextboxData } from "@/Data/AITextboxData";
 import dynamic from "next/dynamic";
-import TreeLine from "@/Components/category/TreeLine";
 import { ACTION_CATEGORIES } from "@/Utils/ActionCategories";
+import ActionCategoryComp from "@/Helper/ActionCategoryComp";
 const Markdown = dynamic(() => import("react-markdown"), {
   loading: () => <p>Loading...</p>,
 });
@@ -1300,19 +1300,7 @@ Example:
   //only return the apiDescription, no additional text or tokens}`)
 
   const [showModal, setShowModal] = useState(null)
-  const [hideActionsTree, setHideActionsTree] = useState(true);
-  const { error, data: actionsInfo, isLoading } = useQuery(["actions"], async () => {
-    const resp = await fetch("http://134.209.37.239/nodeapi/getDescriptions?paginate=10000&page=1&sort=asc", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-    })
-    const respJson = await resp.json()
-    if(respJson.success) return respJson
-    throw respJson.message
-  }, { refetchOnWindowFocus: false, select: (data) => data });
-  
+
   const {mutate: createProcedureMutate, isLoading: createProcedureLoading, data: procedureData} = useMutation(async ({actions, procedureRequirement, procedurePrompt, name, vectorQueryPrompt}) => {
     const resp = await fetch("http://134.209.37.239/nodeapi/createProcedure", {
         method: "POST",
@@ -1356,35 +1344,24 @@ Example:
     }
   }
 
-  if(isLoading) return <Spinner/>
   return (
     <>
       <Formik
-        initialValues={{"Name": "", "Actions": [], "Procedure Requirement": ""}}
+        initialValues={{"Name": procedureName, "Actions": actions, "Procedure Requirement": procedureRequirement}}
         onSubmit={createProcedure}>
         {({ values, setFieldValue, errors, handleSubmit }) => {
           return <Form onSubmit={handleSubmit}>
             <SimpleInputField nameList={[{ name: "Name", require: "true", placeholder: t("Name"), onChange: (e) => setProcedureName(e.target.value), value: procedureName }]} />
-            <div className="theme-tree-box" style={{display: "flex", justifyContent: "center", marginBottom: 10, padding: 0}}>
-              <ul className="tree-main-ul" style={{padding: 0}}>
-                <li>
-                  <div onClick={() => setHideActionsTree(prev => !prev)}>
-                    <i className="tree-icon folder-icon cursor" role="presentation"></i>
-                    {t("Select Actions")}
-                  </div>
-                  {actionsInfo?.categorizedData && !hideActionsTree && <TreeLine activeColored level={0} active={actions} setActive={setActions} data={Object.entries(actionsInfo.categorizedData).map(([key, value]) => ({name: key, id: key, subcategories: value.map(({name, id}) => ({id, name, subcategories: []}))}))} />}
-                </li>
-              </ul>
-            </div>
+            <ActionCategoryComp name="Select Actions" getSelectedActions={(actions) => setActions(actions)} />
             <SimpleInputField nameList={[{ name: "Procedure Requirement", require: "true", placeholder: t("Procedure Requirement"), onChange: (e) => setProcedureRequirement(e.target.value), value: procedureRequirement, type: "textarea", rows: 5, promptText: AITextboxData.procedure_req }, { name: "Procedure Creating Prompt", require: "true", placeholder: t("Procedure Creating Prompt"), onChange: (e) => setProcedurePrompt(e.target.value), value: procedurePrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }, , { name: "Vector Query Creating Prompt", require: "true", placeholder: t("Vector Query Creating Prompt"), onChange: (e) => setVectorQueryPrompt(e.target.value), value: vectorQueryPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }]} />
-            <FormBtn submitText="Create" loading={isLoading || createProcedureLoading || saveProcedureLoading} />
+            <FormBtn submitText="Create" loading={ createProcedureLoading || saveProcedureLoading} />
           </Form>
         }}
       </Formik>
       {procedureData && <>
         <ReactFlowChart name={procedureData.name} procedure={procedureData.procedure} description={procedureData.description} vectorQuery={procedureData.vectorQuery} procedureId={procedureId} width="75vw" />
         <div className="ms-auto justify-content-end dflex-wgap mt-sm-4 my-2 save-back-button">
-          <Btn onClick={() => {saveProcedureMutate({name: procedureName, procedure: procedureData.procedure, description: procedureData.description, vectorQuery: procedureData.vectorQuery})}} className="btn-primary btn-lg" type="submit" title="Save" loading={isLoading || createProcedureLoading || saveProcedureLoading} />
+          <Btn onClick={() => {saveProcedureMutate({name: procedureName, procedure: procedureData.procedure, description: procedureData.description, vectorQuery: procedureData.vectorQuery})}} className="btn-primary btn-lg" type="submit" title="Save" loading={createProcedureLoading || saveProcedureLoading} />
         </div>
       </>}
       <Modal fullscreen isOpen={!!showModal?.name} toggle={() => setShowModal(null)}>
