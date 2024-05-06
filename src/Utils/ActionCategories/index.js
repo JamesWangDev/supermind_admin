@@ -19,4 +19,5 @@ export const ACTION_CATEGORIES = [
     "Google",
     "Asana",
     "Serp API",
+    "OpenAI",
 ]
