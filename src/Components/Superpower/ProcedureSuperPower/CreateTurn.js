@@ -1327,7 +1327,14 @@ Example:
       </Formik>
       {
         turnDataState?.data && <>
-            <textarea style={{width:"100%", height: "100%"}} value={turnDataState?.data.turn} />
+            <textarea style={{width:"100%", height: "100%"}} value={turnDataState?.data.turn} onChange={(e) => {
+              const val = e.currentTarget.value
+              setTurnDataState(prev => {
+                const temp = {...prev}
+                temp.data.turn = val
+                return temp
+              })
+            }} />
             <Btn onClick={() => {
               addTurn(turnName, turnDataState?.data.turn)
             }} className="btn-primary btn-lg" type="submit" title="Add Turn" />
