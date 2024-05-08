@@ -1,52 +1,21 @@
-import { useContext, useEffect, useState } from "react";
-import TableWarper from "../../../Utils/HOC/TableWarper";
-import ShowTable from "../../Table/ShowTable";
-import Loader from "../../CommonComponent/Loader";
-import AccountContext from "../../../Helper/AccountContext";
+import { useState } from "react";
 import { Modal, ModalHeader, ModalBody, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Badge } from "reactstrap";
 import dynamic from "next/dynamic";
 import { useMutation } from "@tanstack/react-query";
 import Btn from "@/Elements/Buttons/Btn";
 import { ACTION_CATEGORIES } from "@/Utils/ActionCategories";
+import ActionCategoryComp from "@/Helper/ActionCategoryComp";
 const Markdown = dynamic(() => import("react-markdown"), {
   loading: () => <p>Loading...</p>,
 });
 
-const AllActionsTable = ({ data, ...props }) => {
-  const { role, setRole } = useContext(AccountContext);
+const AllActionsCategorized = () => {
   const [openModel, setOpenModel] = useState(false);
   const [actionDetail, setActionDetail] = useState(null);
   const [actionDescription, setActionDescription] = useState("")
   const [actionCategories, setActionCategories] = useState([])
-  const [headerObjState, setHeaderObjState] = useState({})
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  useEffect(() => {
-    const storedRole = localStorage.getItem("role");
-    if (storedRole) {
-      const parsedRole = JSON.parse(storedRole);
-      setRole(parsedRole.name);
-    }
-  }, []);
-  
-  useEffect(() => {
-    const headerObj = {
-      checkBox: false,
-      isOption: false,
-      noEdit: false,
-      optionHead: { title: "Action", type: "View" },
-      column: [{ title: "Name", apiKey: "name", sorting: true, sortBy: "desc" }],
-      data: data || [],
-    };
-    headerObj.data.map((element) => (element.sale_price = element?.sale_price));
-  
-    let pro = headerObj?.column?.filter((elem) => {
-      return role == "vendor" ? elem.title !== "Approved" : elem;
-    });
-    headerObj.column = headerObj ? pro : [];
-    setHeaderObjState(headerObj)
-  }, [data])
-  
   const viewActionDetail = (data) => {
     setActionDetail(data);
     setActionDescription(data?.description)
@@ -82,10 +51,7 @@ const AllActionsTable = ({ data, ...props }) => {
     })
     const respJson = await resp.json()
     if(respJson.success) {
-      setHeaderObjState(prev => {
-        prev.data = prev.data.filter((d) => d.workflow_id !== workflowId)
-        return prev
-      })
+      setRefetch(prev => !prev)
       setOpenModel(false)
       return
     }
@@ -94,14 +60,9 @@ const AllActionsTable = ({ data, ...props }) => {
 
   const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
 
-  if (!data || Object.keys(headerObjState).length <= 0) return <Loader />;
   return (
     <>
-      <ShowTable
-        {...props}
-        headerData={headerObjState}
-        redirectLink={viewActionDetail}
-      />
+      <ActionCategoryComp viewActionDetail={viewActionDetail} />
       <Modal fullscreen isOpen={openModel} toggle={toggleModal}>
         <ModalHeader toggle={toggleModal}>{actionDetail?.name}</ModalHeader>
         <ModalBody>
@@ -150,4 +111,4 @@ const AllActionsTable = ({ data, ...props }) => {
   );
 };
 
-export default TableWarper(AllActionsTable);
+export default AllActionsCategorized;

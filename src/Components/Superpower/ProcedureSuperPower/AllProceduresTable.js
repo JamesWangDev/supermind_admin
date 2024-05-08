@@ -62,7 +62,7 @@ const AllProceduresTable = ({ data, ...props }) => {
         return prev
       })
       setOpenModel(false) 
-      console.log("first")
+      return
     }
     throw respJson.message
   }, { refetchOnWindowFocus: false, select: (data) => data.data });
