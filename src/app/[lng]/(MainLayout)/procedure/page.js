@@ -8,7 +8,7 @@ const AllProcedures = () => {
   return (
     <Col sm="12">
       <AllProceduresTable
-        url={"http://134.209.37.239/nodeapi/getProcedures"}
+        url={"https://nodeapi.supermind.bot/nodeapi/getProcedures"}
         moduleName="Actions"
         isCheck={isCheck}
         setIsCheck={setIsCheck}

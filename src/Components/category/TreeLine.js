@@ -2,7 +2,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import Options from "../Table/Options";
 
-const TreeLine = ({ data, level, active, setActive, type, mutate, loading, activeColored }) => {
+const TreeLine = ({ data, level, active, setActive, type, mutate, loading, activeColored, viewDetail }) => {
   const router = useRouter();
 
   if (!data) return null;
@@ -18,16 +18,23 @@ const TreeLine = ({ data, level, active, setActive, type, mutate, loading, activ
                 active.includes(item.id) ? temp.splice(active.indexOf(item.id), 1) : (temp = [...active, item.id]);
                 setActive([...temp]);
               }
-            }}>
+            }}
+            onDoubleClick={(e) => {
+              e.stopPropagation();
+              if(viewDetail){
+                viewDetail(item, true)
+              }
+            }}
+            >
             <i className="tree-icon file-icon" role="presentation"></i>
             {item.name}
-            {!activeColored && <div className="tree-options">
+            {(!activeColored) && <div className="tree-options">
               <Options fullObj={item} mutate={mutate} type={type} loading={loading} keyInPermission={"category"} />
             </div>}
           </div>
           {item.subcategories && (
             <div className={active.includes(item.id) ? "d-block" : "d-none"}>
-              <TreeLine activeColored={activeColored} data={item.subcategories} level={level + 1} active={active} setActive={setActive} mutate={mutate} type={type} />
+              <TreeLine viewDetail={viewDetail} activeColored={activeColored} data={item.subcategories} level={level + 1} active={active} setActive={setActive} mutate={mutate} type={type} />
             </div>
           )}
         </li>

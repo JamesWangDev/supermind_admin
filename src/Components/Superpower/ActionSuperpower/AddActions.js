@@ -25,7 +25,7 @@ const AddActions = ({ values, setFieldValue, errors, updateId }) => {
     ["actions", values.actions],
     () =>
       request({
-        url: "http://134.209.37.239/nodeapi/getDescriptions?paginate=100&page=0&sort=asc",
+        url: "https://nodeapi.supermind.bot/nodeapi/getDescriptions?paginate=100&page=0&sort=asc",
       }),
     { refetchOnWindowFocus: false, select: (res) => res?.data }
   );
