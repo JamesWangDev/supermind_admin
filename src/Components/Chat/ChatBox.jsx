@@ -81,7 +81,15 @@ export default function ChatBox({activeTab, values}) {
             messagesToSend.push(message);
         }
 
-        OpenAIStream(messagesToSend, customModelData?.name, customModelData?.api_url, customModelData?.api_key)
+        const getModelName = (name) => {
+          if(name.includes("anyscale-")) {
+            return name.replace("anyscale-", "");
+          } else {
+            return name;
+          }
+        }
+
+        OpenAIStream(messagesToSend, getModelName(customModelData?.name), customModelData?.api_url, customModelData?.api_key)
             .then(response => {
                 setMessages((messages) => [
                     ...messages,
