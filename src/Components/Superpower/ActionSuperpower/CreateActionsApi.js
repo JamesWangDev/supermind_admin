@@ -10,6 +10,7 @@ import FormBtn from "@/Elements/Buttons/FormBtn";
 import { Form, Formik } from "formik";
 import AccountContext from "@/Helper/AccountContext";
 import { AITextboxData } from "@/Data/AITextboxData";
+import { ACTION_CATEGORIES } from "@/Utils/ActionCategories";
 
 const apiTypeOptions = [
     {
@@ -32,9 +33,10 @@ const CreateActionsApi = () => {
   const { t } = useTranslation(i18Lang, 'common');
   const [spec, setSpec] = useState("")
   const [specType, setSpecType] = useState("spec")
-  const [authType, setAuthType] = useState("authToken")
+  const [authType, setAuthType] = useState("")
   const [authKey, setAuthKey] = useState("");
   const [functionName, setFunctionName] = useState("")
+  const [categories, setCategories] = useState([])
   const [description, setDescription] = useState("")
   const [refetchApiInfo, setRefetchApiInfo] = useState(0)
 
@@ -50,8 +52,8 @@ const CreateActionsApi = () => {
     return [...respJson, {name: "authToken", providerName: "authToken"}]
   }, { refetchOnWindowFocus: false });
 
-  const { error, data: apiInfo, isLoading } = useQuery(["apiInfo", refetchApiInfo, specType, description], async () => {
-    if(!spec || !specType || (authType === "authToken" && !authKey) || !description || (specType === "serpapi" && !functionName)) throw "Please Fill All Fields"
+  const { error, data: apiInfo, isLoading } = useQuery(["apiInfo", refetchApiInfo, specType, description, categories, functionName, authKey], async () => {
+    if(!spec || !specType || (authType === "authToken" && !authKey) || !description || (specType === "serpapi" && !functionName) || !categories) throw "Please Fill All Fields"
     const resp = await fetch("http://134.209.37.239/nodeapi/getNodeData", {
         method: "POST",
         headers: {
@@ -72,7 +74,7 @@ const CreateActionsApi = () => {
           "Content-Type": "application/json",
         },
 
-        body: JSON.stringify({apiSpec: spec, specType, authType, email: accountData.email, authKey, description, functionName})
+        body: JSON.stringify({apiSpec: spec, specType, authType, email: accountData.email, authKey, description, functionName, categories})
     })
     const respJson = await resp.json()
     if(respJson.success) {
@@ -96,7 +98,7 @@ const CreateActionsApi = () => {
 
   return (
     <Formik
-      initialValues={{"ApiSpecType": "", "Auth Type": "", "AuthToken": "", "Function Name": "", "Description": "", "API_SPEC": ""}}
+      initialValues={{"ApiSpecType": specType, "Auth Type": authType, "AuthToken": authKey, "Function Name": functionName, "Categories": categories, "Description": description, "API_SPEC": spec}}
       onSubmit={createNode}>
       {({ values, setFieldValue, errors, handleSubmit }) => {
         const setSpecTypeVal = (label, value) => {
@@ -107,11 +109,16 @@ const CreateActionsApi = () => {
           setFieldValue(label, value);
           setAuthType(value)
         }
+        const setCategoriesVal = (label, value) => {
+          setFieldValue(label, value);
+          setCategories(value)
+        }
         return <Form onSubmit={handleSubmit}>
           <MultiSelectField errors={errors} values={values} setFieldValue={setSpecTypeVal} name="ApiSpecType" require="true" data={apiTypeOptions} />
           <MultiSelectField errors={errors} values={values} setFieldValue={setAuthTypeVal} name="Auth Type" require="true" data={integrationProviderOptions?.map((prov) => ({name: prov.name, id: prov.providerName}))} />
           {authType === "authToken" && <SimpleInputField nameList={[{ name: "AuthToken", require: "true", placeholder: t("AuthToken"), onChange: (e) => setAuthKey(e.target.value), value: authKey }]} />}
           {specType === "serpapi" && <SimpleInputField nameList={[{ name: "Function Name", require: "true", placeholder: t("Function Name"), onChange: (e) => setFunctionName(e.target.value), value: functionName }]} />}
+          <MultiSelectField errors={errors} values={values} setFieldValue={setCategoriesVal} name="Categories" require="true" data={ACTION_CATEGORIES.map((cate) => ({name: cate, id: cate}))} />
           <SimpleInputField nameList={[{ name: "Description", require: "true", placeholder: t("Description"), onChange: (e) => setDescription(e.target.value), value: description }, { name: "API_SPEC", require: "true", title: "API_SPEC", type: "textarea", rows: 10, placeholder: t("ENTER_API_SPEC"), onChange: (e) => {
             setSpec(e.target.value)
             showApiInfo()

@@ -127,7 +127,8 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
         })
         const respJson = await resp.json()
         if(respJson.success) {
-            setStateProcedure(respJson.data)
+            alert("Procedure Updated")
+            return
         }
         throw respJson.message
     }, { refetchOnWindowFocus: false });
@@ -476,7 +477,7 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
                 title="Save Changes"
                 className="align-items-center"
                 loading={updateProcedureLoading}
-                onClick={() => updateProcedureMutate({procedure})}
+                onClick={() => updateProcedureMutate({procedure: stateProcedure})}
             />
         </div>
         <Modal fullscreen isOpen={openModel} toggle={toggleModal}>
