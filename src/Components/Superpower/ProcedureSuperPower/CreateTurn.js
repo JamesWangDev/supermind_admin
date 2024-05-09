@@ -1282,7 +1282,7 @@ Example:
   `);
 
   const {mutate: createTurnMutate, isLoading: createTurnLoading, data: turnData} = useMutation(async ({action, userTurnPrompt, turnPrompt, name}) => {
-    const resp = await fetch("http://134.209.37.239/nodeapi/createTurn", {
+    const resp = await fetch("https://nodeapi.supermind.bot/nodeapi/createTurn", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

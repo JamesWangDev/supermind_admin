@@ -19,7 +19,7 @@ const CreateActionsFunction = () => {
   const [authKey, setAuthKey] = useState("");
 
   const {mutate, error: mutationError, isLoading: mutationLoading} = useMutation(async ({authKey, description, func, categories}) => {
-    const resp = await fetch("http://134.209.37.239/nodeapi/createNodeFromFunction", {
+    const resp = await fetch("https://nodeapi.supermind.bot/nodeapi/createNodeFromFunction", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

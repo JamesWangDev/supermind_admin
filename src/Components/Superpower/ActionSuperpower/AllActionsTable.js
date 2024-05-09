@@ -57,7 +57,7 @@ const AllActionsTable = ({ data, ...props }) => {
   const toggleModal = () => setOpenModel((prev) => !prev);
 
   const {mutate: updateDescriptionMutate, isLoading: updateDescriptionLoading} = useMutation(async ({description, name, categories, id}) => {
-    const resp = await fetch("http://134.209.37.239/nodeapi/updateNodeDescription", {
+    const resp = await fetch("https://nodeapi.supermind.bot/nodeapi/updateNodeDescription", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -74,7 +74,7 @@ const AllActionsTable = ({ data, ...props }) => {
   }, { refetchOnWindowFocus: false, select: (data) => data.data });
 
   const {mutate: deleteDescriptionMutate, isLoading: deleteDescriptionLoading} = useMutation(async ({workflowId}) => {
-    const resp = await fetch(`http://134.209.37.239/nodeapi/deleteWorkflow?workflowId=${workflowId}`, {
+    const resp = await fetch(`https://nodeapi.supermind.bot/nodeapi/deleteWorkflow?workflowId=${workflowId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

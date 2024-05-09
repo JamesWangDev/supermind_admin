@@ -1302,7 +1302,7 @@ Example:
   const [showModal, setShowModal] = useState(null)
 
   const {mutate: createProcedureMutate, isLoading: createProcedureLoading, data: procedureData} = useMutation(async ({actions, procedureRequirement, procedurePrompt, name, vectorQueryPrompt}) => {
-    const resp = await fetch("http://134.209.37.239/nodeapi/createProcedure", {
+    const resp = await fetch("https://nodeapi.supermind.bot/nodeapi/createProcedure", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1319,7 +1319,7 @@ Example:
   }, { refetchOnWindowFocus: false });
   
   const {mutate: saveProcedureMutate, isLoading: saveProcedureLoading, data: procedureId} = useMutation(async ({description, procedure, name, vectorQuery}) => {
-    const resp = await fetch("http://134.209.37.239/nodeapi/saveProcedure", {
+    const resp = await fetch("https://nodeapi.supermind.bot/nodeapi/saveProcedure", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
