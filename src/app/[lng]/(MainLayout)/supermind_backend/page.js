@@ -30,7 +30,8 @@ const SupermindBackend = () => {
   1. 'taskName' - a brief title that describes the task.
   2. 'taskPrompt' - a pseudocode representation that explains how to accomplish the task, prefixed with 'API' if external tools or APIs are needed.
   3. 'taskPresent' - a boolean flag to indicate whether the task is actionable and present.
-  4. 'trainingDataOnly' - a boolean flag to indicate if the task can be completed using only the internal knowledge of the LLM, set to true if no external tools or APIs are required, otherwise false.
+  4. 'trainingDataOnly' - a boolean flag to indicate if the task can be completed using only the internal knowledge of the LLM, set to true if no external tools or APIs are required, otherwise false. If the user message asks to use a procedure - set this flag to false.
+  5. 'RAG'. - if the user query could better be answered with a RAG query or either 1. A custom knowledge base. 2. A web search or 3. a wikipedia search then add set the RAG value to "partition:web" for web search. "partition: wikipedia" for wikipedia search or "partition:partition name" for custom knowledge search. The data partitions available to you are in the data partition block supplied above. You may include multiple partitions for instance partition:web:wikipedia:cardiology will return results from the web, wikipedia and a cardiology data partition . Web searches are often better than wiki searches.
   
   
   Ensure that no other text or tokens are included in the output besides the JSON package. Each task that requires external data or interaction should be clearly marked to differentiate from those that can be handled internally."
