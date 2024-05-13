@@ -33,8 +33,8 @@ const Login = () => {
         <div className="input-box">
           <Formik
             initialValues={{
-              email: "admin@example.com",
-              password: "123456789",
+              email: "",
+              password: "",
             }}
             validationSchema={YupObject({ 
               email: emailSchema,
