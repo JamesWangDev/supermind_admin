@@ -26,10 +26,13 @@ const edgeTypes = {
     customEdge: CustomReactFlowEdge,
 }
 
-const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId, width='75vw', height='100vh'}) => {
+const ReactFlowChart = ({name, procedure, description, vectorQuery, width='75vw', height='100vh'}) => {
     const [webSocket, setWebSocket] = useState(null)
     const [refreshWebSocket, setRefreshWebSocket] = useState(0)
     const [stateProcedure, setStateProcedure] = useState(procedure)
+    const [stateDescription, setStateDescription] = useState(description)
+    const [stateVectorQuery, setStateVectorQuery] = useState(vectorQuery)
+    const [stateProcedureId, setStateProcedureId] = useState()
     const [chatMessage, setChatMessage] = useState("")
     const [openToast, setOpenToast] = useState(false);
     const [openModel, setOpenModel] = useState(false);
@@ -117,7 +120,7 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
         [edges],
     );
 
-    const {mutate: updateProcedureMutate, isLoading: updateProcedureLoading} = useMutation(async ({procedure}) => {
+    const {mutate: updateProcedureMutate, isLoading: updateProcedureLoading} = useMutation(async ({procedure, description, vectorQuery, procedureId}) => {
         const resp = await fetch("https://nodeapi.supermind.bot/nodeapi/saveProcedure", {
             method: "POST",
             headers: {
@@ -127,8 +130,8 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
         })
         const respJson = await resp.json()
         if(respJson.success) {
-            alert("Procedure Updated")
-            return
+            alert(`Procedure ${procedureId ? "updated" : "saved"}`)
+            setStateProcedureId(respJson.data)
         }
         throw respJson.message
     }, { refetchOnWindowFocus: false });
@@ -172,7 +175,7 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
     }, [stateProcedure])
 
     useEffect(() => {
-        const webSocket = new WebSocket("https://nodeapi.supermind.bot/nodeapi")
+        const webSocket = new WebSocket("wss://nodeapi.supermind.bot/nodeapi")
         setWebSocket(webSocket);
         webSocket.onmessage = (event) => {
             try {
@@ -403,14 +406,16 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
         })
     }
 
+    const updateProcedure = () => updateProcedureMutate({procedure: stateProcedure, description: stateDescription, vectorQuery: stateVectorQuery, procedureId: stateProcedureId})
+
     return <>
         <div>
             <h3>Description:</h3>
-            <p>{description}</p>
+            <textarea style={{width: "100%"}} rows="10" type="text" value={stateDescription} onChange={(e) => setStateDescription(e.target.value)} />
         </div>
         <div>
             <h3>Vector Query:</h3>
-            <p>{vectorQuery}</p>
+            <textarea style={{width: "100%"}} rows="10" type="text" value={stateVectorQuery} onChange={(e) => setStateVectorQuery(e.target.value)} />
         </div>
         <div>
             <h3>Procedure:</h3>
@@ -419,7 +424,7 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
                 title="Update Procedure"
                 className="align-items-center btn-theme add-button"
                 loading={updateProcedureLoading}
-                onClick={() => updateProcedureMutate({procedure: stateProcedure})}
+                onClick={updateProcedure}
             />
         </div>
         <div style={{marginBottom: "10px"}}>
@@ -477,7 +482,7 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
                 title="Save Changes"
                 className="align-items-center"
                 loading={updateProcedureLoading}
-                onClick={() => updateProcedureMutate({procedure: stateProcedure})}
+                onClick={updateProcedure}
             />
         </div>
         <Modal fullscreen isOpen={openModel} toggle={toggleModal}>
