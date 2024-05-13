@@ -28,32 +28,13 @@ const SupermindBackend = () => {
   const [chatLogs, setChatLogs] = useState([])
   const [taskSplitterPrompt, setTaskSplitterPrompt] = useState(`Given a user input, your task is to analyze and identify different tasks contained within the message. For each identified task, classify it based on its nature—whether it involves information retrieval, computation, API interaction, or other activities. Output strictly a JSON array where each element is a JSON object representing a distinct task. Each JSON object should have the following properties:
   1. 'taskName' - a brief title that describes the task.
-  2. 'taskPrompt' - a pseudocode representation that explains how to accomplish the task, prefixed with 'API' if external tools or APIs are needed.
+  2. 'taskPrompt' - a pseudocode representation that explains how to accomplish the task. If you are setting the RAG flag then make sure the prompt works as a RAG query - for instance do not say "use an API" in the task prompt if you are doing a web search.
   3. 'taskPresent' - a boolean flag to indicate whether the task is actionable and present.
-  4. 'trainingDataOnly' - a boolean flag to indicate if the task can be completed using only the internal knowledge of the LLM, set to true if no external tools or APIs are required, otherwise false.
+  4. 'trainingDataOnly' - a boolean flag to indicate if the task can be completed using only the internal knowledge of the LLM, set to true if no external tools or APIs are required, otherwise false. If the user message asks to use a procedure - set this flag to false.
+  5. 'RAG'. - if the user query could better be answered with a RAG query or either 1. A custom knowledge base. 2. A web search or 3. a wikipedia search then add set the RAG value to "partition:web" for web search. "partition: wikipedia" for wikipedia search or "partition:partition name" for custom knowledge search. The data partitions available to you are in the data partition block supplied above. You may include multiple partitions for instance partition:web:wikipedia:cardiology will return results from the web, wikipedia and a cardiology data partition . Web searches are often better than wiki searches.
   
   
-  Ensure that no other text or tokens are included in the output besides the JSON package. Each task that requires external data or interaction should be clearly marked to differentiate from those that can be handled internally."
-  
-  
-  Example output based on user input "Check the weather in Paris and set a reminder for a meeting at 3 PM":
-  
-  
-  [
-  {
-  "taskName": "Weather Check",
-  "taskPrompt": "API: Retrieve current weather information for Paris",
-  "taskPresent": true,
-  "trainingDataOnly": false
-  },
-  {
-  "taskName": "Set Reminder",
-  "taskPrompt": "Schedule a reminder for a 3pm meeting",
-  "taskPresent": true,
-  "trainingDataOnly": true
-  }
-  ]
-  `);
+  Ensure that no other text or tokens are included in the output besides the JSON package. Each task that requires external data or interaction should be clearly marked to differentiate from those that can be handled internally.`);
   const [chatPrompt, setChatPrompt] = useState(`You are an action agent. You follow Procedures provided in turns like in Dungeons and Dragons. In each turn, you Issue 2 commands, the first will be as per the procedure, and the second will be a user message informing the user of your action, what node you are executing and why.   Make sure to include the why in your message.   You will receive a response to commands and then follow the procedure logic to choose a new command to issue. Issue each command as a JSON package in the format Command: URL. DATA BLOCK: Key pairs as per procedure. The back end system will parse the text you output and send the DATA Block to the API targeted URL and then return the response in your next turn. DO NOT EXPLAIN ANYTHING OR SAY YOU CANNOT DO ANYTHING. Follow these instructions verbatim, **always** issues the command URL and DATA BLOCK. Do not issue any additional tokens.  For the user message you issues, always use the following URL "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4-f27a-48e9-a62f-a87722a0b5d4"  [Example Turn] Example Command: [{
     "Command": "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4",
     "DATA BLOCK": {
