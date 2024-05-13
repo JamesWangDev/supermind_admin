@@ -175,7 +175,7 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, width='75vw'
     }, [stateProcedure])
 
     useEffect(() => {
-        const webSocket = new WebSocket("https://nodeapi.supermind.bot/nodeapi")
+        const webSocket = new WebSocket("wss://nodeapi.supermind.bot/nodeapi")
         setWebSocket(webSocket);
         webSocket.onmessage = (event) => {
             try {
