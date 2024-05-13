@@ -16,7 +16,8 @@ export const OpenAIStream = async (messages, model, api, api_key) => {
           }, {
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${api_key}`
+                Authorization: model.includes("claude") ? undefined : `Bearer ${api_key}`,
+                'x-api-key': model.includes("claude") ? api_key : undefined
             }
           }).then((response) => {
                 resolve(response.data.choices[0].message.content.trim());
