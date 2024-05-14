@@ -1,10 +1,16 @@
 import axios from "axios";
 
 export const OpenAIStream = async (messages, model, api, api_key) => {
+    let editedMessages = messages;
+    if (model.includes("claude")) {
+      editedMessages = editedMessages.slice(1);
+      editedMessages[1].role = "assistant"
+    }
+
     return new Promise((resolve, reject) => {
         axios.post(api, {
             model: model ? model : "gpt-3.5-turbo",
-            messages: model.includes("claude") ? messages.slice(1) : messages,
+            messages: editedMessages,
             max_tokens: 800,
             temperature: 0.0,
           }, {
