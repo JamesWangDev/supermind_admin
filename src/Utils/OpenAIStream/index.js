@@ -4,7 +4,7 @@ export const OpenAIStream = async (messages, model, api, api_key) => {
     return new Promise((resolve, reject) => {
         axios.post(api, {
             model: model ? model : "gpt-3.5-turbo",
-            messages: model.includes("claude") ? messages.shift() : messages,
+            messages: model.includes("claude") ? messages.slice(1) : messages,
             max_tokens: 800,
             temperature: 0.0,
           }, {
