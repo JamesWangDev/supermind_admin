@@ -79,7 +79,7 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, width='75vw'
         const respJson = await resp.json()
         if(respJson.success) {
             alert(`Procedure ${procedureId ? "updated" : "saved"}`)
-            setStateProcedureId(respJson.data)
+            if(!procedureId) setStateProcedureId(respJson.data)
         }
         throw respJson.message
     }, { refetchOnWindowFocus: false });
