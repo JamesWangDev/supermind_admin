@@ -26,13 +26,13 @@ const edgeTypes = {
     customEdge: CustomReactFlowEdge,
 }
 
-const ReactFlowChart = ({name, procedure, description, vectorQuery, width='75vw', height='100vh'}) => {
+const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId, width='75vw', height='100vh'}) => {
     const [webSocket, setWebSocket] = useState(null)
     const [refreshWebSocket, setRefreshWebSocket] = useState(0)
     const [stateProcedure, setStateProcedure] = useState(procedure)
     const [stateDescription, setStateDescription] = useState(description)
     const [stateVectorQuery, setStateVectorQuery] = useState(vectorQuery)
-    const [stateProcedureId, setStateProcedureId] = useState()
+    const [stateProcedureId, setStateProcedureId] = useState(procedureId)
     const [chatMessage, setChatMessage] = useState("")
     const [openToast, setOpenToast] = useState(false);
     const [openModel, setOpenModel] = useState(false);
@@ -79,7 +79,7 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, width='75vw'
         const respJson = await resp.json()
         if(respJson.success) {
             alert(`Procedure ${procedureId ? "updated" : "saved"}`)
-            setStateProcedureId(respJson.data)
+            if(!procedureId) setStateProcedureId(respJson.data)
         }
         throw respJson.message
     }, { refetchOnWindowFocus: false });
@@ -109,8 +109,7 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, width='75vw'
     })
     const respJson = await resp.json()
     if(respJson.success) {
-        alert(`Procedure ${procedureId ? "updated" : "saved"}`)
-        setStateProcedureId(respJson.data)
+        alert(`Prompts updated`)
     }
     throw respJson.message
     }, { refetchOnWindowFocus: false });    
