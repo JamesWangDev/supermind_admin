@@ -31,14 +31,13 @@ const SupermindBackend = () => {
   const [chatPrompt, setChatPrompt] = useState(``);
   const [vectorQueryPrompt, setVectorQueryPrompt] = useState(``)
   const [procedureSelectorPrompt, setProcedureSelectorPrompt] = useState(``)
-  const [promptsId, setPromptsId] = useState("")
    const {accountData} = useContext(AccountContext);
 
   const { data: supermindsData, isLoading } = useQuery([product], () => request({
     url: product, method: 'get'
   }, router), { refetchOnWindowFocus: false, refetchOnMount: false, cacheTime: 0, select: (data) => data.data.data });
 
-  const { isLoading: promptsLoading } = useQuery([], async() => {
+  const { isLoading: promptsLoading, data: promptsData } = useQuery([], async() => {
     const resp = await fetch("https://nodeapi.supermind.bot/nodeapi/getPrompts", {
       method: "GET",
       headers: {
@@ -51,10 +50,10 @@ const SupermindBackend = () => {
       setChatPrompt(respJson.data.chat)
       setProcedureSelectorPrompt(respJson.data.procedure_selector)
       setTaskSplitterPrompt(respJson.data.task_splitter)
-      setPromptsId(respJson.data.id)
+      return respJson
     }
     throw respJson.message
-  }, { refetchOnWindowFocus: false, refetchOnMount: false, cacheTime: 0 });
+  }, { refetchOnWindowFocus: false, refetchOnMount: false, cacheTime: 0, select: (data) => data.data });
 
   const {mutate: updatePromptsMutate, isLoading: updatePromptsLoading} = useMutation(async () => {
     const resp = await fetch("https://nodeapi.supermind.bot/nodeapi/updatePrompts", {
@@ -62,7 +61,7 @@ const SupermindBackend = () => {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({taskSplitter: taskSplitterPrompt, chat: chatPrompt, vectorQuery: vectorQueryPrompt, procedureSelector: procedureSelectorPrompt, id: promptsId})
+        body: JSON.stringify({...promptsData, task_splitter: taskSplitterPrompt, chat: chatPrompt, vector_query: vectorQueryPrompt, procedure_selector: procedureSelectorPrompt})
     })
     const respJson = await resp.json()
     if(respJson.success) {

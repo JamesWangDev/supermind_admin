@@ -10,7 +10,7 @@ const GptmodelInputs = () => {
     const { t } = useTranslation(i18Lang, 'common');
     return (
         <>
-            <SimpleInputField nameList={[{ name: "name", require: "true", placeholder: t("EnterName") }, { name: "description", require: "true", title: "Description", type: "textarea", rows: 3, placeholder: t("EnterDescription"), helpertext: "*Maximum length should be 300 characters.", promptText: AITextboxData.model_desc }, { name: "api_url", require: "true", placeholder: t("EnterAPIUrl") }, { name: "api_key", require: "true", placeholder: t("EnterAPIKey") }]} />
+            <SimpleInputField nameList={[{ name: "name", require: "true", placeholder: t("EnterName") }, { name: "description", require: "true", title: "Description", type: "textarea", rows: 3, placeholder: t("EnterDescription"), helpertext: "*Maximum length should be 300 characters.", promptText: AITextboxData.model_desc }, { name: "api_url", require: "true", placeholder: t("EnterAPIUrl") }, { name: "api_key", require: "true", placeholder: t("EnterAPIKey") }, { name: "token_price", require: "true", type: "number", placeholder: t("Enter the Token Price per 1k token") }]} />
             <CheckBoxField name="is_public" />
             <CheckBoxField name="status" />
         </>

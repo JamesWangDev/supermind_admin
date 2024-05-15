@@ -1,22 +1,29 @@
 import axios from "axios";
 
 export const OpenAIStream = async (messages, model, api, api_key) => {
+    let editedMessages = messages;
+    if (model.includes("claude")) {
+      editedMessages = messages.slice(1);
+      editedMessages.map((message, index) => {
+        if (index % 2 == 1) {
+          editedMessages[index].role = 'assistant'
+        }
+      })
+    }
+
     return new Promise((resolve, reject) => {
         axios.post(api, {
             model: model ? model : "gpt-3.5-turbo",
-            messages: [
-            // {
-            //     role: "system",
-            //     content: `You are a helpful, friendly, assistant.`
-            // },
-            ...messages
-            ],
+            messages: editedMessages,
             max_tokens: 800,
             temperature: 0.0,
           }, {
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${api_key}`
+                Authorization: model.includes("claude") ? undefined : `Bearer ${api_key}`,
+                'x-api-key': model.includes("claude") ? api_key : undefined,
+                'anthropic-version': model.includes("claude") ? '2023-06-01' : undefined, 
+                'anthropic-beta': model.includes("claude") ? 'messages-2023-12-15' : undefined,
             }
           }).then((response) => {
                 resolve(response.data.choices[0].message.content.trim());
