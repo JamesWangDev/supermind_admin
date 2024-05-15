@@ -3,8 +3,12 @@ import axios from "axios";
 export const OpenAIStream = async (messages, model, api, api_key) => {
     let editedMessages = messages;
     if (model.includes("claude")) {
-      editedMessages = editedMessages.slice(1);
-      editedMessages[1].role = "assistant"
+      editedMessages = messages.slice(1);
+      editedMessages.map((message, index) => {
+        if (index % 2 == 1) {
+          editedMessages[index].role = 'assistant'
+        }
+      })
     }
 
     return new Promise((resolve, reject) => {
