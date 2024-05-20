@@ -1,18 +1,23 @@
 import axios from "axios";
 
 export const OpenAIStream = async (messages, model, api, api_key) => {
-    let editedMessages = messages;
+    let editedMessages = JSON.parse(JSON.stringify(messages));
     if (model.includes("claude")) {
-      editedMessages = messages.slice(1);
       editedMessages.map((message, index) => {
         if (index % 2 == 1) {
-          editedMessages[index].role = 'assistant'
+          editedMessages[index].role = editedMessages.length % 2 == 0 ? 'user' : 'assistant'
+        } else {
+          editedMessages[index].role = editedMessages.length % 2 == 0 ? 'assistant' : 'user'
         }
       })
+
+      if (editedMessages.length % 2 == 0) {
+        editedMessages.unshift({role: "user", content: "none"});
+      }
     }
 
     return new Promise((resolve, reject) => {
-        axios.post(`${model.includes("claude") && 'https://proxy.cors.sh/'}${api}`, {
+        axios.post(`${model.includes("claude") ? 'https://proxy.cors.sh/' : ''}${api}`, {
             model: model ? model : "gpt-3.5-turbo",
             messages: editedMessages,
             max_tokens: 800,
