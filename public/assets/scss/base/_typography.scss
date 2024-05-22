@@ -449,8 +449,15 @@ span {
   background-color: var(--theme-color);
 }
 
+.magic-wand-btn {
+  position: absolute; 
+  right: 10px; 
+  bottom: 10px;
+  display: flex;
+  gap: 4px;
+}
+
 .magic-wand-btn > svg {
-  display: flex; 
   border: 1px solid #00a300; 
   border-radius: 100%; 
   padding: 3px; 
@@ -458,9 +465,6 @@ span {
   height: 24px; 
   color: #00a300; 
   background-color: #eff4ff; 
-  position: absolute; 
-  right: 10px; 
-  bottom: 10px;
   border-width: 1.8px;
 
   &:hover {
@@ -477,12 +481,12 @@ span {
 }
 
 .magic-wand-spinner {
-  right: 10px; 
-  bottom: 10px;
+  right: 28px; 
+  bottom: 0px;
   position: absolute;
   border: 3px solid rgba(0, 0, 0, 0.1);
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   border-left-color: #00a300;
   animation: spin 1s ease infinite;
