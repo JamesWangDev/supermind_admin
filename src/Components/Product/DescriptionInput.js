@@ -1,17 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Col, Row } from 'reactstrap';
+import { Col, Row, UncontrolledPopover, PopoverHeader, PopoverBody, Input } from 'reactstrap';
 import CkEditorComponent from '../InputFields/CkEditorComponent';
 import { ErrorMessage } from 'formik';
 import I18NextContext from '@/Helper/I18NextContext';
 import { useTranslation } from '@/app/i18n/client';
 import { PiMagicWand } from "react-icons/pi";
 import { OpenAIStream } from "@/Utils/OpenAIStream";
+import { RiEdit2Line } from "react-icons/ri";
 
 const DescriptionInput = ({ values, setFieldValue, nameKey, errorMessage, title, helpertext, promptText }) => {
     const { i18Lang } = useContext(I18NextContext);
     const { t } = useTranslation(i18Lang, 'common');
     const [editorLoaded, setEditorLoaded] = useState(false);
     const [isAILoading, setIsAILoading] = useState(false);
+    const [promText, setPromText] = useState(promptText);
     useEffect(() => {
         setEditorLoaded(true);
     }, []);
@@ -25,7 +27,7 @@ const DescriptionInput = ({ values, setFieldValue, nameKey, errorMessage, title,
         const gptPrompt = [
             {
                 role: 'user',
-                content: promptText ? promptText : 'Make this input text better'
+                content: promText ? promText : 'Make this input text better'
             },
             {
                 role: 'user',
@@ -57,8 +59,22 @@ const DescriptionInput = ({ values, setFieldValue, nameKey, errorMessage, title,
                                 setFieldValue(nameKey, data)
                             }} value={values[nameKey]} editorLoaded={editorLoaded}
                             />
-                            <div onClick={handleGetAIAssist} className="magic-wand-btn">
-                                {isAILoading ? <div className="magic-wand-spinner"></div> : <PiMagicWand />}
+                            <div className="magic-wand-btn">
+                                {isAILoading ? <div className="magic-wand-spinner"></div> : <PiMagicWand onClick={handleGetAIAssist} />}
+                                <RiEdit2Line id={nameKey} />
+                                <UncontrolledPopover
+                                    placement="bottom"
+                                    target={nameKey}
+                                    trigger="legacy"
+                                    >
+
+                                    <PopoverHeader>
+                                        Prompt Upadte
+                                    </PopoverHeader>
+                                    <PopoverBody>
+                                        <Input className="w-40" type='textarea' value={promText} onChange={(e) => setPromText(e.target.value)} />
+                                    </PopoverBody>
+                                </UncontrolledPopover>
                             </div>
                         </div>
                         {helpertext && <p className='help-text'>{helpertext}</p>}
