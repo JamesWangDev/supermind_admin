@@ -98,7 +98,7 @@ const SupermindBackend = () => {
   return (
     <>
       <Formik
-        initialValues={{"User Message": "", "Superminds": "", "Task Splitter Prompt": "", "Chat Prompt": ""}}
+        initialValues={{"User Message": "", "Superminds": "", "TaskSplitterPrompt": taskSplitterPrompt, "ChatPrompt": chatPrompt}}
         onSubmit={() => {
             if(webSocket.readyState === webSocket.CLOSED) {
                 setRefreshWebSocket(prev => prev ? 0 : 1)
@@ -118,7 +118,7 @@ const SupermindBackend = () => {
           return <Form onSubmit={handleSubmit}>
             <SimpleInputField nameList={[{ name: "User Message", require: "true", placeholder: t("User Message"), onChange: (e) => setMessage(e.target.value), value: message }]} />
             <MultiSelectField errors={errors} values={values} setFieldValue={setSupermindVal} name="Superminds" require="true" data={supermindsData} />
-            <SimpleInputField nameList={[{ name: "Task Splitter Prompt", require: "true", placeholder: t("Task Splitter Prompt"), onChange: (e) => setTaskSplitterPrompt(e.target.value), value: taskSplitterPrompt, type: "textarea", rows: 5, promptText: AITextboxData.procedure_req }, { name: "Chat Prompt", require: "true", placeholder: t("Chat Prompt"), onChange: (e) => setChatPrompt(e.target.value), value: chatPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }, { name: "Vector Query Prompt", require: "true", placeholder: t("Vector Query Prompt"), onChange: (e) => setVectorQueryPrompt(e.target.value), value: vectorQueryPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }, { name: "Procedure Selector Prompt", require: "true", placeholder: t("Procedure Selector Prompt"), onChange: (e) => setProcedureSelectorPrompt(e.target.value), value: procedureSelectorPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }]} />
+            <SimpleInputField nameList={[{ name: "TaskSplitterPrompt", require: "true", placeholder: t("Task Splitter Prompt"), onChange: (e) => setTaskSplitterPrompt(e.target.value), value: taskSplitterPrompt, type: "textarea", rows: 5, promptText: AITextboxData.procedure_req }, { name: "ChatPrompt", require: "true", placeholder: t("Chat Prompt"), onChange: (e) => setChatPrompt(e.target.value), value: chatPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }, { name: "VectorQueryPrompt", require: "true", placeholder: t("Vector Query Prompt"), onChange: (e) => setVectorQueryPrompt(e.target.value), value: vectorQueryPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }, { name: "ProcedureSelectorPrompt", require: "true", placeholder: t("Procedure Selector Prompt"), onChange: (e) => setProcedureSelectorPrompt(e.target.value), value: procedureSelectorPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }]} />
             <Btn
               title="Update Prompts"
               className="align-items-center btn-theme add-button"
