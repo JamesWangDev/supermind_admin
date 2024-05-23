@@ -500,3 +500,8 @@ span {
     transform: rotate(360deg);
   }
 }
+
+.custom-popover .popover {
+  width: 500px; /* Adjust the width as needed */
+  height: 250px;
+}
