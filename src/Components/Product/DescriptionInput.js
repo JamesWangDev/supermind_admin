@@ -66,13 +66,14 @@ const DescriptionInput = ({ values, setFieldValue, nameKey, errorMessage, title,
                                     placement="bottom"
                                     target={nameKey}
                                     trigger="legacy"
+                                    className='custom-popover'
                                     >
 
                                     <PopoverHeader>
                                         Prompt Upadte
                                     </PopoverHeader>
                                     <PopoverBody>
-                                        <Input className="w-40" type='textarea' value={promText} onChange={(e) => setPromText(e.target.value)} />
+                                        <Input style={{height: 180}} type='textarea' value={promText} onChange={(e) => setPromText(e.target.value)} />
                                     </PopoverBody>
                                 </UncontrolledPopover>
                             </div>

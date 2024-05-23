@@ -85,7 +85,7 @@ const ReactstrapFormikInput = ({ field: { ...fields }, form: { touched, errors }
                   :
                   <div>
                     <div style={{position: "relative"}}>
-                      <Input ref={textAreaEl} disabled={props.disable ? props.disable : false} {...fields} {...props} invalid={Boolean(touched[fields.name] && errors[fields.name])} valid={Boolean(touched[fields.name] && !errors[fields.name])} autoComplete="off" onInput={(e) => {
+                      <Input ref={textAreaEl} disabled={props.disable ? props.disable : false} {...fields} {...props} id={"textarea-" + props.id} invalid={Boolean(touched[fields.name] && errors[fields.name])} valid={Boolean(touched[fields.name] && !errors[fields.name])} autoComplete="off" onInput={(e) => {
                         if (props.min && props.max) {
                           if (e.target.value > 100) e.target.value = 100; if (e.target.value < 0) e.target.value = 0;
                         } else false
@@ -98,13 +98,13 @@ const ReactstrapFormikInput = ({ field: { ...fields }, form: { touched, errors }
                           placement="bottom"
                           target={fields.name}
                           trigger="legacy"
+                          className='custom-popover'
                         >
-
                           <PopoverHeader>
                             Prompt Upadte
                           </PopoverHeader>
                           <PopoverBody>
-                            <Input className="w-40" type='textarea' value={promptText} onChange={(e) => setPromptText(e.target.value)} />
+                            <Input style={{height: 180}} type='textarea' value={promptText} onChange={(e) => setPromptText(e.target.value)} />
                           </PopoverBody>
                         </UncontrolledPopover>
                       </div>}
