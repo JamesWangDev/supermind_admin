@@ -98,7 +98,7 @@ const CreateActionsApi = () => {
 
   return (
     <Formik
-      initialValues={{"ApiSpecType": specType, "Auth Type": authType, "AuthToken": authKey, "Function Name": functionName, "Categories": categories, "Description": description, "API_SPEC": spec}}
+      initialValues={{"ApiSpecType": specType, "AuthType": authType, "AuthToken": authKey, "FunctionName": functionName, "Categories": categories, "Description": description, "API_SPEC": spec}}
       onSubmit={createNode}>
       {({ values, setFieldValue, errors, handleSubmit }) => {
         const setSpecTypeVal = (label, value) => {
@@ -115,9 +115,9 @@ const CreateActionsApi = () => {
         }
         return <Form onSubmit={handleSubmit}>
           <MultiSelectField errors={errors} values={values} setFieldValue={setSpecTypeVal} name="ApiSpecType" require="true" data={apiTypeOptions} />
-          <MultiSelectField errors={errors} values={values} setFieldValue={setAuthTypeVal} name="Auth Type" require="true" data={integrationProviderOptions?.map((prov) => ({name: prov.name, id: prov.providerName}))} />
+          <MultiSelectField errors={errors} values={values} setFieldValue={setAuthTypeVal} name="AuthType" require="true" data={integrationProviderOptions?.map((prov) => ({name: prov.name, id: prov.providerName}))} />
           {authType === "authToken" && <SimpleInputField nameList={[{ name: "AuthToken", require: "true", placeholder: t("AuthToken"), onChange: (e) => setAuthKey(e.target.value), value: authKey }]} />}
-          {specType === "serpapi" && <SimpleInputField nameList={[{ name: "Function Name", require: "true", placeholder: t("Function Name"), onChange: (e) => setFunctionName(e.target.value), value: functionName }]} />}
+          {specType === "serpapi" && <SimpleInputField nameList={[{ name: "FunctionName", require: "true", placeholder: t("FunctionName"), onChange: (e) => setFunctionName(e.target.value), value: functionName }]} />}
           <MultiSelectField errors={errors} values={values} setFieldValue={setCategoriesVal} name="Categories" require="true" data={ACTION_CATEGORIES.map((cate) => ({name: cate, id: cate}))} />
           <SimpleInputField nameList={[{ name: "Description", require: "true", placeholder: t("Description"), onChange: (e) => setDescription(e.target.value), value: description }, { name: "API_SPEC", require: "true", title: "API_SPEC", type: "textarea", rows: 10, placeholder: t("ENTER_API_SPEC"), onChange: (e) => {
             setSpec(e.target.value)

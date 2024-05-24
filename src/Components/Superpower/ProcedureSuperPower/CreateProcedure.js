@@ -88,13 +88,13 @@ const CreateProcedure = () => {
   return (
     <>
       <Formik
-        initialValues={{"Name": procedureName, "Actions": actions, "Procedure Requirement": procedureRequirement}}
+        initialValues={{"Name": procedureName, "Actions": actions, "ProcedureRequirement": procedureRequirement}}
         onSubmit={createProcedure}>
         {({ values, setFieldValue, errors, handleSubmit }) => {
           return <Form onSubmit={handleSubmit}>
             <SimpleInputField nameList={[{ name: "Name", require: "true", placeholder: t("Name"), onChange: (e) => setProcedureName(e.target.value), value: procedureName }]} />
             <ActionCategoryComp name="Select Actions" getSelectedActions={(actions) => setActions(actions)} />
-            <SimpleInputField nameList={[{ name: "Procedure Requirement", require: "true", placeholder: t("Procedure Requirement"), onChange: (e) => setProcedureRequirement(e.target.value), value: procedureRequirement, type: "textarea", rows: 5, promptText: AITextboxData.procedure_req }, { name: "Procedure Creating Prompt", require: "true", placeholder: t("Procedure Creating Prompt"), onChange: (e) => setProcedurePrompt(e.target.value), value: procedurePrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }, , { name: "Vector Query Creating Prompt", require: "true", placeholder: t("Vector Query Creating Prompt"), onChange: (e) => setVectorQueryPrompt(e.target.value), value: vectorQueryPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }]} />
+            <SimpleInputField nameList={[{ name: "ProcedureRequirement", require: "true", placeholder: t("ProcedureRequirement"), onChange: (e) => setProcedureRequirement(e.target.value), value: procedureRequirement, type: "textarea", rows: 5, promptText: AITextboxData.procedure_req }, { name: "ProcedureCreatingPrompt", require: "true", placeholder: t("ProcedureCreatingPrompt"), onChange: (e) => setProcedurePrompt(e.target.value), value: procedurePrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }, , { name: "VectorQueryCreatingPrompt", require: "true", placeholder: t("VectorQueryCreatingPrompt"), onChange: (e) => setVectorQueryPrompt(e.target.value), value: vectorQueryPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }]} />
             <Btn
               title="Update Prompts"
               className="align-items-center btn-theme add-button"
