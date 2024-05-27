@@ -1314,13 +1314,13 @@ Example:
   return (
     <>
       <Formik
-        initialValues={{"Name": turnName, "Action": actions, "User Turn Prompt": turnPrompt, "Turn Creating Prompt": userTurnPrompt}}
+        initialValues={{"Name": turnName, "Action": actions, "UserTurnPrompt": turnPrompt, "TurnCreatingPrompt": userTurnPrompt}}
         onSubmit={createTurn}>
         {({ values, setFieldValue, errors, handleSubmit }) => {
           return <Form onSubmit={handleSubmit}>
             <SimpleInputField nameList={[{ name: "Name", require: "true", placeholder: t("Name"), onChange: (e) => setTurnName(e.target.value), value: turnName }]} />
             <ActionCategoryComp name="Select Actions" getSelectedActions={(actions) => setActions(actions)} />
-            <SimpleInputField nameList={[{ name: "User Turn Prompt", require: "true", placeholder: t("User Turn Prompt"), onChange: (e) => setUserTurnPrompt(e.target.value), value: userTurnPrompt, type: "textarea", rows: 5, promptText: AITextboxData.procedure_req }, { name: "Turn Creating Prompt", require: "true", placeholder: t("Turn Creating Prompt"), onChange: (e) => setTurnPrompt(e.target.value), value: turnPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }]} />
+            <SimpleInputField nameList={[{ name: "UserTurnPrompt", require: "true", placeholder: t("UserTurnPrompt"), onChange: (e) => setUserTurnPrompt(e.target.value), value: userTurnPrompt, type: "textarea", rows: 5, promptText: AITextboxData.procedure_req }, { name: "TurnCreatingPrompt", require: "true", placeholder: t("TurnCreatingPrompt"), onChange: (e) => setTurnPrompt(e.target.value), value: turnPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }]} />
             <FormBtn submitText="Create" loading={createTurnLoading} />
           </Form>
         }}

@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useContext, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import SimpleInputField from "@/Components/InputFields/SimpleInputField";
 import I18NextContext from "@/Helper/I18NextContext";
 import { useTranslation } from "@/app/i18n/client";
@@ -14,6 +14,7 @@ import { product } from "@/Utils/AxiosUtils/API";
 import request from "@/Utils/AxiosUtils";
 import { useRouter } from 'next/navigation';
 import AccountContext from "@/Helper/AccountContext";
+import Btn from "@/Elements/Buttons/Btn";
 
 const SupermindBackend = () => {
   const { i18Lang } = useContext(I18NextContext);
@@ -26,98 +27,49 @@ const SupermindBackend = () => {
   const [chatLoading, setChatLoading] = useState(false)
   const [chatData, setChatData] = useState([])
   const [chatLogs, setChatLogs] = useState([])
-  const [taskSplitterPrompt, setTaskSplitterPrompt] = useState(`Given a user input, your task is to analyze and identify different tasks contained within the message. For each identified task, classify it based on its nature—whether it involves information retrieval, computation, API interaction, or other activities. Output strictly a JSON array where each element is a JSON object representing a distinct task. Each JSON object should have the following properties:
-  1. 'taskName' - a brief title that describes the task.
-  2. 'taskPrompt' - a pseudocode representation that explains how to accomplish the task. If you are setting the RAG flag then make sure the prompt works as a RAG query - for instance do not say "use an API" in the task prompt if you are doing a web search.
-  3. 'taskPresent' - a boolean flag to indicate whether the task is actionable and present.
-  4. 'trainingDataOnly' - a boolean flag to indicate if the task can be completed using only the internal knowledge of the LLM, set to true if no external tools or APIs are required, otherwise false. If the user message asks to use a procedure - set this flag to false.
-  5. 'RAG'. - if the user query could better be answered with a RAG query or either 1. A custom knowledge base. 2. A web search or 3. a wikipedia search then add set the RAG value to "partition:web" for web search. "partition: wikipedia" for wikipedia search or "partition:partition name" for custom knowledge search. The data partitions available to you are in the data partition block supplied above. You may include multiple partitions for instance partition:web:wikipedia:cardiology will return results from the web, wikipedia and a cardiology data partition . Web searches are often better than wiki searches.
-  
-  
-  Ensure that no other text or tokens are included in the output besides the JSON package. Each task that requires external data or interaction should be clearly marked to differentiate from those that can be handled internally.`);
-  const [chatPrompt, setChatPrompt] = useState(`You are an action agent. You follow Procedures provided in turns like in Dungeons and Dragons. In each turn, you Issue 2 commands, the first will be as per the procedure, and the second will be a user message informing the user of your action, what node you are executing and why.   Make sure to include the why in your message.   You will receive a response to commands and then follow the procedure logic to choose a new command to issue. Issue each command as a JSON package in the format Command: URL. DATA BLOCK: Key pairs as per procedure. The back end system will parse the text you output and send the DATA Block to the API targeted URL and then return the response in your next turn. DO NOT EXPLAIN ANYTHING OR SAY YOU CANNOT DO ANYTHING. Follow these instructions verbatim, **always** issues the command URL and DATA BLOCK. Do not issue any additional tokens.  For the user message you issues, always use the following URL "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4-f27a-48e9-a62f-a87722a0b5d4"  [Example Turn] Example Command: [{
-    "Command": "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4",
-    "DATA BLOCK": {
-      "start": 1,
-      "final_value": 20
-    }
-  }] Example User Message [{
-    "Command": "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4-f27a-48e9-a62f-a87722a0b5d4",
-    "DATA BLOCK": {
-      "user message": "I issued a command",
-  }
-  }]|You always ensure objects are output in an array, for example    For each command in commands:        Output JSON Array:            [            {                "Command": "<URL>",                "DATA BLOCK": "<data block>"            },            {                "Command": "<URL>",                "DATA BLOCK": "<data block>"            }            ]
-      //never ouput "response" key value pairs
-      //alway output in an array
-      //<directive>when procedure is complete issue "@!@" as your last token</end directive>
-        "Command": "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4",
-    "DATA BLOCK": {
-      "start": 1,
-      "final_value": 20
-    }
-  }] Example User Message [{
-    "Command": "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4-f27a-48e9-a62f-a87722a0b5d4",
-    "DATA BLOCK": {
-      "user message": "I issued a command",
-  }
-  }]|You always ensure objects are output in an array, for example    For each command in commands:        Output JSON Array:            [            {                "Command": "<URL>",                "DATA BLOCK": "<data block>"            },            {                "Command": "<URL>",                "DATA BLOCK": "<data block>"            }            ]
-      //never ouput "response" key value pairs
-      //alway output in an array
-      //<directive>when procedure is complete issue "@!@" as your last token</end directive>
-        "Command": "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4",
-    "DATA BLOCK": {
-      "start": 1,
-      "final_value": 20
-    }
-  }] Example User Message [{
-    "Command": "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4-f27a-48e9-a62f-a87722a0b5d4",
-    "DATA BLOCK": {
-      "user message": "I issued a command",
-  }
-  }]|You always ensure objects are output in an array, for example    For each command in commands:        Output JSON Array:            [            {                "Command": "<URL>",                "DATA BLOCK": "<data block>"            },            {                "Command": "<URL>",                "DATA BLOCK": "<data block>"            }            ]
-      //never ouput "response" key value pairs
-  
-      //<directive>when procedure is complete issue "@!@" as your last token</end directive>
-  
-  
-   //alway output in an array of JSON!!!!
-  //alway output in an array of JSON!!!!
-  
-  DIRECTIVE: IF THE PROCEDURE IS NOT CORRECT FOR FOR THE USER MESSAGE IGNORE THE PROCEDURE AND ANSWER THE BEST YOU CAN.   YOU MAY STILL USE COMMANDS AND GET RESPONSES IF YOU NEED TO
-  
-  IF INFORMATION IS MISSING TRY YOUR BEST TO ANSWER ANYWAY
-  
-   ///alway output in an array of JSON!!!!`);
-  const [vectorQueryPrompt, setVectorQueryPrompt] = useState(`Your goal is to create a short and concise description of a procedure that will be embedded as a vector and queried against an input to solve a user problem, do not outline steps, only return a description of its overall function.
-
-
-  You should outputted description should include a title and description in a json object as follows:
-
-
-  For each procedure in procedures:
-  Output JSON:
-  {
-  "apiDescription": "<the query>",
-  }
-  Return "apiDescription"
-  //only return the apiDescription, no additional text or tokens
-  `)
-  const [procedureSelectorPrompt, setProcedureSelectorPrompt] = useState(`//step 1. Analyse each input api description by object
-  //step 2. Analyse the input task
-  //step 3. Select the best api to complete the task
-  For each api description in api descriptions:
-  Output JSON:
-  {
-  "spec_id": "<the id of the selected api>",
-  "metadata.name": "<the name of the selected api>"
-  }
-  Return "selectedApi"
-  //if there is no matching procedure, return "spec_id": "90cae5e3-8bb4-4ce5-badf-ed9e42343b8f", "metadata.name": "no matching procedure`)
+  const [taskSplitterPrompt, setTaskSplitterPrompt] = useState(``);
+  const [chatPrompt, setChatPrompt] = useState(``);
+  const [vectorQueryPrompt, setVectorQueryPrompt] = useState(``)
+  const [procedureSelectorPrompt, setProcedureSelectorPrompt] = useState(``)
    const {accountData} = useContext(AccountContext);
 
-   const { data, isLoading } = useQuery([product], () => request({
+  const { data: supermindsData, isLoading } = useQuery([product], () => request({
     url: product, method: 'get'
   }, router), { refetchOnWindowFocus: false, refetchOnMount: false, cacheTime: 0, select: (data) => data.data.data });
+
+  const { isLoading: promptsLoading, data: promptsData } = useQuery([], async() => {
+    const resp = await fetch("https://nodeapi.supermind.bot/nodeapi/getPrompts", {
+      method: "GET",
+      headers: {
+          "Content-Type": "application/json",
+      },
+    })
+    const respJson = await resp.json()
+    if(respJson.success) {
+      setVectorQueryPrompt(respJson.data.vector_query)
+      setChatPrompt(respJson.data.chat)
+      setProcedureSelectorPrompt(respJson.data.procedure_selector)
+      setTaskSplitterPrompt(respJson.data.task_splitter)
+      return respJson
+    }
+    throw respJson.message
+  }, { refetchOnWindowFocus: false, refetchOnMount: false, cacheTime: 0, select: (data) => data.data });
+
+  const {mutate: updatePromptsMutate, isLoading: updatePromptsLoading} = useMutation(async () => {
+    const resp = await fetch("https://nodeapi.supermind.bot/nodeapi/updatePrompts", {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({...promptsData, task_splitter: taskSplitterPrompt, chat: chatPrompt, vector_query: vectorQueryPrompt, procedure_selector: procedureSelectorPrompt})
+    })
+    const respJson = await resp.json()
+    if(respJson.success) {
+        alert(`Procedure ${procedureId ? "updated" : "saved"}`)
+        setStateProcedureId(respJson.data)
+    }
+    throw respJson.message
+  }, { refetchOnWindowFocus: false });
 
   useEffect(() => {
     const webSocket = new WebSocket("wss://nodeapi.supermind.bot/nodeapi")
@@ -146,7 +98,7 @@ const SupermindBackend = () => {
   return (
     <>
       <Formik
-        initialValues={{"User Message": "", "Superminds": "", "Task Splitter Prompt": "", "Chat Prompt": ""}}
+        initialValues={{"User Message": "", "Superminds": "", "TaskSplitterPrompt": taskSplitterPrompt, "ChatPrompt": chatPrompt}}
         onSubmit={() => {
             if(webSocket.readyState === webSocket.CLOSED) {
                 setRefreshWebSocket(prev => prev ? 0 : 1)
@@ -165,9 +117,15 @@ const SupermindBackend = () => {
           }
           return <Form onSubmit={handleSubmit}>
             <SimpleInputField nameList={[{ name: "User Message", require: "true", placeholder: t("User Message"), onChange: (e) => setMessage(e.target.value), value: message }]} />
-            <MultiSelectField errors={errors} values={values} setFieldValue={setSupermindVal} name="Superminds" require="true" data={data} />
-            <SimpleInputField nameList={[{ name: "Task Splitter Prompt", require: "true", placeholder: t("Task Splitter Prompt"), onChange: (e) => setTaskSplitterPrompt(e.target.value), value: taskSplitterPrompt, type: "textarea", rows: 5, promptText: AITextboxData.procedure_req }, { name: "Chat Prompt", require: "true", placeholder: t("Chat Prompt"), onChange: (e) => setChatPrompt(e.target.value), value: chatPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }, { name: "Vector Query Prompt", require: "true", placeholder: t("Vector Query Prompt"), onChange: (e) => setVectorQueryPrompt(e.target.value), value: vectorQueryPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }, { name: "Procedure Selector Prompt", require: "true", placeholder: t("Procedure Selector Prompt"), onChange: (e) => setProcedureSelectorPrompt(e.target.value), value: procedureSelectorPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }]} />
-            <FormBtn submitText="Create" loading={isLoading || chatLoading} />
+            <MultiSelectField errors={errors} values={values} setFieldValue={setSupermindVal} name="Superminds" require="true" data={supermindsData} />
+            <SimpleInputField nameList={[{ name: "TaskSplitterPrompt", require: "true", placeholder: t("Task Splitter Prompt"), onChange: (e) => setTaskSplitterPrompt(e.target.value), value: taskSplitterPrompt, type: "textarea", rows: 5, promptText: AITextboxData.procedure_req }, { name: "ChatPrompt", require: "true", placeholder: t("Chat Prompt"), onChange: (e) => setChatPrompt(e.target.value), value: chatPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }, { name: "VectorQueryPrompt", require: "true", placeholder: t("Vector Query Prompt"), onChange: (e) => setVectorQueryPrompt(e.target.value), value: vectorQueryPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }, { name: "ProcedureSelectorPrompt", require: "true", placeholder: t("Procedure Selector Prompt"), onChange: (e) => setProcedureSelectorPrompt(e.target.value), value: procedureSelectorPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }]} />
+            <Btn
+              title="Update Prompts"
+              className="align-items-center btn-theme add-button"
+              loading={isLoading || chatLoading || updatePromptsLoading || promptsLoading}
+              onClick={updatePromptsMutate}
+            />
+            <FormBtn submitText="Create" loading={isLoading || chatLoading || updatePromptsLoading || promptsLoading} />
           </Form>
         }}
       </Formik>

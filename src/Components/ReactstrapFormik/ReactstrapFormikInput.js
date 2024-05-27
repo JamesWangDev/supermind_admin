@@ -1,11 +1,12 @@
 import React, { useContext, useRef, useState } from "react";
 import { ErrorMessage, useFormikContext } from "formik";
-import { FormFeedback, FormGroup, Input, InputGroup, Label, InputGroupText } from "reactstrap";
+import { FormFeedback, FormGroup, Input, InputGroup, Label, InputGroupText, UncontrolledPopover, PopoverHeader, PopoverBody } from "reactstrap";
 import SettingContext from "../../Helper/SettingContext";
 import { handleModifier } from "../../Utils/Validation/ModifiedErrorMessage";
 import I18NextContext from "@/Helper/I18NextContext";
 import { useTranslation } from "@/app/i18n/client";
 import { PiMagicWand } from "react-icons/pi";
+import { RiEdit2Line } from "react-icons/ri";
 import { OpenAIStream } from "@/Utils/OpenAIStream";
 
 const ReactstrapFormikInput = ({ field: { ...fields }, form: { touched, errors }, ...props }) => {
@@ -15,6 +16,7 @@ const ReactstrapFormikInput = ({ field: { ...fields }, form: { touched, errors }
   const [isAILoading, setIsAILoading] = useState(false);
   const textAreaEl = useRef(null);
   const { setFieldValue } = useFormikContext();
+  const [promptText, setPromptText] = useState(props?.promptText);
 
   const handleGetAIAssist = () => {
     const inputText = textAreaEl.current.props.value;
@@ -26,7 +28,7 @@ const ReactstrapFormikInput = ({ field: { ...fields }, form: { touched, errors }
     const gptPrompt = [
       {
         role: 'user',
-        content: props?.promptText ? props?.promptText : 'Make this input text better'
+        content: promptText ? promptText : 'Make this input text better'
       },
       {
         role: 'user',
@@ -83,13 +85,28 @@ const ReactstrapFormikInput = ({ field: { ...fields }, form: { touched, errors }
                   :
                   <div>
                     <div style={{position: "relative"}}>
-                      <Input ref={textAreaEl} disabled={props.disable ? props.disable : false} {...fields} {...props} invalid={Boolean(touched[fields.name] && errors[fields.name])} valid={Boolean(touched[fields.name] && !errors[fields.name])} autoComplete="off" onInput={(e) => {
+                      <Input ref={textAreaEl} disabled={props.disable ? props.disable : false} {...fields} {...props} id={"textarea-" + props.id} invalid={Boolean(touched[fields.name] && errors[fields.name])} valid={Boolean(touched[fields.name] && !errors[fields.name])} autoComplete="off" onInput={(e) => {
                         if (props.min && props.max) {
                           if (e.target.value > 100) e.target.value = 100; if (e.target.value < 0) e.target.value = 0;
                         } else false
                       }} />
-                      {props.type == "textarea" && <div onClick={handleGetAIAssist} className="magic-wand-btn">
-                        {isAILoading ? <div className="magic-wand-spinner"></div> : <PiMagicWand />}
+                      {props.type == "textarea" && <div className="magic-wand-btn">
+                        {isAILoading ? <div className="magic-wand-spinner"></div> : <PiMagicWand onClick={handleGetAIAssist} />}
+
+                        <RiEdit2Line id={fields.name} />
+                        <UncontrolledPopover
+                          placement="bottom"
+                          target={fields.name}
+                          trigger="legacy"
+                          className='custom-popover'
+                        >
+                          <PopoverHeader>
+                            Prompt Upadte
+                          </PopoverHeader>
+                          <PopoverBody>
+                            <Input style={{height: 180}} type='textarea' value={promptText} onChange={(e) => setPromptText(e.target.value)} />
+                          </PopoverBody>
+                        </UncontrolledPopover>
                       </div>}
                     </div>
                     {props?.helpertext && <p className="help-text">{props?.helpertext}</p>}

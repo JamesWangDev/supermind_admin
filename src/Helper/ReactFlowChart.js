@@ -5,7 +5,7 @@ import CustomReactFlowNode from "@/Helper/CustomReactFlowNode";
 import CustomReactFlowEdge from "@/Helper/CustomReactFlowEdge";
 import Btn from '@/Elements/Buttons/Btn';
 import 'reactflow/dist/style.css';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Toast, ToastHeader, ToastBody, Modal, ModalHeader, ModalBody } from "reactstrap";
 import { useRef } from 'react';
 import { MdClose } from 'react-icons/md';
@@ -30,62 +30,13 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
     const [webSocket, setWebSocket] = useState(null)
     const [refreshWebSocket, setRefreshWebSocket] = useState(0)
     const [stateProcedure, setStateProcedure] = useState(procedure)
+    const [stateDescription, setStateDescription] = useState(description)
+    const [stateVectorQuery, setStateVectorQuery] = useState(vectorQuery)
+    const [stateProcedureId, setStateProcedureId] = useState(procedureId)
     const [chatMessage, setChatMessage] = useState("")
     const [openToast, setOpenToast] = useState(false);
     const [openModel, setOpenModel] = useState(false);
-    const [prompt, setPrompt] = useState(`You are an action agent. You follow Procedures provided in turns like in Dungeons and Dragons. In each turn, you Issue 2 commands, the first will be as per the procedure, and the second will be a user message informing the user of your action, what node you are executing and why.   Make sure to include the why in your message.   You will receive a response to commands and then follow the procedure logic to choose a new command to issue. Issue each command as a JSON package in the format Command: URL. DATA BLOCK: Key pairs as per procedure. The back end system will parse the text you output and send the DATA Block to the API targeted URL and then return the response in your next turn. DO NOT EXPLAIN ANYTHING OR SAY YOU CANNOT DO ANYTHING. Follow these instructions verbatim, **always** issues the command URL and DATA BLOCK. Do not issue any additional tokens.  For the user message you issues, always use the following URL "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4-f27a-48e9-a62f-a87722a0b5d4"  [Example Turn] Example Command: [{
-        "Command": "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4",
-        "DATA BLOCK": {
-          "start": 1,
-          "final_value": 20
-        }
-      }] Example User Message [{
-        "Command": "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4-f27a-48e9-a62f-a87722a0b5d4",
-        "DATA BLOCK": {
-          "user message": "I issued a command",
-      }
-      }]|You always ensure objects are output in an array, for example    For each command in commands:        Output JSON Array:            [            {                "Command": "<URL>",                "DATA BLOCK": "<data block>"            },            {                "Command": "<URL>",                "DATA BLOCK": "<data block>"            }            ]
-          //never ouput "response" key value pairs
-          //alway output in an array
-          //<directive>when procedure is complete issue "@!@" as your last token</end directive>
-            "Command": "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4",
-        "DATA BLOCK": {
-          "start": 1,
-          "final_value": 20
-        }
-      }] Example User Message [{
-        "Command": "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4-f27a-48e9-a62f-a87722a0b5d4",
-        "DATA BLOCK": {
-          "user message": "I issued a command",
-      }
-      }]|You always ensure objects are output in an array, for example    For each command in commands:        Output JSON Array:            [            {                "Command": "<URL>",                "DATA BLOCK": "<data block>"            },            {                "Command": "<URL>",                "DATA BLOCK": "<data block>"            }            ]
-          //never ouput "response" key value pairs
-          //alway output in an array
-          //<directive>when procedure is complete issue "@!@" as your last token</end directive>
-            "Command": "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4",
-        "DATA BLOCK": {
-          "start": 1,
-          "final_value": 20
-        }
-      }] Example User Message [{
-        "Command": "https://n8n-production-9c96.up.railway.app/webhook/0669bfa4-f27a-48e9-a62f-a87722a0b5d4",
-        "DATA BLOCK": {
-          "user message": "I issued a command",
-      }
-      }]|You always ensure objects are output in an array, for example    For each command in commands:        Output JSON Array:            [            {                "Command": "<URL>",                "DATA BLOCK": "<data block>"            },            {                "Command": "<URL>",                "DATA BLOCK": "<data block>"            }            ]
-          //never ouput "response" key value pairs
-      
-          //<directive>when procedure is complete issue "@!@" as your last token</end directive>
-      
-      
-       //alway output in an array of JSON!!!!
-      //alway output in an array of JSON!!!!
-      
-      DIRECTIVE: IF THE PROCEDURE IS NOT CORRECT FOR FOR THE USER MESSAGE IGNORE THE PROCEDURE AND ANSWER THE BEST YOU CAN.   YOU MAY STILL USE COMMANDS AND GET RESPONSES IF YOU NEED TO
-      
-      IF INFORMATION IS MISSING TRY YOUR BEST TO ANSWER ANYWAY
-      
-       ///alway output in an array of JSON!!!!`)
+    const [prompt, setPrompt] = useState(``)
     const [chatLoading, setChatLoading] = useState(false)
     const [chatData, setChatData] = useState([])
     const [chatLogs, setChatLogs] = useState([])
@@ -117,7 +68,7 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
         [edges],
     );
 
-    const {mutate: updateProcedureMutate, isLoading: updateProcedureLoading} = useMutation(async ({procedure}) => {
+    const {mutate: updateProcedureMutate, isLoading: updateProcedureLoading} = useMutation(async ({procedure, description, vectorQuery, procedureId}) => {
         const resp = await fetch("https://nodeapi.supermind.bot/nodeapi/saveProcedure", {
             method: "POST",
             headers: {
@@ -127,11 +78,41 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
         })
         const respJson = await resp.json()
         if(respJson.success) {
-            alert("Procedure Updated")
-            return
+            alert(`Procedure ${procedureId ? "updated" : "saved"}`)
+            if(!procedureId) setStateProcedureId(respJson.data)
         }
         throw respJson.message
     }, { refetchOnWindowFocus: false });
+
+    const { isLoading: promptsLoading, data: promptsData } = useQuery([], async() => {
+        const resp = await fetch("https://nodeapi.supermind.bot/nodeapi/getPrompts", {
+          method: "GET",
+          headers: {
+              "Content-Type": "application/json",
+          },
+        })
+        const respJson = await resp.json()
+        if(respJson.success) {
+          setPrompt(respJson.data.procedure_chat)
+          return respJson
+        }
+        throw respJson.message
+    }, { refetchOnWindowFocus: false, refetchOnMount: false, cacheTime: 0, select: (data) => data.data });
+
+    const {mutate: updatePromptsMutate, isLoading: updatePromptsLoading} = useMutation(async () => {
+    const resp = await fetch("https://nodeapi.supermind.bot/nodeapi/updatePrompts", {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({...promptsData, procedure_chat: prompt})
+    })
+    const respJson = await resp.json()
+    if(respJson.success) {
+        alert(`Prompts updated`)
+    }
+    throw respJson.message
+    }, { refetchOnWindowFocus: false });    
 
     useEffect(() => {
         if(stateProcedure){
@@ -172,7 +153,7 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
     }, [stateProcedure])
 
     useEffect(() => {
-        const webSocket = new WebSocket("https://nodeapi.supermind.bot/nodeapi")
+        const webSocket = new WebSocket("wss://nodeapi.supermind.bot/nodeapi")
         setWebSocket(webSocket);
         webSocket.onmessage = (event) => {
             try {
@@ -403,14 +384,16 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
         })
     }
 
+    const updateProcedure = () => updateProcedureMutate({procedure: stateProcedure, description: stateDescription, vectorQuery: stateVectorQuery, procedureId: stateProcedureId})
+
     return <>
         <div>
             <h3>Description:</h3>
-            <p>{description}</p>
+            <textarea style={{width: "100%"}} rows="10" type="text" value={stateDescription} onChange={(e) => setStateDescription(e.target.value)} />
         </div>
         <div>
             <h3>Vector Query:</h3>
-            <p>{vectorQuery}</p>
+            <textarea style={{width: "100%"}} rows="10" type="text" value={stateVectorQuery} onChange={(e) => setStateVectorQuery(e.target.value)} />
         </div>
         <div>
             <h3>Procedure:</h3>
@@ -419,14 +402,20 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
                 title="Update Procedure"
                 className="align-items-center btn-theme add-button"
                 loading={updateProcedureLoading}
-                onClick={() => updateProcedureMutate({procedure: stateProcedure})}
+                onClick={updateProcedure}
             />
         </div>
         <div style={{marginBottom: "10px"}}>
             <h3>Chat With Procedure:</h3>
             <div style={{display: "flex", gap: 10, justifyContent: "space-around", alignItems: "center"}}>
-                <textarea style={{flex: 2}} placeholder='User Message' rows={5}  value={chatMessage} onChange={(e) => setChatMessage(e.target.value)} />
-                <textarea style={{flex: 2}} placeholder='Prompt' rows={5}  value={prompt} onChange={(e) => setPrompt(e.target.value)} />
+                <textarea style={{flex: 2}} placeholder='User Message' rows={5} value={chatMessage} onChange={(e) => setChatMessage(e.target.value)} />
+                <textarea style={{flex: 2}} placeholder='Prompt' rows={5} value={prompt} onChange={(e) => setPrompt(e.target.value)} />
+                <Btn
+                    title="Update Prompts"
+                    className="align-items-center btn-theme add-button"
+                    loading={chatLoading || updatePromptsLoading || promptsLoading}
+                    onClick={updatePromptsMutate}
+                />
                 <Btn
                     title="Chat With Procedure"
                     className="align-items-center btn-theme add-button"
@@ -477,7 +466,7 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
                 title="Save Changes"
                 className="align-items-center"
                 loading={updateProcedureLoading}
-                onClick={() => updateProcedureMutate({procedure: stateProcedure})}
+                onClick={updateProcedure}
             />
         </div>
         <Modal fullscreen isOpen={openModel} toggle={toggleModal}>
