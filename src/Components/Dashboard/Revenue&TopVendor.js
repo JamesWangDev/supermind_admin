@@ -8,12 +8,12 @@ import TopStoreTabel from "./TopStore/TopStoreTable"
 const RevenueAndTopVendor = () => {
     return (
         <Row className="dashboard-form theme-form">
-            <Col xl={8} md={6} >
+            <Col xl={12} md={12} >
                 <DashboardWrapper classes={{ colProps: { sm: 12 }, title: "AverageRevenue" }}>
                     <DashboardChart />
                 </DashboardWrapper>
             </Col>
-            <Col xl={4} md={6}>
+            {/* <Col xl={4} md={6}>
                 <Formik initialValues={{ filter_by: "" }}>
                     {({ values, setFieldValue }) => (
                         <Form>
@@ -22,7 +22,7 @@ const RevenueAndTopVendor = () => {
                     )}
                 </Formik>
 
-            </Col>
+            </Col> */}
         </Row >
     )
 }

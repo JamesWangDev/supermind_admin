@@ -30,7 +30,7 @@ const TopDashSection = () => {
                             </div>
                         </div>
                     </Col>
-                    <Col xl={3} sm={6}>
+                    {/* <Col xl={3} sm={6}>
                         <div className="card-tiles">
                             <div>
                                 <h6>{t("TotalOrders")}</h6>
@@ -51,7 +51,7 @@ const TopDashSection = () => {
                                 <FiBox />
                             </div>
                         </div>
-                    </Col>
+                    </Col> */}
                     <Col xl={3} sm={6} >
                         <div className="card-tiles">
                             <div>
