@@ -10,7 +10,7 @@ const MainDashboard = () => {
             <section>
                 <RevenueAndTopVendor />
                 <RecentOrderTable />
-                <ProductStockReportTable />
+                {/* <ProductStockReportTable /> */}
             </section >
         </>
     )
