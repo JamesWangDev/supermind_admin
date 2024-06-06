@@ -81,7 +81,7 @@ const ActionCategoryComp = ({ name="Actions", getSelectedActions }) => {
             },
         })
         const respJson = await resp.json()
-        if(respJson.success) return respJson.data
+        if(respJson.success) return respJson
         throw respJson.message
     }, { refetchOnWindowFocus: false, select: (data) => data });
 
