@@ -7,6 +7,10 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { ACTION_CATEGORIES } from '@/Utils/ActionCategories';
 import { Spinner, Modal, ModalHeader, ModalBody, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Badge } from 'reactstrap';
 import Btn from "@/Elements/Buttons/Btn";
+import dynamic from 'next/dynamic';
+const ReactJson = dynamic(() => import('react-json-view'), {
+    loading: () => <p>Loading...</p>,
+})
 
 const ActionCategoryComp = ({ name="Actions", getSelectedActions }) => {
     const [hideActionsTree, setHideActionsTree] = useState(true);
@@ -54,6 +58,21 @@ const ActionCategoryComp = ({ name="Actions", getSelectedActions }) => {
         throw respJson.message
     }, { refetchOnWindowFocus: false, select: (data) => data.data });
 
+    const {mutate: testDescriptionMutate, isLoading: testDescriptionLoading, data: testDescriptionData} = useMutation(async ({description, workflowId}) => {
+        const resp = await fetch(`https://nodeapi.supermind.bot/nodeapi/testWorkflow`, {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            },
+            body: JSON.stringify({description, workflowId})
+        })
+        const respJson = await resp.json()
+        if(respJson.success) {
+            return respJson.data
+        }
+        throw respJson.message
+    }, { refetchOnWindowFocus: false });
+
     const { error, data: actionsInfo, isLoading } = useQuery(["actions", refetch], async () => {
         const resp = await fetch(`https://nodeapi.supermind.bot/nodeapi/getDescriptions?paginate=10000&page=1&sort=asc&search=${searchAction}`, {
             method: "GET",
@@ -62,7 +81,7 @@ const ActionCategoryComp = ({ name="Actions", getSelectedActions }) => {
             },
         })
         const respJson = await resp.json()
-        if(respJson.success) return respJson
+        if(respJson.success) return respJson.data
         throw respJson.message
     }, { refetchOnWindowFocus: false, select: (data) => data });
 
@@ -153,16 +172,23 @@ const ActionCategoryComp = ({ name="Actions", getSelectedActions }) => {
             <Btn
               title="Update Action"
               className="align-items-center btn-theme add-button"
-              loading={updateDescriptionLoading || deleteDescriptionLoading}
+              loading={updateDescriptionLoading || deleteDescriptionLoading || testDescriptionLoading}
               onClick={() => updateDescriptionMutate({description: actionDescription, name: actionDetail?.name, categories: actionCategories, id: actionDetail?.id})}
             />
             <Btn
               title="Delete Action"
               className="align-items-center"
-              loading={updateDescriptionLoading || deleteDescriptionLoading}
+              loading={updateDescriptionLoading || deleteDescriptionLoading || testDescriptionLoading}
               onClick={() => deleteDescriptionMutate({workflowId: actionDetail?.workflow_id})}
             />
+            <Btn
+              title="Test Action"
+              className="align-items-center"
+              loading={updateDescriptionLoading || deleteDescriptionLoading || testDescriptionLoading}
+              onClick={() => testDescriptionMutate({description: actionDescription, workflowId: actionDetail?.workflow_id})}
+            />
           </div>
+          {testDescriptionData && <ReactJson src={testDescriptionData} name={actionDetail?.name} />}
         </ModalBody>
       </Modal>
       </>
