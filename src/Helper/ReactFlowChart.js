@@ -84,7 +84,7 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
         throw respJson.message
     }, { refetchOnWindowFocus: false });
 
-    const { isLoading: promptsLoading, data: promptsData } = useQuery([], async() => {
+    const { isLoading: promptsLoading, data: promptsData } = useQuery(["prompts"], async() => {
         const resp = await fetch("https://nodeapi.supermind.bot/nodeapi/getPrompts", {
           method: "GET",
           headers: {
@@ -117,8 +117,9 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
     useEffect(() => {
         if(stateProcedure){
             const parsedData = xmlParser.parse(stateProcedure)
-            const graphData = parsedData.graph || parsedData.procedure?.graph || parsedData.commandBlock?.graph || parsedData.commandBlock?.command?.graph
-            const edgeData = graphData?.edge?.edge || graphData?.edge
+            const graphData = parsedData.graph || parsedData.procedure?.graph || parsedData.commandBlock?.graph || parsedData.commandBlock?.command?.graph || parsedData.Command?.graph
+            const edgeData = graphData?.edge?.edge || graphData?.edge || graphData?.edges?.edge
+            const nodeData = graphData?.node || graphData?.nodes?.node
             const sourceNodeCount = {}
             const targetNodeCount = {}
             const edges = []
@@ -140,7 +141,7 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
             } else if (typeof edgeData === "object") {
                 handleEdgeInclude(edgeData, 0)
             }
-            const nodes = graphData?.node?.map((n, i) => {
+            const nodes = nodeData?.map((n, i) => {
                 return {id: n["@_id"], type: "customNode", position: {x: 100 * (i % 2 === 0 ? -1 : 1), y: i * 100}, data: {label: n["#text"] || n["@_id"], sourceHandleCount: sourceNodeCount[n["@_id"]] ?? 1, targetHandleCount: targetNodeCount[n["@_id"]] ?? 1, deleteNode}}
             })
             setNodes([])
