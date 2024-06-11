@@ -20,4 +20,10 @@ export const ACTION_CATEGORIES = [
     "Asana",
     "Serp API",
     "OpenAI",
+    "Events",
+    "Business",
+    "Webhooks",
+    "Security",
+    "SEO",
+    "Music",
 ]
