@@ -410,13 +410,13 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
             <h3>Chat With Procedure:</h3>
             <div style={{display: "flex", gap: 10, justifyContent: "space-around", alignItems: "center"}}>
                 <textarea style={{flex: 2}} placeholder='User Message' rows={5} value={chatMessage} onChange={(e) => setChatMessage(e.target.value)} />
-                <textarea style={{flex: 2}} placeholder='Prompt' rows={5} value={prompt} onChange={(e) => setPrompt(e.target.value)} />
-                <Btn
+                {accountData.system_reserve && <textarea style={{flex: 2}} placeholder='Prompt' rows={5} value={prompt} onChange={(e) => setPrompt(e.target.value)} />}
+                {accountData.system_reserve && <Btn
                     title="Update Prompts"
                     className="align-items-center btn-theme add-button"
                     loading={chatLoading || updatePromptsLoading || promptsLoading}
                     onClick={updatePromptsMutate}
-                />
+                />}
                 <Btn
                     title="Chat With Procedure"
                     className="align-items-center btn-theme add-button"

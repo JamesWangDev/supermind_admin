@@ -12,6 +12,7 @@ import dynamic from "next/dynamic";
 import { ACTION_CATEGORIES } from "@/Utils/ActionCategories";
 import ActionCategoryComp from "@/Helper/ActionCategoryComp";
 import Btn from "@/Elements/Buttons/Btn";
+import AccountContext from "@/Helper/AccountContext";
 const Markdown = dynamic(() => import("react-markdown"), {
   loading: () => <p>Loading...</p>,
 });
@@ -24,6 +25,7 @@ const CreateProcedure = () => {
   const [procedureRequirement, setProcedureRequirement] = useState("");
   const [procedurePrompt, setProcedurePrompt] = useState(``);
   const [vectorQueryPrompt, setVectorQueryPrompt] = useState(``)
+  const {accountData} = useContext(AccountContext);
 
   const [showModal, setShowModal] = useState(null)
 
@@ -95,12 +97,13 @@ const CreateProcedure = () => {
             <SimpleInputField nameList={[{ name: "Name", require: "true", placeholder: t("Name"), onChange: (e) => setProcedureName(e.target.value), value: procedureName }]} />
             <ActionCategoryComp name="Select Actions" getSelectedActions={(actions) => setActions(actions)} />
             <SimpleInputField nameList={[{ name: "ProcedureRequirement", require: "true", placeholder: t("ProcedureRequirement"), onChange: (e) => setProcedureRequirement(e.target.value), value: procedureRequirement, type: "textarea", rows: 5, promptText: AITextboxData.procedure_req }, { name: "ProcedureCreatingPrompt", require: "true", placeholder: t("ProcedureCreatingPrompt"), onChange: (e) => setProcedurePrompt(e.target.value), value: procedurePrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }, , { name: "VectorQueryCreatingPrompt", require: "true", placeholder: t("VectorQueryCreatingPrompt"), onChange: (e) => setVectorQueryPrompt(e.target.value), value: vectorQueryPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }]} />
-            <Btn
+            {accountData.system_reserve && <SimpleInputField nameList={[{ name: "ProcedureCreatingPrompt", require: "true", placeholder: t("ProcedureCreatingPrompt"), onChange: (e) => setProcedurePrompt(e.target.value), value: procedurePrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }, , { name: "VectorQueryCreatingPrompt", require: "true", placeholder: t("VectorQueryCreatingPrompt"), onChange: (e) => setVectorQueryPrompt(e.target.value), value: vectorQueryPrompt, type: "textarea", rows: 10, promptText: AITextboxData.procedure_creating_prompt }]} />}
+            {accountData.system_reserve && <Btn
               title="Update Prompts"
               className="align-items-center btn-theme add-button"
               loading={createProcedureLoading || updatePromptsLoading || promptsLoading}
               onClick={updatePromptsMutate}
-            />
+            />}
             <FormBtn submitText="Create" loading={ createProcedureLoading || promptsLoading || updatePromptsLoading } />
           </Form>
         }}
