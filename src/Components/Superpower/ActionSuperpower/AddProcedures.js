@@ -9,39 +9,39 @@ import Btn from "@/Elements/Buttons/Btn";
 import TableLoader from "../../Table/TableLoader";
 import { Modal, ModalHeader, ModalBody } from "reactstrap";
 import dynamic from "next/dynamic";
+import ReactFlowChart from "@/Helper/ReactFlowChart";
 const Markdown = dynamic(() => import("react-markdown"), {
   loading: () => <p>Loading...</p>,
 });
 
-const AddActions = ({ values, setFieldValue, errors, updateId }) => {
+const AddProcedures = ({ values, setFieldValue, errors, updateId }) => {
   const { i18Lang } = useContext(I18NextContext);
   const router = useRouter();
-  const [actions, setActions] = useState([]);
+  const [procedures, setProcedures] = useState([]);
   const [openModel, setOpenModel] = useState(false);
-  const [actionDetail, setActionDetail] = useState(null);
+  const [procedureDetail, setActionDetail] = useState(null);
 
-  // Getting data from Cart API
-  const { data: actionData, isLoading: actionLoader } = useQuery(
-    ["actions", values.actions],
+  const { data: procedureData, isLoading: procedureLoader } = useQuery(
+    ["procedures"],
     () =>
       request({
-        url: "https://nodeapi.supermind.bot/nodeapi/getDescriptions?paginate=100&page=0&sort=asc",
+        url: "https://nodeapi.supermind.bot/nodeapi/getProcedures?paginate=100&page=0&sort=asc",
       }),
     { refetchOnWindowFocus: false, select: (res) => res?.data }
   );
 
   useEffect(() => {
-    if (!actionLoader && actionData) {
-      setActions(actionData.data);
+    if (!procedureLoader && procedureData) {
+      setProcedures(procedureData.data);
     }
-  }, [actionLoader, actionData]);
+  }, [procedureLoader, procedureData]);
 
   const selectOptions = useMemo(
-    () => actions?.map((item) => ({ id: item.name, name: item.name })),
-    [actions]
+    () => procedures?.map((item) => ({ id: item.id, name: item.name })),
+    [procedures]
   );
 
-  const viewActionDetail = (data) => {
+  const viewProcedureDetail = (data) => {
     setActionDetail(data);
     setOpenModel(true);
   };
@@ -56,29 +56,30 @@ const AddActions = ({ values, setFieldValue, errors, updateId }) => {
             errors={errors}
             values={values}
             setFieldValue={setFieldValue}
-            name="actions"
+            name="procedures"
             require="true"
             data={selectOptions}
+            onPressOption={() => {}}
           />
         </Col>
         <Col xs={3}>
           <div className="w-100 flex justify-content-center">
             <Btn
-              title="Add New Action"
+              title="Add New Procedure"
               className="align-items-center btn-theme add-button"
               onClick={() => {
-                router.push(`/${i18Lang}/action/create`);
+                router.push(`/${i18Lang}/procedure/create`);
               }}
             />
           </div>
         </Col>
       </Row>
-      {values?.actions.length > 0 && (
+      {values?.procedures.length > 0 && (
         <Table
           id="table_id"
           className={`role-table refund-table all-package theme-table datatable-wrapper`}
         >
-          <TableLoader fetchStatus={actionLoader} />
+          <TableLoader fetchStatus={procedureLoader} />
           <thead>
             <tr>
               <th className="sm-width">No</th>
@@ -86,17 +87,17 @@ const AddActions = ({ values, setFieldValue, errors, updateId }) => {
             </tr>
           </thead>
           <tbody>
-            {values?.actions.map((action_id, index) => {
-              const action = actions?.filter(
-                (item) => item.name === action_id
+            {values?.procedures.map((procedure_id, index) => {
+              const procedure = procedures?.filter(
+                (item) => item.id === procedure_id
               )[0];
               return (
                 <tr
-                  key={`action_table_${index}`}
-                  onClick={() => viewActionDetail(action)}
+                  key={`procedure_table_${index}`}
+                  onClick={() => viewProcedureDetail(procedure)}
                 >
                   <td>{index + 1}</td>
-                  <td>{action?.name}</td>
+                  <td>{procedure?.name}</td>
                 </tr>
               );
             })}
@@ -104,13 +105,13 @@ const AddActions = ({ values, setFieldValue, errors, updateId }) => {
         </Table>
       )}
       <Modal fullscreen isOpen={openModel} toggle={toggleModal}>
-        <ModalHeader toggle={toggleModal}>{actionDetail?.name}</ModalHeader>
+        <ModalHeader toggle={toggleModal}>{procedureDetail?.name}</ModalHeader>
         <ModalBody>
-          <Markdown>{actionDetail?.description}</Markdown>
+          <ReactFlowChart name={procedureDetail?.name} description={procedureDetail?.description} procedure={procedureDetail?.procedure} procedureId={procedureDetail?.id} vectorQuery={procedureDetail?.vector_query} />
         </ModalBody>
       </Modal>
     </>
   );
 };
 
-export default AddActions;
+export default AddProcedures;

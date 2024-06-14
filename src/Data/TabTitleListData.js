@@ -52,7 +52,7 @@ export const CreateActionTabTitleListData = [
 
 export const ActionSuperPowerTabTitleListData = [
   { title: "General", icon: <RiSettingsLine />, inputs: ["name", "description", "short_description", 'description', "store_id"] },
-  { title: "Add Actions", icon: <RiImageLine />, inputs: ["actions"] }
+  { title: "Add Procedures", icon: <RiImageLine />, inputs: ["procedures"] }
 ];
 
 export const UISuperPowerTabTitleListData = [

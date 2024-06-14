@@ -17,6 +17,6 @@ export function SuperpowerInitValues(oldData, updateId) {
     product_thumbnail_id: updateId ? oldData?.product_thumbnail?.id || "" : "",
     product_galleries: updateId ? oldData?.product_galleries?.map((img) => img) || "" : "",
     product_galleries_id: updateId ? oldData?.product_galleries?.map((elem) => elem.id) || "" : "",
-    actions: updateId && oldData?.actions ? oldData.actions.split(',') || [] : [],
+    procedures: updateId && oldData?.procedures ? JSON.parse(oldData.procedures) || [] : [],
   };
 }
