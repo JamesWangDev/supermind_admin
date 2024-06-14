@@ -1,6 +1,6 @@
 const SuperpowerSubmitFunction = (mutate, value, updateId) => {
   let updatedData = {...value};
-  updatedData['actions'] = updatedData['actions'].join();
+  updatedData["procedures"] = JSON.stringify(updatedData["procedures"])
   mutate(updatedData);
 };
 

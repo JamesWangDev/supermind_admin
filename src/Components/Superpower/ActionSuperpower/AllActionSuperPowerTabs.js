@@ -1,6 +1,6 @@
 import { Col, TabContent, TabPane } from 'reactstrap'
 import GeneralTab from './GeneralTab'
-import AddActions from './AddActions'
+import AddProcedures from './AddProcedures'
 
 const AllSuperPowerTabs = ({ values, setFieldValue, errors, updateId, activeTab }) => {
     return (
@@ -10,7 +10,7 @@ const AllSuperPowerTabs = ({ values, setFieldValue, errors, updateId, activeTab 
                     <GeneralTab values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
                 </TabPane>
                 <TabPane tabId="2">
-                    <AddActions values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
+                    <AddProcedures values={values} setFieldValue={setFieldValue} errors={errors} updateId={updateId} />
                 </TabPane>
             </TabContent>
         </Col>
