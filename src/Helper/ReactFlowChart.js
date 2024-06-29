@@ -187,7 +187,7 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
         const parsedData = xmlParser.parse(stateProcedure.slice(nodesStartIndex, nodesEndIndex + nodeEndStr.length))
         const tempParameters = []
         parsedData?.nodes?.node?.forEach((n) => {
-            n?.commandList?.command?.requiredParameters?.parameter.forEach((p) => {
+            n?.commandList?.command?.requiredParameters?.parameter?.forEach((p) => {
                 tempParameters.push({key: p.key, value: p.value?.system ?? p.value})
             })
         })
