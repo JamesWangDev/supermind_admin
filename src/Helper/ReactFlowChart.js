@@ -45,6 +45,7 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
     const [nodes, setNodes, onNodesChange] = useNodesState([])
     const [edges, setEdges, onEdgesChange] = useEdgesState([])
     const editRef = useRef()
+    const parametersRef = useRef([])
     const {accountData} = useContext(AccountContext);
 
     const onConnect = useCallback(
@@ -153,7 +154,6 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
                 setNodes(nodes ?? [])
                 setEdges(edges ?? [])
             }, 0);
-            getNodesParameters()
         }
     }, [stateProcedure])
 
@@ -180,18 +180,43 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
         };
     }, [refreshWebSocket])
 
-    const getNodesParameters = () => {
+    const getNodesParameters = (nodeIndex) => {
         const nodesStartIndex = stateProcedure.indexOf("<nodes>")
         const nodeEndStr = "</nodes>"
         const nodesEndIndex = stateProcedure.indexOf(nodeEndStr)
         const parsedData = xmlParser.parse(stateProcedure.slice(nodesStartIndex, nodesEndIndex + nodeEndStr.length))
         const tempParameters = []
-        parsedData?.nodes?.node?.forEach((n) => {
-            n?.commandList?.command?.requiredParameters?.parameter?.forEach((p) => {
-                tempParameters.push({key: p.key, value: p.value?.system ?? p.value})
-            })
-        })
-        setParameters(tempParameters)
+        const traverseAllData = (data) => {
+            console.log(data)
+            if(Array.isArray(data)){
+                for (const d of data) {
+                    traverseAllData(d)
+                }
+            } else {
+                for (const [key, value] of Object.entries(data)) {
+                    if(typeof value === "object" && key !== "system"){
+                        traverseAllData(value)
+                    } else if( key === "system") {
+                        let newValue = value
+                        if(typeof value === "object") newValue = JSON.stringify(value)
+                        tempParameters.push({key, value: newValue})
+                    } else {
+                        let newKey = key.replace("@_", "").replace("#")
+                        if(newKey === "key") newKey = `Parameter key`
+                        else if(newKey === "value") newKey = `Parameter value`
+                        tempParameters.push({key: newKey, value})
+                    }
+                }
+            }
+        }
+        nodeIndex--
+        if(nodeIndex >= 0){
+            const selectedNode = parsedData?.nodes?.node?.[nodeIndex]
+            if(selectedNode){
+                traverseAllData(selectedNode)
+                setParameters(tempParameters)
+            }
+        }
     }
 
     const handleNodeChange = async (val) => {
@@ -202,15 +227,19 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
             if(!openParametersToast) setOpenParametersToast(true);
             if(!editRef.current) await new Promise((res) => setTimeout(res, 200))
             const node = nodes.find((node) => node.id === nodeId)
+            const nodeIndex = nodes.findIndex((node) => node.id === nodeId)
+            if(nodeIndex >= 0) getNodesParameters(nodeIndex)
             if(node) {
-                const nodeName = node.data.label
-                const nodeIndexDoubleQuotes = editRef.current.value.indexOf(`<node id="${nodeId}"`)
-                const nodeIndexSingleQuotes = editRef.current.value.indexOf(`<node id='${nodeId}'`)
+                const nodeName = node.id
+                const nodesStr = `<nodes>`
+                const nodesIndex = editRef.current.value.indexOf(nodesStr) + nodesStr.length
+                const nodeIndexDoubleQuotes = editRef.current.value.slice(nodesIndex).indexOf(`<node id="${nodeId}"`)
+                const nodeIndexSingleQuotes = editRef.current.value.slice(nodesIndex).indexOf(`<node id='${nodeId}'`)
                 const nodeIndex = nodeIndexDoubleQuotes >= 0 ? nodeIndexDoubleQuotes : nodeIndexSingleQuotes
-                const editIndex = editRef.current.value.slice(nodeIndex).indexOf(nodeName)
+                const editIndex = editRef.current.value.slice(nodesIndex + nodeIndex).indexOf(nodeName)
                 editRef.current.focus()
-                editRef.current.selectionStart = nodeIndex + editIndex
-                editRef.current.selectionEnd = nodeIndex + editIndex + nodeName.length
+                editRef.current.selectionStart = nodesIndex + nodeIndex + editIndex
+                editRef.current.selectionEnd = nodesIndex + nodeIndex + editIndex + nodeName.length
             }
         }
         onNodesChange(val)
@@ -491,17 +520,43 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
                         parameters?.map((p, i) => {
                             return <div style={{display: "flex", flexDirection: "column", marginBottom: "5px"}} key={i}>
                                 <label>{p.key}</label>
-                                <input type="text" value={p.value} onFocus={async() => {
+                                <input ref={el => parametersRef.current[i] = el} type="text" value={p.value} 
+                                onFocus={async() => {
+                                    let newKey = p.key
+                                    if(newKey === "Parameter key") newKey = `<key>`
+                                    else if(newKey === "Parameter value") newKey = `<value>`
+                                    else if(newKey === "system") newKey = `<system message>`
                                     const val = `${p.value}`
                                     if(!openEditToast) setOpenEditToast(true);
                                     const nodesStartIndex = stateProcedure.indexOf("<nodes>")
-                                    const keyIndex = stateProcedure.slice(nodesStartIndex).indexOf(p.key)
-                                    const valIndex = stateProcedure.slice(nodesStartIndex + keyIndex + p.key.length).indexOf(val)
-                                    console.log(nodesStartIndex, valIndex, val.length)
+                                    const keyIndex = stateProcedure.slice(nodesStartIndex).indexOf(newKey)
+                                    const valIndex = stateProcedure.slice(nodesStartIndex + keyIndex + newKey.length).indexOf(val)
                                     if(!editRef.current) await new Promise((res) => setTimeout(res, 200))
-                                    editRef.current.focus()
-                                    editRef.current.selectionStart = nodesStartIndex + keyIndex + p.key.length + valIndex
-                                    editRef.current.selectionEnd = nodesStartIndex + keyIndex + p.key.length + valIndex + val.length
+                                    editRef.current.selectionStart = nodesStartIndex + keyIndex + newKey.length + valIndex
+                                    editRef.current.selectionEnd = nodesStartIndex + keyIndex + newKey.length + valIndex + val.length
+                                }}
+                                onChange={async(e) => {
+                                    const newValue = e.currentTarget.value
+                                    let newKey = p.key
+                                    if(newKey === "Parameter key") newKey = `<key>`
+                                    else if(newKey === "Parameter value") newKey = `<value>`
+                                    else if(newKey === "system") newKey = `<system message>`
+                                    const val = `${p.value}`
+                                    if(!openEditToast) setOpenEditToast(true);
+                                    const nodesStartIndex = stateProcedure.indexOf("<nodes>")
+                                    const keyIndex = stateProcedure.slice(nodesStartIndex).indexOf(newKey)
+                                    const valIndex = stateProcedure.slice(nodesStartIndex + keyIndex + newKey.length).indexOf(val)
+                                    if(!editRef.current) await new Promise((res) => setTimeout(res, 200))
+                                    const tempParameters = [...parameters]
+                                    tempParameters[i].value = newValue
+                                    setParameters(tempParameters)
+                                    setStateProcedure(prev => {
+                                        return prev.slice(0, nodesStartIndex + keyIndex + newKey.length + valIndex) + newValue + prev.slice(nodesStartIndex + keyIndex + newKey.length + valIndex + val.length)
+                                    })
+                                    setTimeout(() => {
+                                        editRef.current.selectionStart = nodesStartIndex + keyIndex + newKey.length + valIndex
+                                        editRef.current.selectionEnd = nodesStartIndex + keyIndex + newKey.length + valIndex + newValue.length
+                                    }, 10);
                                 }} />
                             </div>
                         })
