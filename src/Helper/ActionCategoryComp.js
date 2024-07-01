@@ -28,6 +28,7 @@ const ActionCategoryComp = ({ name="Actions", getSelectedActions }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [testDescriptionData, setTestDescriptionData] = useState()
     const [testDescriptionError, setTestDescriptionError] = useState()
+    const [testDescriptionParameters, setTestDescriptionParameters] = useState()
     const {accountData} = useContext(AccountContext);
 
     const {mutate: updateDescriptionMutate, isLoading: updateDescriptionLoading} = useMutation(async ({description, name, categories, id}) => {
@@ -60,24 +61,30 @@ const ActionCategoryComp = ({ name="Actions", getSelectedActions }) => {
             setOpenModel(false)
             setTestDescriptionData()
             setTestDescriptionError()
+            setTestDescriptionParameters()
             return
         }
         throw respJson.message
     }, { refetchOnWindowFocus: false, select: (data) => data.data });
 
     const {mutate: testDescriptionMutate, isLoading: testDescriptionLoading} = useMutation(async ({description, workflowId}) => {
-        const resp = await fetch(`https://nodeapi.supermind.bot/nodeapi/testNode`, {
-            method: "POST",
-            headers: {
-            "Content-Type": "application/json",
-            },
-            body: JSON.stringify({description, workflowId, fastkartUserId: accountData.id})
-        })
-        const respJson = await resp.json()
-        if(respJson.success) {
-            setTestDescriptionData(respJson.data)
-        }
+      setTestDescriptionData()
+      setTestDescriptionError()
+      setTestDescriptionParameters()
+      const resp = await fetch(`https://nodeapi.supermind.bot/nodeapi/testNode`, {
+          method: "POST",
+          headers: {
+          "Content-Type": "application/json",
+          },
+          body: JSON.stringify({description, workflowId, fastkartUserId: accountData.id})
+      })
+      const respJson = await resp.json()
+      if(respJson.success) {
+        setTestDescriptionData(respJson.data)
+      } else {
         setTestDescriptionError(respJson.message)
+      }
+      setTestDescriptionParameters(respJson.parameters)
     }, { refetchOnWindowFocus: false });
 
     const { error, data: actionsInfo, isLoading } = useQuery(["actions", refetch], async () => {
@@ -204,6 +211,7 @@ const ActionCategoryComp = ({ name="Actions", getSelectedActions }) => {
             />
           </div>
           {testDescriptionData && <ReactJson src={testDescriptionData} name={actionDetail?.name} />}
+          {testDescriptionParameters && <ReactJson src={testDescriptionParameters} name={`${actionDetail?.name} Parameters`} />}
           {testDescriptionError && <p>{testDescriptionError}</p>}
         </ModalBody>
       </Modal>
