@@ -37,6 +37,7 @@ const ProductSubmitFunction = (mutate, value, updateId) => {
         value["combination"]?.map((item) => item?.values?.map((elem) => elem)))[ind]
     }
   })
+  value["taskSplitter"] = JSON.stringify(value["taskSplitter"])
   mutate(value);
 };
 
