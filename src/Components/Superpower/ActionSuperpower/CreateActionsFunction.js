@@ -45,7 +45,7 @@ const CreateActionsFunction = () => {
 
   return (
     <Formik
-      initialValues={{"ApiSpecType": "", "AuthToken": "", "API_SPEC": ""}}
+      initialValues={{"Categories": categories}}
       onSubmit={createNode}>
       {({ values, setFieldValue, errors, handleSubmit }) => {
          const setCategoriesVal = (label, value) => {
