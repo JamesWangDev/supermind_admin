@@ -187,7 +187,6 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
         const parsedData = xmlParser.parse(stateProcedure.slice(nodesStartIndex, nodesEndIndex + nodeEndStr.length))
         const tempParameters = []
         const traverseAllData = (data) => {
-            console.log(data)
             if(Array.isArray(data)){
                 for (const d of data) {
                     traverseAllData(d)

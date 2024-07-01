@@ -51,6 +51,7 @@ export function ProductInitValues(oldData, updateId) {
     max_downstream_cost:  updateId ? oldData?.max_downstream_cost || "" : "",
     overage_profit_margin:  updateId ? oldData?.overage_profit_margin || "" : "",
     prompts: updateId ? oldData?.prompts?.map((item) => item.id) || [] : [],
+    taskSplitter: updateId ? oldData?.taskSplitter ? JSON.parse(oldData?.taskSplitter) : [] : [],
     gpt_model: updateId ? oldData?.gpt_model || "" : 1,
     superpowers: updateId ? oldData?.superpowers?.map((item) => item.id) || [] : [],
     action_superpowers: updateId ? oldData?.action_superpowers?.map((item) => item.id) || [] : [],
