@@ -10,6 +10,7 @@ export default memo(({ data, id }) => {
     return (
         <div style={{border: "1px solid black", padding: 5, borderRadius: 5}}>
         {Array(data.targetHandleCount).fill(0).map((_, i) => <Handle
+            key={i}
             type="target"
             position={targetPositions[i % 4]}
             id={`${i}`}
@@ -29,6 +30,7 @@ export default memo(({ data, id }) => {
             <CloseButton style={{position: "absolute", top: -10, left: -10}} onClick={() => data.deleteNode(id)} />
         </div>
         {Array(data.sourceHandleCount).fill(0).map((_, i) => <Handle
+            key={i}
             type="source"
             position={sourcePositions[i % 4]}
             id={`${i}`}
