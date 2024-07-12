@@ -30,7 +30,7 @@ const PromptAndModels2 = ({ values, setFieldValue, errors, updateId }) => {
         setPrompts(promptData.data)
     }
   }, [promptLoader, promptData])
-
+console.log(values?.taskSplitter)
   const selectOptions = useMemo(() => (prompts?.map(item => ({id: item.id, name: item.name}))), [prompts]);
 
   return (
@@ -84,7 +84,7 @@ const PromptAndModels2 = ({ values, setFieldValue, errors, updateId }) => {
           </div>
         </Col>
       </Row>
-      {values?.taskSplitter.length > 0 && <Table id="table_id" className={`role-table refund-table all-package theme-table datatable-wrapper`}>
+      {values?.taskSplitter?.length > 0 && <Table id="table_id" className={`role-table refund-table all-package theme-table datatable-wrapper`}>
         <TableLoader fetchStatus={promptLoader} />
         <thead>
           <tr>
@@ -95,7 +95,7 @@ const PromptAndModels2 = ({ values, setFieldValue, errors, updateId }) => {
           </tr>
         </thead>
         <tbody>
-          {values?.taskSplitter?.map((prompt_id, index) => (
+          {Array.isArray(values?.taskSplitter) && values?.taskSplitter?.map((prompt_id, index) => (
             <tr key={`prompt_table_${index}`}>
               <td>{index + 1}</td>
               <td>{prompts?.filter(item => item.id === prompt_id)[0]?.name}</td>
