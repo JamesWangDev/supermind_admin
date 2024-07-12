@@ -42,6 +42,8 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
     const [chatData, setChatData] = useState([])
     const [chatLogs, setChatLogs] = useState([])
     const [parameters, setParameters] = useState([])
+    const [focusSet, setFocusSet] = useState(false)
+    const [parameterCursor, setParameterCursor] = useState(null)
     const [nodes, setNodes, onNodesChange] = useNodesState([])
     const [edges, setEdges, onEdgesChange] = useEdgesState([])
     const editRef = useRef()
@@ -59,9 +61,7 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
                 if(!editRef.current) await new Promise((res) => setTimeout(res, 200))
                 if(editRef.current.selectionStart !== graphEndIndex || editRef.current.selectionEnd !== graphEndIndex + contentToAdd.length) {
                     setTimeout(() => {
-                        editRef.current.focus()
-                        editRef.current.selectionStart = graphEndIndex
-                        editRef.current.selectionEnd = graphEndIndex + contentToAdd.length
+                        focusOnTextSelection(graphEndIndex, graphEndIndex + contentToAdd.length)
                     }, 10);
                 }
                 return addEdge({...params, type: "customEdge", label: ""}, edges)
@@ -218,6 +218,24 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
         }
     }
 
+    const focusOnTextSelection = (selectionStart, selectionEnd, shouldFocus=true) => {
+        if(shouldFocus) editRef.current.focus()
+        const fullText = editRef.current.value;
+        editRef.current.value = fullText.substring(0, selectionEnd);
+        const scrollHeight = editRef.current.scrollHeight
+        editRef.current.value = fullText;
+        let scrollTop = scrollHeight;
+        const textareaHeight = editRef.current.clientHeight;
+        if (scrollTop > textareaHeight){
+            scrollTop -= textareaHeight / 2;
+        } else{
+            scrollTop = 0;
+        }
+        editRef.current.scrollTop = scrollTop;
+        editRef.current.selectionStart = selectionStart
+        editRef.current.selectionEnd = selectionEnd
+    }
+
     const handleNodeChange = async (val) => {
         if(val.length === 1 && (val[0].type === "select" || val[0].type === "position")){
             const nodeId = val[0].id
@@ -236,9 +254,7 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
                 const nodeIndexSingleQuotes = editRef.current.value.slice(nodesIndex).indexOf(`<node id='${nodeId}'`)
                 const nodeIndex = nodeIndexDoubleQuotes >= 0 ? nodeIndexDoubleQuotes : nodeIndexSingleQuotes
                 const editIndex = editRef.current.value.slice(nodesIndex + nodeIndex).indexOf(nodeName)
-                editRef.current.focus()
-                editRef.current.selectionStart = nodesIndex + nodeIndex + editIndex
-                editRef.current.selectionEnd = nodesIndex + nodeIndex + editIndex + nodeName.length
+                focusOnTextSelection(nodesIndex + nodeIndex + editIndex, nodesIndex + nodeIndex + editIndex + nodeName.length)
             }
         }
         onNodesChange(val)
@@ -270,12 +286,11 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
                 const editIndex = editRef.current.value.slice(edgeStartIndex).indexOf(edgeName)
                 editRef.current.focus()
                 if(edgeName && edgeName.length){
-                    editRef.current.selectionStart = edgeStartIndex + editIndex
-                    editRef.current.selectionEnd = edgeStartIndex + editIndex + edgeName.length
-                    if(editRef.current.selectionEnd === editRef.current.selectionStart) editRef.current.selectionEnd += edgeStartDoubleQuotes.length + 3
+                    let selectionEnd = edgeStartIndex + editIndex + edgeName.length
+                    if(editRef.current.selectionEnd === editRef.current.selectionStart) selectionEnd += edgeStartDoubleQuotes.length + 3
+                    focusOnTextSelection(edgeStartIndex + editIndex, selectionEnd)
                 } else {
-                    editRef.current.selectionStart = edgeStartIndex
-                    editRef.current.selectionEnd = edgeStartIndex + edgeEndIndex + edgeEnd.length
+                    focusOnTextSelection(edgeStartIndex, edgeStartIndex + edgeEndIndex + edgeEnd.length)
                 }
             }
         } else if(filteredVal.length === 1 && filteredVal[0].type === "remove"){
@@ -299,9 +314,7 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
                 const edgeEndIndex = isSelfClosingEdge ? edgeDoubleQuotes.length : editRef.current.value.slice(edgeStartIndex).indexOf(edgeEnd)
                 setStateProcedure(stateProcedure.slice(0, edgeStartIndex) + stateProcedure.slice(edgeStartIndex + edgeEndIndex + edgeEnd.length))
                 setTimeout(() => {
-                    editRef.current.focus()
-                    editRef.current.selectionStart = edgeStartIndex
-                    editRef.current.selectionEnd = edgeStartIndex
+                    focusOnTextSelection(edgeStartIndex, edgeStartIndex)
                 }, 10);
             }
         } else if (val[0].type === "reset") {
@@ -334,10 +347,8 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
     </edge>`
                 setStateProcedure(editRef.current.value.slice(0, edgeIndex + edgeDoubleQuotes.length) + textToAdd + editRef.current.value.slice(edgeIndex + edgeDoubleQuotes.length + edgeEndIndex))
                 setTimeout(() => {
-                    editRef.current.focus()
                     const selectionLength = edgeIndex + edgeDoubleQuotes.length + textToAdd.indexOf("</returnValue>")
-                    editRef.current.selectionStart = selectionLength
-                    editRef.current.selectionEnd = selectionLength
+                    focusOnTextSelection(selectionLength, selectionLength)
                 }, 10);
             }
         }
@@ -384,9 +395,7 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
         })
         toggleModal()
         setTimeout(() => {
-            editRef.current.focus()
-            editRef.current.selectionStart = lastTurnQuotesIndex + turnEndIndex + nodeToAdd.length
-            editRef.current.selectionEnd = lastTurnQuotesIndex + turnEndIndex + nodeToAdd.length + turnToAdd.length
+            focusOnTextSelection(lastTurnQuotesIndex + turnEndIndex + nodeToAdd.length, lastTurnQuotesIndex + turnEndIndex + nodeToAdd.length + turnToAdd.length)
         }, 400);
     }
 
@@ -440,6 +449,20 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
     }
 
     const updateProcedure = () => updateProcedureMutate({procedure: stateProcedure, description: stateDescription, vectorQuery: stateVectorQuery, procedureId: stateProcedureId})
+
+    const handleParametersFocus = async (newKey, value) => {
+        let keyIndexOffset = value.length
+        if(newKey === "Parameter key") newKey = `<key>${value}`
+        else if(newKey === "Parameter value") newKey = `<value>${value}`
+        else if(newKey === "system") newKey = `<system message>${value}`
+        else newKey = `<${newKey}>${value}`
+        if(!openEditToast) setOpenEditToast(true);
+        const nodesStartIndex = stateProcedure.indexOf("<nodes>")
+        const keyIndex = stateProcedure.slice(nodesStartIndex).indexOf(newKey) - keyIndexOffset
+        const valIndex = stateProcedure.slice(nodesStartIndex + keyIndex + newKey.length).indexOf(value)
+        if(!editRef.current) await new Promise((res) => setTimeout(res, 200))
+        return [nodesStartIndex + keyIndex + newKey.length + valIndex, nodesStartIndex + keyIndex + newKey.length + valIndex + value.length]
+    }
 
     return <>
         <div>
@@ -519,44 +542,39 @@ const ReactFlowChart = ({name, procedure, description, vectorQuery, procedureId,
                         parameters?.map((p, i) => {
                             return <div style={{display: "flex", flexDirection: "column", marginBottom: "5px"}} key={i}>
                                 <label>{p.key}</label>
-                                <input ref={el => parametersRef.current[i] = el} type="text" value={p.value} 
+                                <input style={{outline: "solid"}} ref={el => parametersRef.current[i] = el} type="text" value={p.value} 
                                 onFocus={async() => {
-                                    let newKey = p.key
-                                    if(newKey === "Parameter key") newKey = `<key>`
-                                    else if(newKey === "Parameter value") newKey = `<value>`
-                                    else if(newKey === "system") newKey = `<system message>`
-                                    const val = `${p.value}`
-                                    if(!openEditToast) setOpenEditToast(true);
-                                    const nodesStartIndex = stateProcedure.indexOf("<nodes>")
-                                    const keyIndex = stateProcedure.slice(nodesStartIndex).indexOf(newKey)
-                                    const valIndex = stateProcedure.slice(nodesStartIndex + keyIndex + newKey.length).indexOf(val)
-                                    if(!editRef.current) await new Promise((res) => setTimeout(res, 200))
-                                    editRef.current.selectionStart = nodesStartIndex + keyIndex + newKey.length + valIndex
-                                    editRef.current.selectionEnd = nodesStartIndex + keyIndex + newKey.length + valIndex + val.length
+                                    if(!focusSet){
+                                        const [selectionStart, selectionEnd] = await handleParametersFocus(p.key, p.value)
+                                        focusOnTextSelection(selectionStart, selectionEnd, false)
+                                        parametersRef.current[i].focus()
+                                        setFocusSet(true)
+                                        setTimeout(() => {
+                                            setFocusSet(false)
+                                        }, 100);
+                                    }
+                                    
                                 }}
                                 onChange={async(e) => {
                                     const newValue = e.currentTarget.value
-                                    let newKey = p.key
-                                    if(newKey === "Parameter key") newKey = `<key>`
-                                    else if(newKey === "Parameter value") newKey = `<value>`
-                                    else if(newKey === "system") newKey = `<system message>`
-                                    const val = `${p.value}`
-                                    if(!openEditToast) setOpenEditToast(true);
-                                    const nodesStartIndex = stateProcedure.indexOf("<nodes>")
-                                    const keyIndex = stateProcedure.slice(nodesStartIndex).indexOf(newKey)
-                                    const valIndex = stateProcedure.slice(nodesStartIndex + keyIndex + newKey.length).indexOf(val)
-                                    if(!editRef.current) await new Promise((res) => setTimeout(res, 200))
+                                    const cursorPosition = e.currentTarget.selectionStart
+                                    const [selectionStart, selectionEnd] = await handleParametersFocus(p.key, p.value)
                                     const tempParameters = [...parameters]
                                     tempParameters[i].value = newValue
                                     setParameters(tempParameters)
+                                    setParameterCursor(cursorPosition)
                                     setStateProcedure(prev => {
-                                        return prev.slice(0, nodesStartIndex + keyIndex + newKey.length + valIndex) + newValue + prev.slice(nodesStartIndex + keyIndex + newKey.length + valIndex + val.length)
+                                        return prev.slice(0, selectionStart) + newValue + prev.slice(selectionEnd)
                                     })
                                     setTimeout(() => {
-                                        editRef.current.selectionStart = nodesStartIndex + keyIndex + newKey.length + valIndex
-                                        editRef.current.selectionEnd = nodesStartIndex + keyIndex + newKey.length + valIndex + newValue.length
-                                    }, 10);
-                                }} />
+                                        setParameterCursor(prev => {
+                                            parametersRef.current[i].setSelectionRange(prev, prev)
+                                            return prev
+                                        })
+                                    }, 1);
+                                }} 
+                                onBlur={() => setParameterCursor(null)}
+                                />
                             </div>
                         })
                     }
