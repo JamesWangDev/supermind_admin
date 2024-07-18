@@ -129,7 +129,9 @@ export default function ChatBox({activeTab, values}) {
   };
 
   useEffect(() => {
-    scrollToBottom();
+    if(messages.length > 1) {
+      scrollToBottom();
+    }
   }, [messages]);
 
   useEffect(() => {
